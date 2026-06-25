@@ -7,6 +7,8 @@ import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await AppUtils.instance.init();
 
   // recent

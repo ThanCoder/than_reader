@@ -31,7 +31,12 @@ class PdfListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 3,
               children: [
-                Text(pdf.name),
+                Text(
+                  pdf.name,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 13),
+                ),
                 Text('Size: ${pdf.size.toFileSizeLabel()}'),
                 Text('Date: ${pdf.date.formatTimeAgo()}'),
                 // progress

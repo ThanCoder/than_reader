@@ -8,3 +8,8 @@ class PdfError extends PdfStateEvent {
 }
 
 class PdfLoaded extends PdfStateEvent {}
+
+class PdfDelete extends PdfStateEvent {
+  final String path;
+  PdfDelete(this.path);
+}

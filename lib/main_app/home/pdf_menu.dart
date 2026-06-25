@@ -1,7 +1,10 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/core/state/pdf_state_event.dart';
 
 class PdfMenu extends StatefulWidget {
   final PdfFile pdf;
@@ -18,13 +21,33 @@ class _PdfMenuState extends State<PdfMenu> {
     return ListView(
       children: [
         ListTile(
+          leading: Icon(Icons.info),
           title: Text('PDF Info'),
           onTap: () {
             context.pop();
             showInfoDialog();
           },
         ),
+        ListTile(
+          leading: Icon(Icons.delete, color: Colors.red),
+          title: Text('Delete'),
+          onTap: () {
+            context.pop();
+            showDeleteConfirm();
+          },
+        ),
       ],
+    );
+  }
+
+  void showDeleteConfirm() {
+    showTConfirmDialog(
+      context,
+      contentText: 'ဖျက်ချင်တာသေချာပြီလား?',
+      submitText: 'Delete Forever',
+      onSubmit: () {
+        PdfStateConroller.instance.dispatch(PdfDelete(widget.pdf.path));
+      },
     );
   }
 

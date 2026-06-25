@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cf_lite/cf_lite.dart';
 import 'package:flutter/material.dart';
@@ -73,5 +74,24 @@ class PdfStateConroller {
     _controller.add(_state);
   }
 
-  void dispatch(PdfStateEvent event) {}
+  void dispatch(PdfStateEvent event) {
+    if (event is PdfDelete) {
+      _handleDeletePdf(event);
+    }
+  }
+
+  void _handleDeletePdf(PdfDelete event) {
+    final list = state.list;
+    final index = list.indexWhere((e) => e.path == event.path);
+    if (index == -1) return;
+    // ui
+    list.removeAt(index);
+    _state = _state.copyWith(list: list);
+    _controller.add(_state);
+    //disk
+    final file = File(event.path);
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+  }
 }

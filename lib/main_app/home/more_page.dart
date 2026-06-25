@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/partials/app_theme_chooser.dart';
 import 'package:than_reader/core/partials/custompath_scanner_manager_widget.dart';
+import 'package:than_reader/core/partials/version_info_widget.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -17,6 +18,8 @@ class MorePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppThemeChooser(),
+              Divider(),
+              VersionInfoWidget(),
               Divider(),
               CustompathScannerManagerWidget(),
               Divider(),
