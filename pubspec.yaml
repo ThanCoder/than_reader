@@ -37,7 +37,7 @@ dev_dependencies:
 # dev lib
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/images/logo_2.jpg"
+  image_path: "assets/images/app_icon.png"
 
 flutter:
   uses-material-design: true

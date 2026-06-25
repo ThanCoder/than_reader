@@ -1,5 +1,6 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
@@ -23,13 +24,13 @@ class _HomePageState extends State<HomePage> {
     init();
   }
 
-  void init() async {
+  Future<void> init() async {
     if (!await ThanPkg.platform.isStoragePermissionGranted()) {
       await ThanPkg.platform.requestStoragePermission();
       return;
     }
 
-    PdfStateConroller.instance.fetchList();
+    await PdfStateConroller.instance.fetchList();
   }
 
   @override
@@ -63,10 +64,18 @@ class _HomePageState extends State<HomePage> {
           return Center(child: CircularProgressIndicator.adaptive());
         }
         final list = state.list;
-        return ListView.separated(
-          itemCount: list.length,
-          separatorBuilder: (context, index) => Divider(),
-          itemBuilder: (context, index) => _listItem(list[index]),
+        if (list.isEmpty) {
+          return Center(
+            child: RefreshButton(text: Text('PDF မရှိပါ....'), onClicked: init),
+          );
+        }
+        return RefreshIndicator.adaptive(
+          onRefresh: init,
+          child: ListView.separated(
+            itemCount: list.length,
+            separatorBuilder: (context, index) => Divider(),
+            itemBuilder: (context, index) => _listItem(list[index]),
+          ),
         );
       },
     );

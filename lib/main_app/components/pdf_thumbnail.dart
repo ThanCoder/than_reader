@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pdf_engine/than_pdf_engine.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 
@@ -16,13 +17,19 @@ class PdfThumbnail extends StatelessWidget {
     required this.height,
   });
 
-  File get cacheFile =>
-      File(AppUtils.instance.cachePath.join(pdfPath.getName()));
+  File get cacheFile => File(
+    AppUtils.instance.cachePath.join(
+      '${pdfPath.getName(withExt: false)}-w-$width-h-$height-.jpg',
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     if (cacheFile.existsSync()) {
-      return Image.file(cacheFile);
+      return TImageFile(
+        path: cacheFile.path,
+        defaultAssetsPath: 'assets/images/pdf-icon.webp',
+      );
     }
     return FutureBuilder(
       future: PdfCore.genThumbnailJpg(
@@ -35,10 +42,14 @@ class PdfThumbnail extends StatelessWidget {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator.adaptive());
         }
-        if (cacheFile.existsSync()) {
-          return Image.file(cacheFile);
-        }
-        return Image.asset('assets/images/pdf-icon.webp');
+        return TImageFile(
+          path: cacheFile.path,
+          defaultAssetsPath: 'assets/images/pdf-icon.webp',
+        );
+        // if (cacheFile.existsSync()) {
+        //   return Image.file(cacheFile);
+        // }
+        // return Image.asset('assets/images/pdf-icon.webp');
       },
     );
   }

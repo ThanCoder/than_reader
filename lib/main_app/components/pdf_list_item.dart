@@ -24,7 +24,7 @@ class PdfListItem extends StatelessWidget {
       child: Row(
         spacing: 4,
         children: [
-          SizedBox(width: 150, height: 160, child: thumbnail),
+          SizedBox(width: 130, height: 160, child: thumbnail),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,6 +42,6 @@ class PdfListItem extends StatelessWidget {
   }
 
   Widget get thumbnail {
-    return PdfThumbnail(pdfPath: pdf.path, width: 150, height: 150);
+    return PdfThumbnail(pdfPath: pdf.path, width: 130, height: 160);
   }
 }

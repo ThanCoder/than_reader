@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
@@ -8,6 +9,8 @@ void main() async {
   await AppUtils.instance.init();
 
   AppManager.instance.register(PdfrxApp());
+
+  await TWidgets.instance.init(defaultImageAssetsPath: 'assets/images/app_icon.png');
 
   runApp(const MyApp());
 }
