@@ -54,7 +54,7 @@ class PdfListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${config.page}/${config.pageCount}',
+          '${((config.page / config.pageCount) * 100).toStringAsFixed(2)}% - ${config.page}/${config.pageCount}',
           style: TextStyle(fontSize: 13, color: Colors.amber[700]),
         ),
         LinearProgressIndicator(value: config.page / config.pageCount),

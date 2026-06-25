@@ -131,6 +131,15 @@ class _PdfrxScreenState extends State<PdfrxScreen> {
     loadingBannerBuilder: (context, bytesDownloaded, totalBytes) {
       return Center(child: CircularProgressIndicator.adaptive());
     },
+    pageOverlaysBuilder: (context, pageRectInViewer, page) => [
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Text(
+          'Page: ${page.pageNumber}',
+          style: const TextStyle(color: Colors.red),
+        ),
+      ),
+    ],
     onKey: (params, key, isRealKeyPress) {
       if (key == LogicalKeyboardKey.escape) {
         exitFullscreen();
