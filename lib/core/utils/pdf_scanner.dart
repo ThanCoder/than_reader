@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:than_pkg/than_pkg.dart';
@@ -30,6 +31,10 @@ class PdfScanner extends PathScanner {
       try {
         scanFolders.add((await getApplicationDocumentsDirectory()).path);
         scanFolders.add((await getDownloadsDirectory())!.path);
+        final homePath = Platform.environment['HOME'];
+        if (homePath != null) {
+          scanFolders.add(homePath.join('Desktop'));
+        }
       } catch (e) {
         debugPrint('[PdfScanner:getAll:linux]: $e');
       }

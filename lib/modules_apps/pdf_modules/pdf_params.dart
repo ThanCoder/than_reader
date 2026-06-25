@@ -21,15 +21,16 @@ enum PdfThemeMode {
   dark;
 
   static PdfThemeMode fromName(String name) {
-    if (name == appFollow.name) return .appFollow;
+    if (name == systemFollow.name) return .systemFollow;
     if (name == light.name) return .light;
     if (name == dark.name) return .dark;
-    return .systemFollow;
+    return .appFollow;
   }
 }
 
 class PdfConfig {
   final int page;
+  final int pageCount;
   final double zoom;
   final double offsetX;
   final bool isFullscreen;
@@ -48,9 +49,10 @@ class PdfConfig {
     required this.scrollByMouseWheel,
     required this.scrollByArrowKey,
     required this.screenOrientationTypes,
+    required this.pageCount,
   });
 
-  static Future<PdfConfig> fromPath(String path) async {
+  static PdfConfig fromPath(String path) {
     final configFile = File(path);
     if (!configFile.existsSync()) return PdfConfig.empty();
     try {
@@ -70,6 +72,7 @@ class PdfConfig {
   factory PdfConfig.empty() {
     return PdfConfig(
       page: 1,
+      pageCount: -1,
       zoom: 1,
       offsetX: 0,
       isFullscreen: false,
@@ -83,6 +86,7 @@ class PdfConfig {
 
   PdfConfig copyWith({
     int? page,
+    int? pageCount,
     double? zoom,
     double? offsetX,
     bool? isFullscreen,
@@ -94,6 +98,7 @@ class PdfConfig {
   }) {
     return PdfConfig(
       page: page ?? this.page,
+      pageCount: pageCount ?? this.pageCount,
       zoom: zoom ?? this.zoom,
       offsetX: offsetX ?? this.offsetX,
       isFullscreen: isFullscreen ?? this.isFullscreen,
@@ -109,6 +114,7 @@ class PdfConfig {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'page': page,
+      'pageCount': pageCount,
       'zoom': zoom,
       'offsetX': offsetX,
       'isFullscreen': isFullscreen,
@@ -122,9 +128,10 @@ class PdfConfig {
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
     return PdfConfig(
-      page: map.getInt(['page']),
-      zoom: map.getDouble(['zoom']),
-      offsetX: map.getDouble(['offsetX']),
+      page: map['page'] as int,
+      pageCount: map.getInt(['pageCount'], def: -1),
+      zoom: map['zoom'] as double,
+      offsetX: map['offsetX'] as double,
       isFullscreen: map['isFullscreen'] as bool,
       isKeepScreen: map['isKeepScreen'] as bool,
       themeMode: PdfThemeMode.fromName(map.getString(['themeMode'])),

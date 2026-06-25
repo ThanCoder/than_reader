@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
+import 'package:than_reader/core/utils/app_theme.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config_menu.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
@@ -41,14 +45,20 @@ class _PdfrxScreenState extends State<PdfrxScreen> {
   void dispose() {
     ThanPkg.platform.toggleFullScreen(isFullScreen: false);
     ThanPkg.platform.toggleKeepScreen(isKeep: false);
-    ThanPkg.android.app.requestOrientation(type: .portrait);
+    if (Platform.isAndroid) {
+      ThanPkg.android.app.requestOrientation(type: .portrait);
+    }
     super.dispose();
   }
 
   void initConfig() {
     ThanPkg.platform.toggleFullScreen(isFullScreen: config.isFullscreen);
     ThanPkg.platform.toggleKeepScreen(isKeep: config.isKeepScreen);
-    ThanPkg.android.app.requestOrientation(type: config.screenOrientationTypes);
+    if (Platform.isAndroid) {
+      ThanPkg.android.app.requestOrientation(
+        type: config.screenOrientationTypes,
+      );
+    }
   }
 
   void onDocumentLoadFinished() async {
@@ -75,6 +85,7 @@ class _PdfrxScreenState extends State<PdfrxScreen> {
         context.pop<PdfConfig>(
           config.copyWith(
             page: controller.pageNumber,
+            pageCount: controller.pageCount,
             zoom: controller.currentZoom,
             offsetX: controller.centerPosition.dx,
             isFullscreen: config.isFullscreen,
@@ -91,7 +102,12 @@ class _PdfrxScreenState extends State<PdfrxScreen> {
         child: Scaffold(
           appBar: config.isFullscreen
               ? null
-              : AppBar(title: Text(widget.path.getName())),
+              : AppBar(
+                  title: Text(
+                    widget.path.getName(),
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
           body: mainWidget,
         ),
       ),
@@ -248,6 +264,13 @@ class _PdfrxScreenState extends State<PdfrxScreen> {
 
   bool get isDarkMode {
     if (config.themeMode == .dark) return true;
+    if (config.themeMode == .appFollow) {
+      return AppThemeType.isDarkMode;
+    }
+    if (config.themeMode == .systemFollow) {
+      final brightness = PlatformDispatcher.instance.platformBrightness;
+      return brightness == .dark;
+    }
     return false;
   }
 

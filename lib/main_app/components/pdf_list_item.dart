@@ -2,6 +2,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
 class PdfListItem extends StatelessWidget {
   final PdfFile pdf;
@@ -32,12 +33,32 @@ class PdfListItem extends StatelessWidget {
               children: [
                 Text(pdf.name),
                 Text('Size: ${pdf.size.toFileSizeLabel()}'),
-                Text('Date: ${pdf.date.toDetailedAgeLabel()}'),
+                Text('Date: ${pdf.date.formatTimeAgo()}'),
+                // progress
+                progressWidget,
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget get progressWidget {
+    final config = PdfConfig.fromPath(pdf.configPath);
+    if (config.pageCount == -1) {
+      return SizedBox.shrink();
+    }
+    return Column(
+      spacing: 3,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${config.page}/${config.pageCount}',
+          style: TextStyle(fontSize: 13, color: Colors.amber[700]),
+        ),
+        LinearProgressIndicator(value: config.page / config.pageCount),
+      ],
     );
   }
 

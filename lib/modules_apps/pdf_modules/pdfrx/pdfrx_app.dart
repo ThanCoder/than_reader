@@ -9,11 +9,11 @@ import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_screen.dart';
 class PdfrxApp extends ModuleApp<PdfParams, PdfResult> {
   @override
   Future<PdfResult?> go(BuildContext context, PdfParams params) async {
-    final configPath = await AppUtils.instance.getConfigPath(
+    final configPath = AppUtils.instance.getConfigPath(
       '${params.path.getName(withExt: false)}-config.json',
     );
 
-    final config = await PdfConfig.fromPath(configPath);
+    final config = PdfConfig.fromPath(configPath);
 
     if (!context.mounted) return null;
 

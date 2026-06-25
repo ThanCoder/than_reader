@@ -124,10 +124,11 @@ packages:
   dart_core_extensions:
     dependency: "direct main"
     description:
-      name: dart_core_extensions
-      sha256: e0fc804b73d3e9db4a93f75165bbae7617c41bb3c2de6a225a751ecc0c9df9e8
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: e6e1474b6f2f9c6e690f78f6f29804758b8ca9aa
+      url: "https://github.com/ThanCoder/dart_core_extensions.git"
+    source: git
     version: "0.3.0"
   fake_async:
     dependency: transitive

@@ -89,11 +89,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void goReader(PdfFile pdf) {
-    AppManager.instance.go<PdfrxApp, PdfParams, PdfResult>(
+  void goReader(PdfFile pdf) async {
+    await AppManager.instance.go<PdfrxApp, PdfParams, PdfResult>(
       context,
       PdfParams(path: pdf.path),
     );
+    setState(() {});
   }
 
   void showPdfMenu(PdfFile pdf) {

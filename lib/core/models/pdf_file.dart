@@ -2,13 +2,20 @@
 import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
 class PdfFile {
   final String name;
   final String path;
   final int size;
   final DateTime date;
-  const PdfFile({required this.name, required this.path, required this.date, required this.size});
+  const PdfFile({
+    required this.name,
+    required this.path,
+    required this.date,
+    required this.size,
+  });
 
   factory PdfFile.fromEntry(FileSystemEntity entry) {
     return PdfFile(
@@ -18,6 +25,9 @@ class PdfFile {
       date: entry.modifiedDate,
     );
   }
+  String get configPath => AppUtils.instance.getConfigPath(
+    '${path.getName(withExt: false)}-config.json',
+  );
 }
 
 extension PdfFileExtensions on List<PdfFile> {

@@ -10,25 +10,40 @@ class AppUtils {
   factory AppUtils() => instance;
 
   late String cachePath;
+  late String configPath;
+  late String appConfigPath;
 
   Future<void> init() async {
     try {
       final cacheP = await getApplicationCacheDirectory();
+      final dir = await getApplicationSupportDirectory();
+      final configDir = Directory(dir.path.join('config'));
+      final appConfigDir = Directory(dir.path.join('app_config'));
+      if (!configDir.existsSync()) {
+        configDir.createSync();
+      }
+      if (!appConfigDir.existsSync()) {
+        appConfigDir.createSync();
+      }
       cachePath = cacheP.path;
+      configPath = configDir.path;
+      appConfigPath = appConfigDir.path;
     } catch (e) {
       debugPrint('[AppUtils:init]: $e');
     }
   }
 
-  Future<String> getConfigPath([String? name]) async {
-    final dir = await getApplicationSupportDirectory();
-    final configDir = Directory(dir.path.join('config'));
-    if (!configDir.existsSync()) {
-      configDir.createSync();
-    }
+  String getConfigPath([String? name]) {
     if (name != null) {
-      return configDir.path.join(name);
+      return configPath.join(name);
     }
-    return configDir.path;
+    return configPath;
+  }
+
+  String getAppConfigPath([String? name]) {
+    if (name != null) {
+      return appConfigPath.join(name);
+    }
+    return appConfigPath;
   }
 }
