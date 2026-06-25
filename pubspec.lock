@@ -37,10 +37,10 @@ packages:
     dependency: "direct main"
     description:
       name: cf_lite
-      sha256: e7838cfad3485f8afaf9d42d960d9b01432b5924ed06f46006b7ea0bb469438b
+      sha256: e90d84db24cd431a592fefc0557df7ad4b4d6fe8f28f8e6611929c1fb482145d
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.3.1"
   change_app_package_name:
     dependency: "direct dev"
     description:
@@ -126,10 +126,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e6e1474b6f2f9c6e690f78f6f29804758b8ca9aa
+      resolved-ref: d1d2c051b7f5af65410801d42bc62ab3ec87effe
       url: "https://github.com/ThanCoder/dart_core_extensions.git"
     source: git
-    version: "0.3.0"
+    version: "0.4.0"
   fake_async:
     dependency: transitive
     description:

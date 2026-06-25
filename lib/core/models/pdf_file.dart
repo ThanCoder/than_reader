@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
 class PdfFile {
   final String name;
@@ -31,6 +30,16 @@ class PdfFile {
 }
 
 extension PdfFileExtensions on List<PdfFile> {
+  void sortA2Z({bool isA2Z = true}) {
+    sort((a, b) {
+      if (isA2Z) {
+        return a.name.compareTo(b.name);
+      } else {
+        return b.name.compareTo(a.name);
+      }
+    });
+  }
+
   void sortDate({bool isNewest = true}) {
     sort((a, b) {
       if (isNewest) {
@@ -41,6 +50,16 @@ extension PdfFileExtensions on List<PdfFile> {
         return a.date.millisecondsSinceEpoch.compareTo(
           b.date.millisecondsSinceEpoch,
         );
+      }
+    });
+  }
+
+  void sortSize({bool isSmallest = true}) {
+    sort((a, b) {
+      if (isSmallest) {
+        return a.size.compareTo(b.size);
+      } else {
+        return b.size.compareTo(a.size);
       }
     });
   }

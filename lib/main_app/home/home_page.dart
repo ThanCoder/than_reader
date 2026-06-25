@@ -6,6 +6,7 @@ import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
+import 'package:than_reader/main_app/home/pdf_sort_button.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Than Reader"),
         actions: [
+          // sort
+          PdfSortButton(),
           if (TPlatform.isDesktop)
             IconButton(
               onPressed: PdfStateConroller.instance.fetchList,
