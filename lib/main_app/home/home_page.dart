@@ -8,6 +8,7 @@ import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
 import 'package:than_reader/main_app/home/pdf_sort_button.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
 
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void goReader(PdfFile pdf) async {
-    await AppManager.instance.go<PdfrxApp, PdfParams, PdfResult>(
+    await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
       PdfParams(path: pdf.path),
     );

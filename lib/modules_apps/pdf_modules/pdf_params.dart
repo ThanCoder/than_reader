@@ -28,6 +28,18 @@ enum PdfThemeMode {
   }
 }
 
+enum PdfReaderType {
+  autoReader,
+  thanPdfReader,
+  pdfrxReader;
+
+  static PdfReaderType fromName(String name) {
+    if (name == thanPdfReader.name) return .thanPdfReader;
+    if (name == pdfrxReader.name) return .pdfrxReader;
+    return .autoReader;
+  }
+}
+
 class PdfConfig {
   final int page;
   final int pageCount;
@@ -39,6 +51,7 @@ class PdfConfig {
   final double scrollByMouseWheel;
   final double scrollByArrowKey;
   final ScreenOrientationTypes screenOrientationTypes;
+  final PdfReaderType readerType;
   const PdfConfig({
     required this.page,
     required this.zoom,
@@ -50,6 +63,7 @@ class PdfConfig {
     required this.scrollByArrowKey,
     required this.screenOrientationTypes,
     required this.pageCount,
+    required this.readerType,
   });
 
   static PdfConfig fromPath(String path) {
@@ -81,33 +95,7 @@ class PdfConfig {
       scrollByMouseWheel: 2,
       scrollByArrowKey: 40,
       screenOrientationTypes: .portrait,
-    );
-  }
-
-  PdfConfig copyWith({
-    int? page,
-    int? pageCount,
-    double? zoom,
-    double? offsetX,
-    bool? isFullscreen,
-    bool? isKeepScreen,
-    PdfThemeMode? themeMode,
-    double? scrollByMouseWheel,
-    double? scrollByArrowKey,
-    ScreenOrientationTypes? screenOrientationTypes,
-  }) {
-    return PdfConfig(
-      page: page ?? this.page,
-      pageCount: pageCount ?? this.pageCount,
-      zoom: zoom ?? this.zoom,
-      offsetX: offsetX ?? this.offsetX,
-      isFullscreen: isFullscreen ?? this.isFullscreen,
-      isKeepScreen: isKeepScreen ?? this.isKeepScreen,
-      themeMode: themeMode ?? this.themeMode,
-      scrollByMouseWheel: scrollByMouseWheel ?? this.scrollByMouseWheel,
-      scrollByArrowKey: scrollByArrowKey ?? this.scrollByArrowKey,
-      screenOrientationTypes:
-          screenOrientationTypes ?? this.screenOrientationTypes,
+      readerType: .autoReader,
     );
   }
 
@@ -123,6 +111,7 @@ class PdfConfig {
       'scrollByMouseWheel': scrollByMouseWheel,
       'scrollByArrowKey': scrollByArrowKey,
       'screenOrientationTypes': screenOrientationTypes.name,
+      'readerType': readerType.name,
     };
   }
 
@@ -140,6 +129,36 @@ class PdfConfig {
       screenOrientationTypes: ScreenOrientationTypes.getType(
         map.getString(['screenOrientationTypes']),
       ),
+      readerType: PdfReaderType.fromName(map.getString(['readerType'])),
+    );
+  }
+
+  PdfConfig copyWith({
+    int? page,
+    int? pageCount,
+    double? zoom,
+    double? offsetX,
+    bool? isFullscreen,
+    bool? isKeepScreen,
+    PdfThemeMode? themeMode,
+    double? scrollByMouseWheel,
+    double? scrollByArrowKey,
+    ScreenOrientationTypes? screenOrientationTypes,
+    PdfReaderType? readerType,
+  }) {
+    return PdfConfig(
+      page: page ?? this.page,
+      pageCount: pageCount ?? this.pageCount,
+      zoom: zoom ?? this.zoom,
+      offsetX: offsetX ?? this.offsetX,
+      isFullscreen: isFullscreen ?? this.isFullscreen,
+      isKeepScreen: isKeepScreen ?? this.isKeepScreen,
+      themeMode: themeMode ?? this.themeMode,
+      scrollByMouseWheel: scrollByMouseWheel ?? this.scrollByMouseWheel,
+      scrollByArrowKey: scrollByArrowKey ?? this.scrollByArrowKey,
+      screenOrientationTypes:
+          screenOrientationTypes ?? this.screenOrientationTypes,
+      readerType: readerType ?? this.readerType,
     );
   }
 }

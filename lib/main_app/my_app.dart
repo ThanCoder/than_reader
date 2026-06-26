@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/utils/app_theme.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/main_app/home/home_screen.dart';
 
 class MyApp extends StatefulWidget {

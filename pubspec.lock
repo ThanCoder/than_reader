@@ -124,11 +124,10 @@ packages:
   dart_core_extensions:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d1d2c051b7f5af65410801d42bc62ab3ec87effe
-      url: "https://github.com/ThanCoder/dart_core_extensions.git"
-    source: git
+      name: dart_core_extensions
+      sha256: "5363c4a3f729b817343b88ff734ea70572200b91972d43a8d84c8d609ff2d613"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.4.0"
   fake_async:
     dependency: transitive
@@ -678,6 +677,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
+  t_pdf_reader:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: b142f070e7a0ffae6d111643fad92eb6d8acb707
+      url: "https://github.com/ThanCoder/t_pdf_reader.git"
+    source: git
+    version: "0.0.1"
   t_widgets:
     dependency: "direct main"
     description:
