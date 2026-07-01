@@ -24,7 +24,6 @@ class MorePage extends StatelessWidget {
               VersionInfoWidget(),
               Divider(),
               CacheManagerListTile(cacheDirPath: Utils().cachePath),
-              Divider(),
               CustompathScannerManagerWidget(),
             ],
           ),

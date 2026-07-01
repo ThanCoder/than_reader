@@ -23,6 +23,7 @@ void main() async {
     Utils.instance.getConfigPath('app.config.cfb'),
   );
   await PdfFavController.instance.init();
+  await PdfFavController.instance.getAll();//get all fav list
 
   AppManager.instance.register(PdfApp());
   AppManager.instance.register(PdfrxApp());

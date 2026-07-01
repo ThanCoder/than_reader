@@ -6,12 +6,15 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/partials/folder_style_button.dart';
+import 'package:than_reader/partials/list_style_button.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,9 +89,9 @@ class _HomePageState extends State<HomePage> {
   Widget get headerWidget {
     return Row(
       children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.folder)),
+        FolderStyleButton(),
         Spacer(),
-        IconButton(onPressed: () {}, icon: Icon(Icons.list_rounded)),
+        ListStyleButton(value: .list),
         StreamBuilder(
           stream: PdfStateConroller().stream,
           initialData: PdfStateConroller().state,
@@ -126,14 +129,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _listWidget(List<PdfFile> list) {
-    return SliverList.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) => Card(child: _listItem(list[index])),
+    return ValueListenableBuilder(
+      valueListenable: ListStyleButton.listStyleButtonTypeNotifier,
+      builder: (context, value, child) {
+        if (value == .grid) {
+          return SliverGrid.builder(
+            itemCount: list.length,
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              mainAxisExtent: 200,
+              maxCrossAxisExtent: 180,
+              crossAxisSpacing: 3,
+              mainAxisSpacing: 3,
+            ),
+            itemBuilder: (context, index) => gridItem(list[index]),
+          );
+        }
+        return SliverList.builder(
+          itemCount: list.length,
+          itemBuilder: (context, index) => Card(child: _listItem(list[index])),
+        );
+      },
     );
   }
 
   Widget _listItem(PdfFile pdf) {
     return PdfListItem(
+      pdf: pdf,
+      onMenuClicked: showPdfMenu,
+      onClicked: goReader,
+    );
+  }
+
+  Widget gridItem(PdfFile pdf) {
+    return PdfGridItem(
       pdf: pdf,
       onMenuClicked: showPdfMenu,
       onClicked: goReader,

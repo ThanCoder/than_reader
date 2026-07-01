@@ -5,6 +5,8 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_reader_type_chooser.dart';
 
 class PdfMenu extends StatefulWidget {
   final PdfFile pdf;
@@ -16,27 +18,52 @@ class PdfMenu extends StatefulWidget {
 }
 
 class _PdfMenuState extends State<PdfMenu> {
+  late PdfConfig config;
+  @override
+  void initState() {
+    config = PdfConfig.fromPath(widget.pdf.configPath);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          leading: Icon(Icons.info),
-          title: Text('PDF Info'),
-          onTap: () {
-            context.pop();
-            showInfoDialog();
-          },
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 200),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('PDF Info'),
+              onTap: () {
+                context.pop();
+                showInfoDialog();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete, color: Colors.red),
+              title: Text('Delete'),
+              onTap: () {
+                context.pop();
+                showDeleteConfirm();
+              },
+            ),
+            Card(
+              child: ListTile(
+                title: Text("Pdf Reader Type"),
+                trailing: PdfReaderTypeChooser(
+                  value: config.readerType,
+                  onChanged: (value) {
+                    config = config.copyWith(readerType: value);
+                    config.savePath(widget.pdf.configPath);
+                    setState(() {});
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
-        ListTile(
-          leading: Icon(Icons.delete, color: Colors.red),
-          title: Text('Delete'),
-          onTap: () {
-            context.pop();
-            showDeleteConfirm();
-          },
-        ),
-      ],
+      ),
     );
   }
 
