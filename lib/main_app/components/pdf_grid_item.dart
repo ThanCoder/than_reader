@@ -1,4 +1,3 @@
-import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';

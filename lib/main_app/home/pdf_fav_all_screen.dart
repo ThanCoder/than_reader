@@ -50,7 +50,7 @@ class _PdfFavAllScreenState extends State<PdfFavAllScreen> {
         }
         return SliverList.builder(
           itemCount: list.length,
-          itemBuilder: (context, index) => Card(child: _listItem(list[index])),
+          itemBuilder: (context, index) => _listItem(list[index]),
         );
       },
     );
