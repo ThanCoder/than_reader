@@ -4,7 +4,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pdf_engine/than_pdf_engine.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {
   final String pdfPath;
@@ -18,7 +18,7 @@ class PdfThumbnail extends StatelessWidget {
   });
 
   File get cacheFile => File(
-    AppUtils.instance.cachePath.join(
+    Utils.instance.cachePath.join(
       '${pdfPath.getName(withExt: false)}-w-$width-h-$height-.jpg',
     ),
   );

@@ -1,6 +1,7 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/main_app/components/fav_toggle_button.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
@@ -25,7 +26,7 @@ class PdfListItem extends StatelessWidget {
       child: Row(
         spacing: 4,
         children: [
-          SizedBox(width: 130, height: 160, child: thumbnail),
+          SizedBox(width: 100, height: 130, child: thumbnail),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,6 +42,7 @@ class PdfListItem extends StatelessWidget {
                 Text('Date: ${pdf.date.formatTimeAgo()}'),
                 // progress
                 progressWidget,
+                FavToggleButton(file: pdf),
               ],
             ),
           ),

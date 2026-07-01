@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/core/utils/utils.dart';
 
 class PdfFile {
   final String name;
@@ -24,7 +24,15 @@ class PdfFile {
       date: entry.modifiedDate,
     );
   }
-  String get configPath => AppUtils.instance.getConfigPath(
+  factory PdfFile.fromFile(File file) {
+    return PdfFile(
+      name: file.getName(),
+      path: file.path,
+      size: file.size,
+      date: file.modifiedDate,
+    );
+  }
+  String get configPath => Utils.instance.getConfigPath(
     '${path.getName(withExt: false)}-config.json',
   );
 }

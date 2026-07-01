@@ -1,18 +1,17 @@
-import 'package:t_widgets/t_widgets.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/partials/sort_provider.dart';
 
 class PdfState {
   final List<PdfFile> list;
   final bool isLoading;
   final String error;
-  final int sortId;
-  final bool isAsc;
+  final SortItem sortItem;
   const PdfState({
     required this.list,
     required this.isLoading,
     required this.error,
-    required this.sortId,
-    required this.isAsc,
+    required this.sortItem,
   });
 
   factory PdfState.empty() {
@@ -20,8 +19,7 @@ class PdfState {
       list: [],
       isLoading: false,
       error: '',
-      isAsc: true,
-      sortId: TSort.getDateId,
+      sortItem: SortItem.dateSortItem,
     );
   }
 
@@ -29,15 +27,13 @@ class PdfState {
     List<PdfFile>? list,
     bool? isLoading,
     String? error,
-    int? sortId,
-    bool? isAsc,
+    SortItem? sortItem,
   }) {
     return PdfState(
       list: list ?? this.list,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
-      sortId: sortId ?? this.sortId,
-      isAsc: isAsc ?? this.isAsc,
+      sortItem: sortItem ?? this.sortItem,
     );
   }
 }

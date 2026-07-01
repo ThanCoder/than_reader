@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/partials/app_theme_chooser.dart';
-import 'package:than_reader/core/partials/custompath_scanner_manager_widget.dart';
-import 'package:than_reader/core/partials/version_info_widget.dart';
+import 'package:than_reader/core/utils/utils.dart';
+import 'package:than_reader/partials/app_theme_chooser.dart';
+import 'package:than_reader/partials/cache_manager.dart';
+import 'package:than_reader/partials/custompath_scanner_manager_widget.dart';
+import 'package:than_reader/partials/version_info_widget.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -21,8 +23,9 @@ class MorePage extends StatelessWidget {
               Divider(),
               VersionInfoWidget(),
               Divider(),
-              CustompathScannerManagerWidget(),
+              CacheManagerListTile(cacheDirPath: Utils().cachePath),
               Divider(),
+              CustompathScannerManagerWidget(),
             ],
           ),
         ),

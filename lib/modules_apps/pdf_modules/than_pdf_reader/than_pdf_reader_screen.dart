@@ -122,13 +122,11 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
       children: [
         // pdf
         Positioned.fill(
+          left: 0,
+          right: 0,
+          bottom: 0,
           top: config.isFullscreen ? 0 : 50,
-          child: Container(
-            color: Colors.white,
-            width: double.infinity,
-            height: double.infinity,
-            child: pdfReaderWidget,
-          ),
+          child: ClipRRect(child: pdfReaderWidget),
         ),
 
         // header
@@ -143,12 +141,15 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
       onDoubleTap: exitFullscreen,
       onLongPress: showConfigMenu,
       onSecondaryTap: showConfigMenu,
-      child: ClipRRect(
-        child: ColorFiltered(
-          colorFilter: ColorFilter.mode(
-            Colors.white,
-            isDarkMode ? BlendMode.difference : BlendMode.darken,
-          ),
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          Colors.white,
+          isDarkMode ? BlendMode.difference : BlendMode.darken,
+        ),
+        child: Container(
+          color: Colors.white,
+          width: double.infinity,
+          height: double.infinity,
           child: TPdfReader(path: widget.path, controller: controller),
         ),
       ),

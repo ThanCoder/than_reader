@@ -2,15 +2,16 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
+import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
+import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
-import 'package:than_reader/main_app/home/pdf_sort_button.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
+import 'package:than_reader/partials/sort_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,8 +42,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Than Reader"),
         actions: [
-          // sort
-          PdfSortButton(),
           if (TPlatform.isDesktop)
             IconButton(
               onPressed: PdfStateConroller.instance.fetchList,
@@ -55,10 +54,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget get _widget {
-    return _listWidget;
-  }
-
-  Widget get _listWidget {
     return StreamBuilder(
       stream: PdfStateConroller.instance.stream,
       initialData: PdfStateConroller.instance.state,
@@ -75,13 +70,55 @@ class _HomePageState extends State<HomePage> {
         }
         return RefreshIndicator.adaptive(
           onRefresh: init,
-          child: ListView.separated(
-            itemCount: list.length,
-            separatorBuilder: (context, index) => Divider(),
-            itemBuilder: (context, index) => _listItem(list[index]),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: headerWidget),
+              SliverToBoxAdapter(child: subHeaderWidget),
+              _listWidget(list),
+            ],
           ),
         );
       },
+    );
+  }
+
+  Widget get headerWidget {
+    return Row(
+      children: [
+        IconButton(onPressed: () {}, icon: Icon(Icons.folder)),
+        Spacer(),
+        IconButton(onPressed: () {}, icon: Icon(Icons.list_rounded)),
+        StreamBuilder(
+          stream: PdfStateConroller().stream,
+          initialData: PdfStateConroller().state,
+          builder: (context, snapshot) {
+            final state = snapshot.data!;
+            return SortButton(
+              value: state.sortItem,
+              list: PdfStateConroller().sortList,
+              onApply: PdfStateConroller().setSort,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget get subHeaderWidget {
+    return Row(
+      children: [
+        TChip(
+          title: Text('Favorite'),
+          onClick: () => context.push(builder: (context) => PdfFavAllScreen()),
+        ),
+      ],
+    );
+  }
+
+  Widget _listWidget(List<PdfFile> list) {
+    return SliverList.builder(
+      itemCount: list.length,
+      itemBuilder: (context, index) => Card(child: _listItem(list[index])),
     );
   }
 

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
-import 'package:than_reader/core/partials/custompath_scanner_manager_widget.dart';
+import 'package:than_reader/partials/custompath_scanner_manager_widget.dart';
 import 'package:than_reader/core/utils/path_scanner.dart';
 
 class PdfScanner extends PathScanner {

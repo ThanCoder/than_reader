@@ -1,4 +1,4 @@
-import 'package:cf_lite/cf_lite.dart';
+import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 
@@ -9,11 +9,16 @@ class CustompathScannerManagerWidget extends StatefulWidget {
   State<CustompathScannerManagerWidget> createState() =>
       _CustompathScannerManagerWidgetState();
 
-  static List<String> get customPathList =>
-      CFLite.getInstance().getList<String>('custom_scan_path_list', def: []);
+  static List<String> get customPathList {
+    // CFLite.getInstance().getList<String>('custom_scan_path_list', def: []);
+    final list = CFBStore.getInstance.getList('custom_scan_path_list');
+    return List<String>.from(list);
+  }
 
-  static void setCustomPathList(List<String> list) {
-    CFLite.getInstance().put('custom_scan_path_list', list);
+  static void setCustomPathList(List<String> list) async {
+    // await CFLite.getInstance().put<List<String>>('custom_scan_path_list', list);
+    CFBStore.getInstance.put('custom_scan_path_list', list);
+    await CFBStore.getInstance.writeAll();
   }
 }
 

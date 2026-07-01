@@ -21,11 +21,9 @@ dependencies:
   path_provider: ^2.1.6
   path: ^1.9.1
   pdfrx: ^2.4.4
-  than_pdf_engine:
-    git: https://github.com/ThanCoder/than_pdf_engine.git
   t_pdf_reader:
-    git: https://github.com/ThanCoder/t_pdf_reader.git
-
+    path: /home/thancoder/projects/plugins/t_pdf_reader
+  cfb_store: ^0.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

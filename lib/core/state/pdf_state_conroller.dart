@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cf_lite/cf_lite.dart';
+import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/core/utils/pdf_scanner.dart';
+import 'package:than_reader/partials/sort_provider.dart';
 
 class PdfStateConroller {
   static PdfStateConroller instance = PdfStateConroller._();
@@ -20,27 +20,37 @@ class PdfStateConroller {
   PdfState _state = .empty();
   PdfState get state => _state;
   final sortList = [
-    ...TSort.getDefaultList,
-    TSort(id: 1, title: 'Size', ascTitle: 'Smallest', descTitle: 'Biggest'),
+    SortItem.nameSortItem,
+    SortItem.dateSortItem,
+    SortItem.sizeSortItem,
   ];
 
   Future<void> fetchList() async {
     try {
+      ///Sort
+      SortItem sortItem = SortItem.dateSortItem;
+      final id = CFBStore.getInstance.getInt('pdf_sort_id', -1);
+      if (id != -1) {
+        sortItem = sortList.firstWhere(
+          (e) => e.id == id,
+          orElse: () => SortItem.dateSortItem,
+        );
+        sortItem = sortItem.copyWith(
+          isTrue: CFBStore.getInstance.getBool('pdf_sort_true'),
+        );
+      }
+
       _state = _state.copyWith(isLoading: true, error: '', list: []);
       _controller.add(_state);
 
       final list = await PdfScanner.getAll();
-
       _state = _state.copyWith(
         isLoading: false,
         error: '',
         list: list,
-        isAsc: CFLite.getInstance().getBool('pdf_sort_asc', def: true),
-        sortId: CFLite.getInstance().getInt(
-          'pdf_sort_id',
-          def: TSort.getDateId,
-        ),
+        sortItem: sortItem,
       );
+      sort();
       _controller.add(_state);
       sort();
     } catch (e) {
@@ -50,27 +60,24 @@ class PdfStateConroller {
     }
   }
 
-  void setSort(int sortId, bool isAsc) {
-    _state = _state.copyWith(isAsc: isAsc, sortId: sortId);
-    CFLite.getInstance().put<bool>('pdf_sort_asc', isAsc);
-    CFLite.getInstance().put<int>('pdf_sort_id', sortId);
-    //  isAsc: CFLite.getInstance().getBool('pdf_sort_asc', def: true),
-    // sortId: CFLite.getInstance().getInt('pdf_sort_id', def: TSort.getDateId),
+  void setSort(SortItem item) {
+    _state = _state.copyWith(sortItem: item);
+    CFBStore.getInstance.put('pdf_sort_id', item.id);
+    CFBStore.getInstance.put('pdf_sort_true', item.isTrue);
+    CFBStore.getInstance.writeAll();
     sort();
   }
 
   void sort() {
-    final list = _state.list;
-    if (_state.sortId == TSort.getDateId) {
-      list.sortDate(isNewest: state.isAsc);
+    if (_state.sortItem.id == SortItem.dateSortItem.id) {
+      _state.list.sortDate(isNewest: state.sortItem.isTrue);
     }
-    if (_state.sortId == TSort.getTitleId) {
-      list.sortA2Z(isA2Z: state.isAsc);
+    if (_state.sortItem.id == SortItem.nameSortItem.id) {
+      _state.list.sortA2Z(isA2Z: state.sortItem.isTrue);
     }
-    if (_state.sortId == 1) {
-      list.sortSize(isSmallest: state.isAsc);
+    if (_state.sortItem.id == SortItem.sizeSortItem.id) {
+      _state.list.sortSize(isSmallest: state.sortItem.isTrue);
     }
-    _state = _state.copyWith(list: list);
     _controller.add(_state);
   }
 

@@ -1,7 +1,9 @@
 import 'package:cf_lite/cf_lite.dart';
+import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/core/state/pdf_fav_controller.dart';
+import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
@@ -11,12 +13,16 @@ import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_re
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await AppUtils.instance.init();
+  await Utils.instance.init();
 
   // recent
   await CFLite.getInstance().init(
-    dbPath: AppUtils.instance.getAppConfigPath('app.cf.json'),
+    dbPath: Utils.instance.getConfigPath('app.cf.json'),
   );
+  await CFBStore.getInstance.open(
+    Utils.instance.getConfigPath('app.config.cfb'),
+  );
+  await PdfFavController.instance.init();
 
   AppManager.instance.register(PdfApp());
   AppManager.instance.register(PdfrxApp());

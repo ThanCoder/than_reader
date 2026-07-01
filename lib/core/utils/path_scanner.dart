@@ -19,6 +19,7 @@ abstract class PathScanner {
         final subDirs = [Directory(path)];
         while (subDirs.isNotEmpty) {
           final currentDir = subDirs.removeLast();
+          if (!currentDir.existsSync()) continue;
 
           final dirList = currentDir.listSync(followLinks: false);
           for (var file in dirList) {

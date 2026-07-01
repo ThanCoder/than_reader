@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
+  cfb_store:
+    dependency: "direct main"
+    description:
+      name: cfb_store
+      sha256: "175af2619d89a6034657f20a29329b7454d29ccdd3d4e5bc5815973a253aeb1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   change_app_package_name:
     dependency: "direct dev"
     description:
@@ -680,11 +688,9 @@ packages:
   t_pdf_reader:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b142f070e7a0ffae6d111643fad92eb6d8acb707
-      url: "https://github.com/ThanCoder/t_pdf_reader.git"
-    source: git
+      path: "/home/thancoder/projects/plugins/t_pdf_reader"
+      relative: false
+    source: path
     version: "0.0.1"
   t_widgets:
     dependency: "direct main"
@@ -712,13 +718,12 @@ packages:
     source: hosted
     version: "0.7.11"
   than_pdf_engine:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d0694caca4ac14a3947d6c3a8960897d0a051d31
-      url: "https://github.com/ThanCoder/than_pdf_engine.git"
-    source: git
+      name: than_pdf_engine
+      sha256: "528f10b6854b379b862900996d5b362c3e7cd46ce8e215d39ae2cf2211b0f67b"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   than_pkg:
     dependency: "direct main"
