@@ -4,6 +4,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
@@ -107,9 +108,18 @@ class _HomePageState extends State<HomePage> {
   Widget get subHeaderWidget {
     return Row(
       children: [
-        TChip(
-          title: Text('Favorite'),
-          onClick: () => context.push(builder: (context) => PdfFavAllScreen()),
+        StreamBuilder(
+          stream: PdfFavController().stateStream,
+          builder: (context, asyncSnapshot) {
+            if (PdfFavController().state.favPathList.isEmpty) {
+              return SizedBox.shrink();
+            }
+            return TChip(
+              title: Text('Favorite'),
+              onClick: () =>
+                  context.push(builder: (context) => PdfFavAllScreen()),
+            );
+          },
         ),
       ],
     );

@@ -46,10 +46,6 @@ class PdfThumbnail extends StatelessWidget {
           path: cacheFile.path,
           defaultAssetsPath: 'assets/images/pdf-icon.webp',
         );
-        // if (cacheFile.existsSync()) {
-        //   return Image.file(cacheFile);
-        // }
-        // return Image.asset('assets/images/pdf-icon.webp');
       },
     );
   }
