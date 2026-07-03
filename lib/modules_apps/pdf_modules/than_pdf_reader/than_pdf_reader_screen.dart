@@ -55,7 +55,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     controller.onPdfLoaded.listen((event) {
       isLoading = false;
       if (!mounted) return;
-      showTSnackBar(context, 'Loaded: ${event.elapsed.inMilliseconds}ms');
+      // showTSnackBar(context, 'Loaded: ${event.elapsed.inMilliseconds} ms');
       // recent
       controller.jumpToPage(
         config.page,
