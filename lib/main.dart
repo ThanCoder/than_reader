@@ -1,6 +1,7 @@
 import 'package:cf_lite/cf_lite.dart';
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
+import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/utils/utils.dart';
@@ -13,6 +14,8 @@ import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_re
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  pdfrxInitialize();
+
   await Utils.instance.init();
 
   // recent
@@ -23,7 +26,7 @@ void main() async {
     Utils.instance.getConfigPath('app.config.cfb'),
   );
   await PdfFavController.instance.init();
-  await PdfFavController.instance.getAll();//get all fav list
+  await PdfFavController.instance.getAll(); //get all fav list
 
   AppManager.instance.register(PdfApp());
   AppManager.instance.register(PdfrxApp());

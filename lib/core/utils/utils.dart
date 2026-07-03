@@ -28,19 +28,27 @@ class Utils {
   }
 
   String getCachePath([String? name]) {
+    final dir = Directory(cachePath);
+    if (!dir.existsSync()) {
+      dir.createSync();
+    }
     if (name == null) return cachePath;
     return cachePath.join(name);
   }
 
   String getConfigPath([String? name]) {
+    final dir = Directory(configPath);
+    if (!dir.existsSync()) {
+      dir.createSync();
+    }
     if (name == null) return configPath;
     return configPath.join(name);
   }
 
   /// ### Return -> [(count,size)]
-  Future<(int, int)?> getFolderInfo(Directory dir) async {
-    if (!dir.existsSync()) return null;
-    return await Isolate.run<(int, int)?>(() {
+  Future<(int, int)> getFolderInfo(Directory dir) async {
+    if (!dir.existsSync()) return (0, 0);
+    return await Isolate.run<(int, int)>(() {
       try {
         int size = 0;
         int count = 0;
@@ -53,7 +61,7 @@ class Utils {
         return (count, size);
       } catch (e) {
         debugPrint('[Utils:deleteDir]: $e');
-        return null;
+        return (0, 0);
       }
     });
   }
@@ -62,7 +70,9 @@ class Utils {
     if (!dir.existsSync()) return false;
     return await Isolate.run(() {
       try {
-        dir.deleteSync(recursive: true);
+        for (var file in dir.listSync()) {
+          file.deleteSync(recursive: true);
+        }
         return true;
       } catch (e) {
         debugPrint('[Utils:deleteDir]: $e');

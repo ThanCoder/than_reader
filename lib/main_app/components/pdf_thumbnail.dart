@@ -21,12 +21,14 @@ class PdfThumbnail extends StatelessWidget {
 
   File get cacheFile => File(
     Utils.instance.cachePath.join(
-      '${pdfPath.getName(withExt: false)}-w-$width-h-$height-.jpg',
+      '${pdfPath.getName(withExt: false)}-w-$width-h-$height.jpg',
     ),
   );
 
   @override
   Widget build(BuildContext context) {
+    // print(cacheFile.path);
+
     if (cacheFile.existsSync()) {
       return TImageFile(
         path: cacheFile.path,
@@ -39,6 +41,7 @@ class PdfThumbnail extends StatelessWidget {
         cacheFile.path,
         width: width,
         height: height,
+        quality: 90,
       ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

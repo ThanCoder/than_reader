@@ -721,10 +721,10 @@ packages:
     dependency: transitive
     description:
       name: than_pdf_engine
-      sha256: "528f10b6854b379b862900996d5b362c3e7cd46ce8e215d39ae2cf2211b0f67b"
+      sha256: "6e860fc840dac7ac5394bf6066287334b9d2ee0b36207aba5185ab0cf5d36d46"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.1.0"
   than_pkg:
     dependency: "direct main"
     description:

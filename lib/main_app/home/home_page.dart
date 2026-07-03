@@ -109,22 +109,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget get subHeaderWidget {
-    return Row(
-      children: [
-        StreamBuilder(
-          stream: PdfFavController().stateStream,
-          builder: (context, asyncSnapshot) {
-            if (PdfFavController().state.favPathList.isEmpty) {
-              return SizedBox.shrink();
-            }
-            return TChip(
-              title: Text('Favorite'),
-              onClick: () =>
-                  context.push(builder: (context) => PdfFavAllScreen()),
-            );
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          StreamBuilder(
+            stream: PdfFavController().stateStream,
+            builder: (context, asyncSnapshot) {
+              if (PdfFavController().state.favPathList.isEmpty) {
+                return SizedBox.shrink();
+              }
+              return TChip(
+                title: Text('Favorite'),
+                onClick: () =>
+                    context.push(builder: (context) => PdfFavAllScreen()),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

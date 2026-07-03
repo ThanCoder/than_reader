@@ -14,6 +14,12 @@ class CacheManagerListTile extends StatefulWidget {
 }
 
 class _CacheManagerListTileState extends State<CacheManagerListTile> {
+  @override
+  void didUpdateWidget(covariant CacheManagerListTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {});
+  }
+
   bool needToClean = false;
   @override
   Widget build(BuildContext context) {
@@ -21,11 +27,13 @@ class _CacheManagerListTileState extends State<CacheManagerListTile> {
       future: Utils().getFolderInfo(Directory(widget.cacheDirPath)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == .waiting) {
-          return Text('စစ်ဆေးနေပါတယ်.....');
+          return Card(child: ListTile(title: Text('စစ်ဆေးနေပါတယ်.....')));
         }
         final data = snapshot.data;
         if (data == null) return SizedBox.shrink();
-        needToClean = data.$1 > 0;
+        if (data.$1 == 0) return SizedBox.shrink();
+
+        needToClean = data.$2 > 0;
 
         return Card(
           child: ListTile(

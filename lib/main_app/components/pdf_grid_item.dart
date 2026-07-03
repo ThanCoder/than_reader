@@ -41,7 +41,7 @@ class PdfGridItem extends StatelessWidget {
                   left: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: .3),
+                      color: Colors.black.withValues(alpha: .1),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: FavToggleButton(file: pdf),
@@ -76,6 +76,6 @@ class PdfGridItem extends StatelessWidget {
   }
 
   Widget get thumbnail {
-    return PdfThumbnail(pdfPath: pdf.path, width: 130, height: 160);
+    return PdfThumbnail(pdfPath: pdf.path, width: 180, height: 200);
   }
 }

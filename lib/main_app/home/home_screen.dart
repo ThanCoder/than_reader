@@ -10,13 +10,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final list = [HomePage(), MorePage(key: UniqueKey())];
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: index, children: list),
+      body: IndexedStack(
+        index: index,
+        children: [
+          HomePage(),
+          MorePage(key: UniqueKey()),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (value) => setState(() {
