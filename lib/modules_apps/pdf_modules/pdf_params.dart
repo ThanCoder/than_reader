@@ -9,7 +9,8 @@ import 'package:than_pkg/than_pkg.dart';
 class PdfParams {
   final String path;
   final String? password;
-  PdfParams({required this.path, this.password});
+  final String configPath;
+  PdfParams({required this.path, required this.configPath, this.password});
 }
 
 class PdfResult {}

@@ -77,7 +77,7 @@ class _PdfFavAllScreenState extends State<PdfFavAllScreen> {
   void goReader(PdfFile pdf) async {
     await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
-      PdfParams(path: pdf.path),
+      PdfParams(path: pdf.path, configPath: pdf.configPath),
     );
     setState(() {});
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
@@ -41,6 +43,14 @@ class _PdfMenuState extends State<PdfMenu> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.drive_file_rename_outline),
+              title: Text('Rename'),
+              onTap: () {
+                context.pop();
+                showRenameDialog();
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.delete, color: Colors.red),
               title: Text('Delete'),
               onTap: () {
@@ -73,7 +83,36 @@ class _PdfMenuState extends State<PdfMenu> {
       contentText: 'ဖျက်ချင်တာသေချာပြီလား?',
       submitText: 'Delete Forever',
       onSubmit: () {
-        PdfStateConroller.instance.dispatch(PdfDelete(widget.pdf.path));
+        PdfStateConroller.instance.dispatch(PdfDelete(widget.pdf));
+      },
+    );
+  }
+
+  void showRenameDialog() {
+    final pdfFile = File(widget.pdf.path);
+    final dir = Directory(pdfFile.parentPath);
+    final existsName = <String>[];
+    if (dir.existsSync()) {
+      for (var file in dir.listSync()) {
+        if (file.statSync().type != .file) continue;
+        existsName.add(file.getName());
+      }
+    }
+    // print(widget.pdf.configPath);
+    existsName.remove(widget.pdf.name);
+    showTReanmeDialog(
+      context,
+      text: widget.pdf.name.onlyName,
+      barrierDismissible: false,
+      submitText: 'Rename',
+      onCheckIsError: (text) {
+        if (text.isEmpty) return 'name required';
+        if (existsName.contains('$text.pdf')) return 'Already Exists!';
+        return null;
+      },
+
+      onSubmit: (text) {
+        PdfStateConroller().renamePdf(widget.pdf, text);
       },
     );
   }

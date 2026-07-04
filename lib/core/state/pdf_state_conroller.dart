@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state.dart';
@@ -89,16 +90,46 @@ class PdfStateConroller {
 
   void _handleDeletePdf(PdfDelete event) {
     final list = state.list;
-    final index = list.indexWhere((e) => e.path == event.path);
+    final index = list.indexWhere((e) => e.path == event.pdf.path);
     if (index == -1) return;
     // ui
     list.removeAt(index);
     _state = _state.copyWith(list: list);
     _controller.add(_state);
     //disk
-    final file = File(event.path);
+    final file = File(event.pdf.path);
+    final configFile = File(event.pdf.configPath);
+
     if (file.existsSync()) {
       file.deleteSync();
     }
+    if (configFile.existsSync()) {
+      configFile.deleteSync();
+    }
+  }
+
+  void renamePdf(PdfFile pdf, String rename) {
+    final oldPdf = File(pdf.path);
+    final oldConfigFile = File(pdf.configPath);
+
+    final renamePath = oldPdf.parentPath.join('$rename.pdf');
+    // pdf အရင်ပြောင်း
+    if (oldPdf.existsSync()) oldPdf.renameSync(renamePath);
+
+    // new class ပြောင်း
+    final newPdf = pdf.copyWith(path: renamePath, name: renamePath.getName());
+    // config name ကိုပြောင်း
+    if (oldConfigFile.existsSync()) {
+      oldConfigFile.renameSync(newPdf.configPath);
+    }
+    // ပြီးတော့ List မှာပြောင်း
+    final newList = List<PdfFile>.from(state.list);
+    final index = newList.indexWhere((e) => e.name == pdf.name);
+    if (index == -1) {
+      debugPrint('[PdfStateConroller:renamePdf]: ${pdf.name} not found index');
+      return;
+    }
+    newList[index] = newPdf;
+    _controller.add(_state.copyWith(list: newList));
   }
 }

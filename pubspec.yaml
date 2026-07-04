@@ -24,6 +24,7 @@ dependencies:
   t_pdf_reader:
     path: /home/thancoder/projects/plugins/t_pdf_reader
   cfb_store: ^0.1.0
+  crypto: ^3.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
