@@ -4,6 +4,7 @@ import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_pkg/than_pkg.dart';
+import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfConfigPathManager extends StatefulWidget {
@@ -28,17 +29,23 @@ class _PdfConfigPathManagerState extends State<PdfConfigPathManager> {
       String path = CFBStore.getInstance.getString(
         'app-pdf-config-custom-path',
       );
+      bool usePath = CFBStore.getInstance.getBool(
+        'app-pdf-config-custom-path-used',
+      );
+      PdfConfigPathManager.enableNotifier.value = usePath;
       if (path.isEmpty) {
         path = '${await ThanPkg.platform.getAppExternalPath()}';
         path = path.join('.${Utils().packageInfo.appName}').join('config');
       }
-      if (PdfConfigPathManager.enableNotifier.value) {
+      if (usePath) {
         final folder = Directory(path);
         if (!folder.existsSync()) {
           folder.createSync(recursive: true);
         }
       }
       PdfConfigPathManager.pathFolderNotifier.value = path;
+      // refresh list state
+      PdfStateConroller().refreshState();
     } catch (e) {
       debugPrint('[_PdfConfigPathManagerState:init]: $e');
     }
@@ -62,8 +69,10 @@ class _PdfConfigPathManagerState extends State<PdfConfigPathManager> {
             overflow: .ellipsis,
             style: TextStyle(fontSize: 12),
           ),
-          onChanged: (value) {
+          onChanged: (value) async {
             PdfConfigPathManager.enableNotifier.value = value;
+            CFBStore.getInstance.put('app-pdf-config-custom-path-used', value);
+            await CFBStore.getInstance.writeAll();
             init();
           },
         );

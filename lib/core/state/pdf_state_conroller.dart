@@ -61,6 +61,10 @@ class PdfStateConroller {
     }
   }
 
+  void refreshState() {
+    _controller.add(_state);
+  }
+
   void setSort(SortItem item) {
     _state = _state.copyWith(sortItem: item);
     CFBStore.getInstance.put('pdf_sort_id', item.id);

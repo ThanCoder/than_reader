@@ -691,7 +691,7 @@ packages:
       path: "/home/thancoder/projects/plugins/t_pdf_reader"
       relative: false
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   t_widgets:
     dependency: "direct main"
     description:
@@ -721,10 +721,10 @@ packages:
     dependency: transitive
     description:
       name: than_pdf_engine
-      sha256: "6e860fc840dac7ac5394bf6066287334b9d2ee0b36207aba5185ab0cf5d36d46"
+      sha256: "75c3a3c949e4173cc296a57d1bb1cd6e223a573212d8c780175a3053a5437a51"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.1"
   than_pkg:
     dependency: "direct main"
     description:

@@ -53,6 +53,7 @@ class PdfConfig {
   final double scrollByArrowKey;
   final ScreenOrientationTypes screenOrientationTypes;
   final PdfReaderType readerType;
+  final List<PdfBookmark> bookmarkList;
   const PdfConfig({
     required this.page,
     required this.zoom,
@@ -65,6 +66,7 @@ class PdfConfig {
     required this.screenOrientationTypes,
     required this.pageCount,
     required this.readerType,
+    required this.bookmarkList,
   });
 
   static PdfConfig fromPath(String path) {
@@ -97,6 +99,7 @@ class PdfConfig {
       scrollByArrowKey: 40,
       screenOrientationTypes: .portrait,
       readerType: .autoReader,
+      bookmarkList: [],
     );
   }
 
@@ -113,6 +116,7 @@ class PdfConfig {
       'scrollByArrowKey': scrollByArrowKey,
       'screenOrientationTypes': screenOrientationTypes.name,
       'readerType': readerType.name,
+      'bookmarkList': bookmarkList.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -131,6 +135,10 @@ class PdfConfig {
         map.getString(['screenOrientationTypes']),
       ),
       readerType: PdfReaderType.fromName(map.getString(['readerType'])),
+      bookmarkList: map
+          .getList(['bookmarkList'], def: [])
+          .map((e) => PdfBookmark.fromMap(e))
+          .toList(),
     );
   }
 
@@ -146,6 +154,7 @@ class PdfConfig {
     double? scrollByArrowKey,
     ScreenOrientationTypes? screenOrientationTypes,
     PdfReaderType? readerType,
+    List<PdfBookmark>? bookmarkList,
   }) {
     return PdfConfig(
       page: page ?? this.page,
@@ -160,6 +169,28 @@ class PdfConfig {
       screenOrientationTypes:
           screenOrientationTypes ?? this.screenOrientationTypes,
       readerType: readerType ?? this.readerType,
+      bookmarkList: bookmarkList ?? this.bookmarkList,
+    );
+  }
+}
+
+class PdfBookmark {
+  final int page;
+  final String title;
+  PdfBookmark({required this.page, required this.title});
+
+  PdfBookmark copyWith({int? page, String? title}) {
+    return PdfBookmark(page: page ?? this.page, title: title ?? this.title);
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{'page': page, 'title': title};
+  }
+
+  factory PdfBookmark.fromMap(Map<String, dynamic> map) {
+    return PdfBookmark(
+      page: map.getInt(['page']),
+      title: map.getString(['title'], def: 'Untitled'),
     );
   }
 }

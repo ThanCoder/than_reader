@@ -6,6 +6,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pdf_engine/than_pdf_engine.dart';
+import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {
@@ -33,6 +34,22 @@ class PdfThumbnail extends StatelessWidget {
       return TImageFile(
         path: cacheFile.path,
         defaultAssetsPath: 'assets/images/pdf-icon.webp',
+      );
+    }
+    if (Platform.isAndroid) {
+      return FutureBuilder(
+        future: ThanPkg.android.thumbnail.genPdfThumbnail(
+          pathList: [SrcDistType(src: pdfPath, dist: cacheFile.path)],
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == .waiting) {
+            return Center(child: CircularProgressIndicator.adaptive());
+          }
+          return TImageFile(
+            path: cacheFile.path,
+            defaultAssetsPath: 'assets/images/pdf-icon.webp',
+          );
+        },
       );
     }
     return FutureBuilder(

@@ -9,6 +9,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/utils/app_theme.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_bookmark_menu.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config_menu.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
@@ -55,7 +56,11 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     controller.onPdfLoaded.listen((event) {
       isLoading = false;
       if (!mounted) return;
-      // showTSnackBar(context, 'Loaded: ${event.elapsed.inMilliseconds} ms');
+      showTSnackBar(
+        context,
+        'Loaded: ${event.elapsed.autoTimeLabel()}',
+        showCloseIcon: true,
+      );
       // recent
       controller.jumpToPage(
         config.page,
@@ -111,6 +116,22 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
                     style: TextStyle(fontSize: 12),
                   ),
                 ),
+          endDrawer: StreamBuilder(
+            stream: controller.onPageChanged,
+            builder: (context, asyncSnapshot) {
+              return PdfBookmarkMenu(
+                config: config,
+                currentPage: controller.currentPage,
+                onChanged: (config) {
+                  this.config = config;
+                  setState(() {});
+                },
+                onNavigate: (navigatePage) {
+                  controller.jumpToPage(navigatePage);
+                },
+              );
+            },
+          ),
           body: mainWidget,
         ),
       ),
@@ -167,6 +188,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
             StreamBuilder(
               stream: controller.onPageChanged,
               builder: (context, asyncSnapshot) {
+                // book mark အတွက်
                 return GestureDetector(
                   onTap: showGoToDialog,
                   child: Text(
