@@ -10,8 +10,8 @@ import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/utils/app_theme.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_bookmark_menu.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config_menu.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
 class ThanPdfReaderScreen extends StatefulWidget {
   final String path;

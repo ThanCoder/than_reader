@@ -7,6 +7,7 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_reader_type_chooser.dart';
 
@@ -23,7 +24,7 @@ class _PdfMenuState extends State<PdfMenu> {
   late PdfConfig config;
   @override
   void initState() {
-    config = PdfConfig.fromPath(widget.pdf.configPath);
+    config = PdfConfig.fromPathSync(widget.pdf.configPath);
     super.initState();
   }
 
@@ -34,6 +35,17 @@ class _PdfMenuState extends State<PdfMenu> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            ListTile(
+              title: Center(
+                child: Text(
+                  widget.pdf.name,
+                  maxLines: 2,
+                  overflow: .ellipsis,
+                  style: TextStyle(fontSize: 12, fontWeight: .bold),
+                ),
+              ),
+            ),
+            Divider(),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('PDF Info'),
@@ -58,6 +70,7 @@ class _PdfMenuState extends State<PdfMenu> {
                 showDeleteConfirm();
               },
             ),
+            // ListTile(leading: Icon(Icons.tag), title: Text('Tag')),
             Card(
               child: ListTile(
                 title: Text("Pdf Reader Type"),

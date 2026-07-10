@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 
 class PdfGridItem extends StatelessWidget {
   final PdfFile pdf;
@@ -65,7 +65,7 @@ class PdfGridItem extends StatelessWidget {
   }
 
   Widget get progressWidget {
-    final config = PdfConfig.fromPath(pdf.configPath);
+    final config = PdfConfig.fromPathSync(pdf.configPath);
     if (config.pageCount == -1) {
       return SizedBox.shrink();
     }

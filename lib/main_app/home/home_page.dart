@@ -6,6 +6,7 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/main_app/components/all_tags_component.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
@@ -77,7 +78,9 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: headerWidget),
-              SliverToBoxAdapter(child: subHeaderWidget),
+              SliverToBoxAdapter(
+                child: SizedBox(height: 50, width: 200, child: subHeaderWidget),
+              ),
               _listWidget(list),
             ],
           ),
@@ -89,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   Widget get headerWidget {
     return Row(
       children: [
-        FolderStyleButton(),
+        // FolderStyleButton(),
         Spacer(),
         ListStyleButton(value: .list),
         StreamBuilder(
@@ -111,22 +114,27 @@ class _HomePageState extends State<HomePage> {
   Widget get subHeaderWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          StreamBuilder(
-            stream: PdfFavController().stateStream,
-            builder: (context, asyncSnapshot) {
-              if (PdfFavController().state.favPathList.isEmpty) {
-                return SizedBox.shrink();
-              }
-              return TChip(
-                title: Text('Favorite'),
-                onClick: () =>
-                    context.push(builder: (context) => PdfFavAllScreen()),
-              );
-            },
-          ),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: .horizontal,
+        child: Row(
+          children: [
+            StreamBuilder(
+              stream: PdfFavController().stateStream,
+              builder: (context, asyncSnapshot) {
+                if (PdfFavController().state.favPathList.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return TChip(
+                  title: Text('Favorite'),
+                  onClick: () =>
+                      context.push(builder: (context) => PdfFavAllScreen()),
+                );
+              },
+            ),
+            SizedBox(width: 20),
+            AllTagsComponent(),
+          ],
+        ),
       ),
     );
   }
@@ -174,7 +182,7 @@ class _HomePageState extends State<HomePage> {
   void goReader(PdfFile pdf) async {
     await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
-      PdfParams(path: pdf.path,configPath: pdf.configPath),
+      PdfParams(path: pdf.path, configPath: pdf.configPath),
     );
     setState(() {});
   }

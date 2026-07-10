@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
+import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
@@ -25,6 +26,7 @@ void main() async {
   await CFBStore.getInstance.open(
     Utils.instance.getConfigPath('app.config.cfb'),
   );
+  await PdfTagDB.instance.open(Utils.instance.getConfigPath('pdf.tags.cfb'));
   await PdfFavController.instance.init();
   await PdfFavController.instance.getAll(); //get all fav list
 

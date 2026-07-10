@@ -8,6 +8,7 @@ import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/core/utils/pdf_scanner.dart';
+import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
 class PdfStateConroller {
@@ -17,6 +18,8 @@ class PdfStateConroller {
 
   final _controller = StreamController<PdfState>.broadcast();
   Stream<PdfState> get stream => _controller.stream;
+  final Set<String> _allTags = {};
+  Set<String> get allTags => _allTags;
 
   PdfState _state = .empty();
   PdfState get state => _state;
@@ -52,6 +55,8 @@ class PdfStateConroller {
         sortItem: sortItem,
       );
       sort();
+      // add alltags
+      refreshAllTags();
       _controller.add(_state);
       sort();
     } catch (e) {
@@ -63,6 +68,25 @@ class PdfStateConroller {
 
   void refreshState() {
     _controller.add(_state);
+  }
+
+  List<PdfFile> getFilterTag(String tag) {
+    List<PdfFile> list = [];
+    for (var pdf in state.list) {
+      final tags = PdfTagDB.instance.getList(pdf.path);
+      if (tags.contains(tag)) {
+        list.add(pdf);
+      }
+    }
+    return list;
+  }
+
+  void refreshAllTags() {
+    _allTags.clear();
+    for (var pdf in state.list) {
+      final tags = PdfTagDB.instance.getList(pdf.path);
+      _allTags.addAll(tags);
+    }
   }
 
   void setSort(SortItem item) {
