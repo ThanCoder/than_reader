@@ -1,9 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:than_reader/core/utils/pdf_config_id_generator.dart';
 
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/partials/pdf_config_path_manager.dart';
@@ -13,11 +11,13 @@ class PdfFile {
   final String path;
   final int size;
   final DateTime date;
+  final String configId;
   const PdfFile({
     required this.name,
     required this.path,
     required this.date,
     required this.size,
+    required this.configId,
   });
 
   factory PdfFile.fromEntry(FileSystemEntity entry) {
@@ -26,6 +26,7 @@ class PdfFile {
       path: entry.path,
       size: entry.size,
       date: entry.modifiedDate,
+      configId: PdfConfigIdGenerator.generateSync(entry.path),
     );
   }
   factory PdfFile.fromFile(File file) {
@@ -34,27 +35,34 @@ class PdfFile {
       path: file.path,
       size: file.size,
       date: file.modifiedDate,
+      configId: PdfConfigIdGenerator.generateSync(file.path),
     );
   }
   // String get configPath => Utils.instance.getConfigPath(
   //   '${path.getName(withExt: false)}-config.json',
   // );
   String get configPath {
-    final dig = sha1.convert(utf8.encode(name));
     if (PdfConfigPathManager.enableNotifier.value) {
       return PdfConfigPathManager.pathFolderNotifier.value.join(
-        '$dig-config.json',
+        '$configId-config',
       );
     }
-    return Utils.instance.getConfigPath('$dig-config.json');
+    return Utils.instance.getConfigPath('$configId-config');
   }
 
-  PdfFile copyWith({String? name, String? path, int? size, DateTime? date}) {
+  PdfFile copyWith({
+    String? name,
+    String? path,
+    int? size,
+    DateTime? date,
+    String? configId,
+  }) {
     return PdfFile(
       name: name ?? this.name,
       path: path ?? this.path,
       size: size ?? this.size,
       date: date ?? this.date,
+      configId: configId ?? this.configId,
     );
   }
 }

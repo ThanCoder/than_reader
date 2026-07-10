@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_pkg/than_pkg.dart';
@@ -40,9 +39,10 @@ class PdfConfig {
 
   static PdfConfig fromPathSync(String path) {
     // final cfb = CFBStore();
-    // cfb.open(dbPath);
+    // cfb.openSync('$path.cbf');
+    // cfb.put(key, value)
 
-    final configFile = File(path);
+    final configFile = File('$path.json');
     if (!configFile.existsSync()) return PdfConfig.empty();
     try {
       final map = jsonDecode(configFile.readAsStringSync());
@@ -54,7 +54,7 @@ class PdfConfig {
   }
 
   Future<void> savePath(String path) async {
-    final configFile = File(path);
+    final configFile = File('$path.json');
     await configFile.writeAsString(jsonEncode(toMap()));
   }
 

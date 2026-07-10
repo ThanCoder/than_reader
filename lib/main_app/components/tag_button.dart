@@ -41,14 +41,22 @@ class _TagButtonState extends State<TagButton> {
 
   Widget get tagWidget {
     return Wrap(
-      spacing: 2,
-      runSpacing: 2,
+      spacing: 4,
+      runSpacing: 4,
       children: List.generate(tags.length, (index) => tagItem(tags[index])),
     );
   }
 
   Widget tagItem(String tag) {
-    return Text('#$tag', style: TextStyle(fontWeight: .bold, fontSize: 12));
+    return Text(
+      '#$tag',
+      style: TextStyle(
+        fontWeight: .bold,
+        fontSize: 12,
+        fontStyle: .italic,
+        color: Colors.blueAccent,
+      ),
+    );
   }
 
   void goTagManager() async {

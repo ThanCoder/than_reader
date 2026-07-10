@@ -139,7 +139,6 @@ class PdfStateConroller {
 
   void renamePdf(PdfFile pdf, String rename) {
     final oldPdf = File(pdf.path);
-    final oldConfigFile = File(pdf.configPath);
 
     final renamePath = oldPdf.parentPath.join('$rename.pdf');
     // pdf အရင်ပြောင်း
@@ -147,10 +146,6 @@ class PdfStateConroller {
 
     // new class ပြောင်း
     final newPdf = pdf.copyWith(path: renamePath, name: renamePath.getName());
-    // config name ကိုပြောင်း
-    if (oldConfigFile.existsSync()) {
-      oldConfigFile.renameSync(newPdf.configPath);
-    }
     // ပြီးတော့ List မှာပြောင်း
     final newList = List<PdfFile>.from(state.list);
     final index = newList.indexWhere((e) => e.name == pdf.name);

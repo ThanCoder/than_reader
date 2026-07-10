@@ -45,10 +45,10 @@ packages:
     dependency: "direct main"
     description:
       name: cfb_store
-      sha256: "175af2619d89a6034657f20a29329b7454d29ccdd3d4e5bc5815973a253aeb1d"
+      sha256: "9f54965b5f8b23ff44bb59556d5c65d6c0440d0ccf36207ec45a2edb963f05a6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   change_app_package_name:
     dependency: "direct dev"
     description:

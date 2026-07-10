@@ -138,17 +138,19 @@ class _HomePageState extends State<HomePage> {
           mouseCursor: SystemMouseCursors.click,
           onTap: () => context.push(builder: (context) => PdfFavAllScreen()),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(3),
             ),
-            child: Text(
-              'Favorite',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: .bold,
-                color: Colors.blue,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+              child: Text(
+                'Favorite',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: .bold,
+                  color: Colors.blue,
+                ),
               ),
             ),
           ),
