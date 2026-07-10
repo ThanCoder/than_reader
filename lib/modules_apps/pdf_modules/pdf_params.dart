@@ -1,10 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:than_pkg/than_pkg.dart';
 
 class PdfParams {
   final String path;

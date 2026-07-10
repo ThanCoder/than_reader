@@ -14,7 +14,6 @@ import 'package:than_reader/main_app/home/pdf_menu.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
-import 'package:than_reader/partials/folder_style_button.dart';
 import 'package:than_reader/partials/list_style_button.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
@@ -118,25 +117,48 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: .horizontal,
         child: Row(
           children: [
-            StreamBuilder(
-              stream: PdfFavController().stateStream,
-              builder: (context, asyncSnapshot) {
-                if (PdfFavController().state.favPathList.isEmpty) {
-                  return SizedBox.shrink();
-                }
-                return TChip(
-                  title: Text('Favorite'),
-                  onClick: () =>
-                      context.push(builder: (context) => PdfFavAllScreen()),
-                );
-              },
-            ),
-            SizedBox(width: 20),
+            favButtonWidget,
+            // tagHiddenWidget,
+            SizedBox(width: 15),
             AllTagsComponent(),
           ],
         ),
       ),
     );
+  }
+
+  Widget get favButtonWidget {
+    return StreamBuilder(
+      stream: PdfFavController().stateStream,
+      builder: (context, asyncSnapshot) {
+        if (PdfFavController().state.favPathList.isEmpty) {
+          return SizedBox.shrink();
+        }
+        return InkWell(
+          mouseCursor: SystemMouseCursors.click,
+          onTap: () => context.push(builder: (context) => PdfFavAllScreen()),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Text(
+              'Favorite',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: .bold,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get tagHiddenWidget {
+    return Checkbox.adaptive(value: false, onChanged: (value) {});
   }
 
   Widget _listWidget(List<PdfFile> list) {

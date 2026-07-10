@@ -87,6 +87,7 @@ class PdfStateConroller {
       final tags = PdfTagDB.instance.getList(pdf.path);
       _allTags.addAll(tags);
     }
+    _controller.add(state);
   }
 
   void setSort(SortItem item) {
