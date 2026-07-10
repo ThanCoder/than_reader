@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:io';
+import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_pkg/than_pkg.dart';
@@ -39,8 +40,9 @@ class PdfConfig {
 
   static PdfConfig fromPathSync(String path) {
     // final cfb = CFBStore();
-    // cfb.openSync('$path.cbf');
-    // cfb.put(key, value)
+    // cfb.openSync('$path.cfb');
+    // final map = cfb.getMap('config');
+    // return PdfConfig.fromMap(map);
 
     final configFile = File('$path.json');
     if (!configFile.existsSync()) return PdfConfig.empty();
@@ -56,6 +58,10 @@ class PdfConfig {
   Future<void> savePath(String path) async {
     final configFile = File('$path.json');
     await configFile.writeAsString(jsonEncode(toMap()));
+    // final cfb = CFBStore();
+    // await cfb.open('$path.cfb');
+    // cfb.put('config', toMap());
+    // await cfb.writeAll();
   }
 
   factory PdfConfig.empty() {
@@ -96,15 +102,15 @@ class PdfConfig {
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
     return PdfConfig(
-      page: map['page'] as int,
-      pageCount: map.getInt(['pageCount'], def: -1),
-      zoom: map['zoom'] as double,
-      offsetX: map['offsetX'] as double,
-      isFullscreen: map['isFullscreen'] as bool,
-      isKeepScreen: map['isKeepScreen'] as bool,
+      page: map.getInt(['page'], def: 1),
+      pageCount: map.getInt(['pageCount'], def: 0),
+      zoom: map.getDouble(['zoom']),
+      offsetX: map.getDouble(['offsetX']),
+      isFullscreen: map.getBool(['isFullscreen']),
+      isKeepScreen: map.getBool(['isKeepScreen']),
       themeMode: PdfThemeMode.fromName(map.getString(['themeMode'])),
-      scrollByMouseWheel: map['scrollByMouseWheel'] as double,
-      scrollByArrowKey: map['scrollByArrowKey'] as double,
+      scrollByMouseWheel: map.getDouble(['scrollByMouseWheel']),
+      scrollByArrowKey: map.getDouble(['scrollByArrowKey']),
       screenOrientationTypes: ScreenOrientationTypes.getType(
         map.getString(['screenOrientationTypes']),
       ),
@@ -113,7 +119,7 @@ class PdfConfig {
           .getList(['bookmarkList'], def: [])
           .map((e) => PdfBookmark.fromMap(e))
           .toList(),
-      tags: map.getStringList(['tags']),
+      tags: map.getStringList(['tags'], def: []),
     );
   }
 
