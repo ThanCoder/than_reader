@@ -688,19 +688,19 @@ packages:
   t_pdf_reader:
     dependency: "direct main"
     description:
-      path: "/home/thancoder/projects/plugins/t_pdf_reader"
-      relative: false
-    source: path
+      name: t_pdf_reader
+      sha256: c137f1b0fc2398112924c98025aa5a544d196e434834da74876121f28d4635dd
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0"
   t_widgets:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "137440e184334cd8bf150c908f403deb1bfdc091"
-      url: "https://github.com/ThanCoder/t_widget"
-    source: git
-    version: "2.6.1"
+      name: t_widgets
+      sha256: edfa47ea3f76ab88869fa200cab1f9c73573b98fe70095d3ebf59c3e34dcd0bc
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
   term_glyph:
     dependency: transitive
     description:

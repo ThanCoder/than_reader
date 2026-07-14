@@ -14,15 +14,13 @@ dependencies:
   package_info_plus: ^10.1.0
   than_pkg: ^5.1.0
   dart_core_extensions: ^0.4.0
-  t_widgets:
-    git: https://github.com/ThanCoder/t_widget
+  t_widgets: ^2.7.0
   mime: ^2.0.0
   cf_lite: ^0.3.1
   path_provider: ^2.1.6
   path: ^1.9.1
   pdfrx: ^2.4.4
-  t_pdf_reader:
-    path: /home/thancoder/projects/plugins/t_pdf_reader
+  t_pdf_reader: ^0.1.0
   cfb_store: ^0.3.0
   crypto: ^3.0.7
   ffi: ^2.2.0
