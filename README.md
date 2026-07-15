@@ -9,7 +9,10 @@
 + [x] PDF
 
 ## Download App
-[Releases](https://github.com/ThanCoder/than_reader/releases)
+[Latest Releases](https://github.com/ThanCoder/than_reader/releases)
+
+## Tested
++ [x] `Pdf Big Size` -> Tested - PDF Size 800mb အထက်ကို စမ်းသပ်ပြီးပါပြီ။
   
 ## Screenshot
 
