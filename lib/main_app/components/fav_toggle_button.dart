@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 
 class FavToggleButton extends StatelessWidget {
-  final PdfFile file;
+  final AppFile file;
   const FavToggleButton({super.key, required this.file});
 
   @override

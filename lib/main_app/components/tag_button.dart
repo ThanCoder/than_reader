@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/tag_manager_screen.dart';
 
 class TagButton extends StatefulWidget {
-  final PdfFile pdf;
+  final AppFile pdf;
   const TagButton({super.key, required this.pdf});
 
   @override

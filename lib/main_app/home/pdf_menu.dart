@@ -4,7 +4,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
@@ -12,7 +12,7 @@ import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_reader_type_chooser.dart';
 
 class PdfMenu extends StatefulWidget {
-  final PdfFile pdf;
+  final AppFile pdf;
   final BuildContext mainContext;
   const PdfMenu({super.key, required this.pdf, required this.mainContext});
 

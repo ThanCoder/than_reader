@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
 import 'package:than_reader/main_app/components/pdf_config_progress_widget.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
 
-
 class PdfGridItem extends StatelessWidget {
-  final PdfFile pdf;
-  final void Function(PdfFile pdf)? onClicked;
-  final void Function(PdfFile pdf)? onMenuClicked;
+  final AppFile pdf;
+  final void Function(AppFile pdf)? onClicked;
+  final void Function(AppFile pdf)? onMenuClicked;
   const PdfGridItem({
     super.key,
     required this.pdf,
@@ -70,6 +69,6 @@ class PdfGridItem extends StatelessWidget {
   }
 
   Widget get thumbnail {
-    return PdfThumbnail(pdfPath: pdf.path, width: 180, height: 200);
+    return PdfThumbnail(file: pdf, width: 180, height: 200);
   }
 }

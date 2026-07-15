@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 
 class PdfConfigProgressWidget extends StatelessWidget {
-  final PdfFile pdf;
+  final AppFile pdf;
   const PdfConfigProgressWidget({super.key, required this.pdf});
 
   @override

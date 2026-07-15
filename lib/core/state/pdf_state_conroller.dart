@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/pdf_state.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
-import 'package:than_reader/core/utils/pdf_scanner.dart';
+import 'package:than_reader/core/utils/file_scanner.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
@@ -47,7 +47,7 @@ class PdfStateConroller {
       _state = _state.copyWith(isLoading: true, error: '', list: []);
       _controller.add(_state);
 
-      final list = await PdfScanner.getAll();
+      final list = await FileScanner.getAll();
       _state = _state.copyWith(
         isLoading: false,
         error: '',
@@ -70,8 +70,8 @@ class PdfStateConroller {
     _controller.add(_state);
   }
 
-  List<PdfFile> getFilterTag(String tag) {
-    List<PdfFile> list = [];
+  List<AppFile> getFilterTag(String tag) {
+    List<AppFile> list = [];
     for (var pdf in state.list) {
       final tags = PdfTagDB.instance.getList(pdf.path);
       if (tags.contains(tag)) {
@@ -137,7 +137,7 @@ class PdfStateConroller {
     }
   }
 
-  void renamePdf(PdfFile pdf, String rename) {
+  void renamePdf(AppFile pdf, String rename) {
     final oldPdf = File(pdf.path);
 
     final renamePath = oldPdf.parentPath.join('$rename.pdf');
@@ -147,7 +147,7 @@ class PdfStateConroller {
     // new class ပြောင်း
     final newPdf = pdf.copyWith(path: renamePath, name: renamePath.getName());
     // ပြီးတော့ List မှာပြောင်း
-    final newList = List<PdfFile>.from(state.list);
+    final newList = List<AppFile>.from(state.list);
     final index = newList.indexWhere((e) => e.name == pdf.name);
     if (index == -1) {
       debugPrint('[PdfStateConroller:renamePdf]: ${pdf.name} not found index');

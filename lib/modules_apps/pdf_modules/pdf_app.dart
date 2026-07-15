@@ -15,11 +15,13 @@ class PdfApp extends ModuleApp<PdfParams, PdfResult> {
   Future<PdfResult?> go(BuildContext context, PdfParams params) async {
     final configPath = params.configPath;
 
-    final config = PdfConfig.fromPathSync(ConfigStorageFactory.create(configPath));
+    final config = PdfConfig.fromPathSync(
+      ConfigStorageFactory.create(configPath),
+    );
     PdfConfig? changedConfig;
     if (config.readerType == .autoReader) {
-      final pdfFile = File(params.path);
-      if (pdfFile.size > ((1024 * 1024) * 10)) {
+      final file = File(params.path);
+      if (file.size > ((1024 * 1024) * 10)) {
         // big pdf
         changedConfig = await context.push<PdfConfig>(
           builder: (context) => ThanPdfReaderScreen(

@@ -5,23 +5,24 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/utils/thumbnail_manager.dart';
+import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/thumbnail_generator/thumbnail_generator_factory.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {
-  final String pdfPath;
+  final AppFile file;
   final int width;
   final int height;
   const PdfThumbnail({
     super.key,
-    required this.pdfPath,
+    required this.file,
     required this.width,
     required this.height,
   });
 
   File get cacheFile => File(
     Utils.instance.cachePath.join(
-      '${pdfPath.getName(withExt: false)}-w-$width-h-$height.jpg',
+      '${file.path.getName(withExt: false)}-w-$width-h-$height.jpg',
     ),
   );
 
@@ -52,8 +53,8 @@ class PdfThumbnail extends StatelessWidget {
     //   );
     // }
     return FutureBuilder(
-      future: ThumbnailManager.generate(
-        pdfPath,
+      future: ThumbnailGeneratorFactory.create(file).generate(
+        file.path,
         cacheFile.path,
         width: width,
         height: height,

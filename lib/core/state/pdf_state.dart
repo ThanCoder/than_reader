@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
 class PdfState {
-  final List<PdfFile> list;
+  final List<AppFile> list;
   final bool isLoading;
   final String error;
   final SortItem sortItem;
@@ -24,7 +24,7 @@ class PdfState {
   }
 
   PdfState copyWith({
-    List<PdfFile>? list,
+    List<AppFile>? list,
     bool? isLoading,
     String? error,
     SortItem? sortItem,

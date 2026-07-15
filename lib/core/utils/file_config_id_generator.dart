@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 
-class PdfConfigIdGenerator {
+class FileConfigIdGenerator {
   static String generateSync(String pdfPath) {
     final file = File(pdfPath);
     // file မရှိရင် name ပေးထားမယ်

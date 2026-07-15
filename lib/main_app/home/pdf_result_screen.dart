@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
@@ -10,7 +10,7 @@ import 'package:than_reader/partials/list_style_button.dart';
 
 class PdfResultScreen extends StatefulWidget {
   final String title;
-  final List<PdfFile> list;
+  final List<AppFile> list;
   const PdfResultScreen({super.key, required this.title, required this.list});
 
   @override
@@ -57,7 +57,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
     );
   }
 
-  Widget _listItem(PdfFile pdf) {
+  Widget _listItem(AppFile pdf) {
     return Card(
       child: PdfListItem(
         pdf: pdf,
@@ -67,7 +67,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
     );
   }
 
-  Widget gridItem(PdfFile pdf) {
+  Widget gridItem(AppFile pdf) {
     return PdfGridItem(
       pdf: pdf,
       onMenuClicked: showPdfMenu,
@@ -75,7 +75,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
     );
   }
 
-  void goReader(PdfFile pdf) async {
+  void goReader(AppFile pdf) async {
     await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
       PdfParams(path: pdf.path, configPath: pdf.configPath),
@@ -83,7 +83,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
     setState(() {});
   }
 
-  void showPdfMenu(PdfFile pdf) {
+  void showPdfMenu(AppFile pdf) {
     showModalBottomSheet(
       context: context,
       // isScrollControlled: true,

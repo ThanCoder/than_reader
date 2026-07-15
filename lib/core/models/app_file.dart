@@ -1,46 +1,69 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:than_reader/core/utils/pdf_config_id_generator.dart';
 
+import 'package:than_reader/core/utils/file_config_id_generator.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/partials/pdf_config_path_manager.dart';
 
-class PdfFile {
+// enum FileType { pdf, epub, mobi, txt, unknown }
+enum FileType { pdf, epub, unknown }
+
+class AppFile {
   final String name;
   final String path;
   final int size;
   final DateTime date;
   final String configId;
-  const PdfFile({
+  final FileType type;
+  const AppFile({
     required this.name,
     required this.path,
     required this.date,
     required this.size,
     required this.configId,
+    required this.type,
   });
 
-  factory PdfFile.fromEntry(FileSystemEntity entry) {
-    return PdfFile(
+  factory AppFile.fromEntry(FileSystemEntity entry) {
+    return AppFile(
       name: entry.getName(),
       path: entry.path,
       size: entry.size,
       date: entry.modifiedDate,
-      configId: PdfConfigIdGenerator.generateSync(entry.path),
+      configId: FileConfigIdGenerator.generateSync(entry.path),
+      type: _getFileType(entry.path),
     );
   }
-  factory PdfFile.fromFile(File file) {
-    return PdfFile(
+  factory AppFile.fromFile(File file) {
+    return AppFile(
       name: file.getName(),
       path: file.path,
       size: file.size,
       date: file.modifiedDate,
-      configId: PdfConfigIdGenerator.generateSync(file.path),
+      configId: FileConfigIdGenerator.generateSync(file.path),
+      type: _getFileType(file.path),
     );
   }
-  // String get configPath => Utils.instance.getConfigPath(
-  //   '${path.getName(withExt: false)}-config.json',
-  // );
+
+  // Path ကနေပြီး file extension ကို ရှာပြီး FileType သတ်မှတ်ပေးမယ့် helper method
+  static FileType _getFileType(String path) {
+    final ext = path.split('.').last.toLowerCase();
+    switch (ext) {
+      case 'pdf':
+        return FileType.pdf;
+      case 'epub':
+        return FileType.epub;
+      // case 'mobi':
+      //   return FileType.mobi;
+      // case 'txt':
+      //   return FileType.txt;
+      default:
+        return FileType.unknown;
+    }
+  }
+
   String get configPath {
     if (PdfConfigPathManager.enableNotifier.value) {
       return PdfConfigPathManager.pathFolderNotifier.value.join(
@@ -50,24 +73,26 @@ class PdfFile {
     return Utils.instance.getConfigPath('$configId-config');
   }
 
-  PdfFile copyWith({
+  AppFile copyWith({
     String? name,
     String? path,
     int? size,
     DateTime? date,
     String? configId,
+    FileType? type,
   }) {
-    return PdfFile(
+    return AppFile(
       name: name ?? this.name,
       path: path ?? this.path,
       size: size ?? this.size,
       date: date ?? this.date,
       configId: configId ?? this.configId,
+      type: type ?? this.type,
     );
   }
 }
 
-extension PdfFileExtensions on List<PdfFile> {
+extension AppFileExtensions on List<AppFile> {
   void sortA2Z({bool isA2Z = true}) {
     sort((a, b) {
       if (isA2Z) {

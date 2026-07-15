@@ -1,6 +1,6 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
 import 'package:than_reader/main_app/components/pdf_config_progress_widget.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
@@ -8,9 +8,9 @@ import 'package:than_reader/main_app/components/tag_button.dart';
 import 'package:than_reader/main_app/components/tags_view.dart';
 
 class PdfListItem extends StatelessWidget {
-  final PdfFile pdf;
-  final void Function(PdfFile pdf)? onClicked;
-  final void Function(PdfFile pdf)? onMenuClicked;
+  final AppFile pdf;
+  final void Function(AppFile pdf)? onClicked;
+  final void Function(AppFile pdf)? onMenuClicked;
   const PdfListItem({
     super.key,
     required this.pdf,
@@ -82,6 +82,6 @@ class PdfListItem extends StatelessWidget {
   }
 
   Widget get thumbnail {
-    return PdfThumbnail(pdfPath: pdf.path, width: 130, height: 160);
+    return PdfThumbnail(file: pdf, width: 130, height: 160);
   }
 }

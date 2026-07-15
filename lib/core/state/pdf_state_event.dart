@@ -1,4 +1,4 @@
-import 'package:than_reader/core/models/pdf_file.dart';
+import 'package:than_reader/core/models/app_file.dart';
 
 abstract class PdfStateEvent {}
 
@@ -12,6 +12,6 @@ class PdfError extends PdfStateEvent {
 class PdfLoaded extends PdfStateEvent {}
 
 class PdfDelete extends PdfStateEvent {
-  final PdfFile pdf;
+  final AppFile pdf;
   PdfDelete(this.pdf);
 }
