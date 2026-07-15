@@ -7,6 +7,7 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
+import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_reader_type_chooser.dart';
 
@@ -23,7 +24,7 @@ class _PdfMenuState extends State<PdfMenu> {
   late PdfConfig config;
   @override
   void initState() {
-    config = PdfConfig.fromPathSync(widget.pdf.configPath);
+    config = PdfConfig.fromPathSync(ConfigStorageFactory.create(widget.pdf.configPath));
     super.initState();
   }
 
@@ -77,7 +78,7 @@ class _PdfMenuState extends State<PdfMenu> {
                   value: config.readerType,
                   onChanged: (value) {
                     config = config.copyWith(readerType: value);
-                    config.savePath(widget.pdf.configPath);
+                    config.savePathSync(ConfigStorageFactory.create(widget.pdf.configPath));
                     setState(() {});
                   },
                 ),

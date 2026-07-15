@@ -18,6 +18,8 @@ class _AllTagsComponentState extends State<AllTagsComponent> {
       builder: (context, snapshot) {
         final allTags = PdfStateConroller().allTags.toList();
         return Row(
+          mainAxisAlignment: .start,
+          crossAxisAlignment: .start,
           spacing: 4,
           children: List.generate(
             allTags.length,

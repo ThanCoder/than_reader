@@ -4,6 +4,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_screen.dart';
@@ -14,7 +15,7 @@ class PdfApp extends ModuleApp<PdfParams, PdfResult> {
   Future<PdfResult?> go(BuildContext context, PdfParams params) async {
     final configPath = params.configPath;
 
-    final config = PdfConfig.fromPathSync(configPath);
+    final config = PdfConfig.fromPathSync(ConfigStorageFactory.create(configPath));
     PdfConfig? changedConfig;
     if (config.readerType == .autoReader) {
       final pdfFile = File(params.path);
@@ -38,7 +39,7 @@ class PdfApp extends ModuleApp<PdfParams, PdfResult> {
         );
       }
       if (changedConfig != null) {
-        await changedConfig.savePath(configPath);
+        changedConfig.savePathSync(ConfigStorageFactory.create(configPath));
       }
     } else if (config.readerType == .pdfrxReader) {
       changedConfig = await context.push<PdfConfig>(

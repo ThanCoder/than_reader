@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_reader_screen.dart';
@@ -14,7 +15,9 @@ class ThanPdfReaderApp extends ModuleApp<PdfParams, PdfResult> {
       '${params.path.getName(withExt: false)}-config.json',
     );
 
-    final config = PdfConfig.fromPathSync(configPath);
+    final config = PdfConfig.fromPathSync(
+      ConfigStorageFactory.create(configPath),
+    );
 
     if (!context.mounted) return null;
 
@@ -26,7 +29,7 @@ class ThanPdfReaderApp extends ModuleApp<PdfParams, PdfResult> {
       ),
     );
     if (changedConfig != null) {
-      await changedConfig.savePath(configPath);
+      changedConfig.savePathSync(ConfigStorageFactory.create(configPath));
     }
 
     return null;

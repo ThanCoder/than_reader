@@ -2,9 +2,10 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/pdf_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
+import 'package:than_reader/main_app/components/pdf_config_progress_widget.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
 import 'package:than_reader/main_app/components/tag_button.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
+import 'package:than_reader/main_app/components/tags_view.dart';
 
 class PdfListItem extends StatelessWidget {
   final PdfFile pdf;
@@ -24,55 +25,60 @@ class PdfListItem extends StatelessWidget {
       onTap: () => onClicked?.call(pdf),
       onLongPress: () => onMenuClicked?.call(pdf),
       onSecondaryTap: () => onMenuClicked?.call(pdf),
-      child: Row(
-        spacing: 4,
-        children: [
-          SizedBox(width: 100, height: 130, child: thumbnail),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 3,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // print('maxWidth: ${constraints.maxWidth}');
+          final isMobile = constraints.maxWidth < 250;
+          if (isMobile) {
+            return Column(
+              spacing: 6,
               children: [
-                Text(
-                  pdf.name,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 13),
-                ),
-                Text('Size: ${pdf.size.toFileSizeLabel()}'),
-                Text('Date: ${pdf.date.formatTimeAgo()}'),
-                // progress
-                progressWidget,
-                Wrap(
-                  children: [
-                    FavToggleButton(file: pdf),
-                    TagButton(pdf: pdf),
-                  ],
-                ),
+                SizedBox(width: 100, height: 130, child: thumbnail),
+                buildDetail,
               ],
-            ),
-          ),
-        ],
+            );
+          }
+          return Row(
+            spacing: 4,
+            children: [
+              SizedBox(width: 100, height: 130, child: thumbnail),
+              Expanded(child: buildDetail),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget get progressWidget {
-    final config = PdfConfig.fromPathSync(pdf.configPath);
-    if (config.pageCount == -1) {
-      return SizedBox.shrink();
-    }
+  Widget get buildDetail {
     return Column(
-      spacing: 3,
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: .start,
+      spacing: 3,
       children: [
         Text(
-          '${((config.page / config.pageCount) * 100).toStringAsFixed(2)}% - ${config.page}/${config.pageCount}',
-          style: TextStyle(fontSize: 13, color: Colors.amber[700]),
+          pdf.name,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 13),
         ),
-        LinearProgressIndicator(value: config.page / config.pageCount),
+        Text('Size: ${pdf.size.toFileSizeLabel()}'),
+        Text('Date: ${pdf.date.formatTimeAgo()}'),
+        // progress
+        progressWidget,
+        Row(
+          children: [
+            FavToggleButton(file: pdf),
+            TagButton(pdf: pdf),
+          ],
+        ),
+        TagsView(pdf: pdf),
       ],
     );
+  }
+
+  Widget get progressWidget {
+    return PdfConfigProgressWidget(pdf: pdf);
   }
 
   Widget get thumbnail {

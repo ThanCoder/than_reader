@@ -1,9 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:than_pkg/than_pkg.dart';
+import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
 
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
@@ -37,30 +34,20 @@ class PdfConfig {
     required this.tags,
   });
 
-  static PdfConfig fromPathSync(String path) {
-    // final cfb = CFBStore();
-    // cfb.openSync('$path.cfb');
-    // final map = cfb.getMap('config');
-    // return PdfConfig.fromMap(map);
-
-    final configFile = File('$path.json');
-    if (!configFile.existsSync()) return PdfConfig.empty();
-    try {
-      final map = jsonDecode(configFile.readAsStringSync());
-      return PdfConfig.fromMap(map);
-    } catch (e) {
-      debugPrint('[PdfConfig:fromPath]: $e');
-    }
-    return PdfConfig.empty();
+  static PdfConfig fromPathSync(IConfigStorage storage) {
+    return PdfConfig.fromMap(storage.loadSync());
   }
 
-  Future<void> savePath(String path) async {
-    final configFile = File('$path.json');
-    await configFile.writeAsString(jsonEncode(toMap()));
-    // final cfb = CFBStore();
-    // await cfb.open('$path.cfb');
-    // cfb.put('config', toMap());
-    // await cfb.writeAll();
+  void savePathSync(IConfigStorage storage) {
+    storage.saveSync(toMap());
+  }
+
+  static Future<PdfConfig> fromPath(IConfigStorage storage) async {
+    return PdfConfig.fromMap(await storage.load());
+  }
+
+  Future<void> savePath(IConfigStorage storage) async {
+    await storage.save(toMap());
   }
 
   factory PdfConfig.empty() {
@@ -101,15 +88,15 @@ class PdfConfig {
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
     return PdfConfig(
-      page: map.getInt(['page'], def: 1),
+      page: map.getInt(['page'], def: 0),
       pageCount: map.getInt(['pageCount'], def: 0),
-      zoom: map.getDouble(['zoom']),
+      zoom: map.getDouble(['zoom'], def: 1.0),
       offsetX: map.getDouble(['offsetX']),
       isFullscreen: map.getBool(['isFullscreen']),
       isKeepScreen: map.getBool(['isKeepScreen']),
       themeMode: PdfThemeMode.fromName(map.getString(['themeMode'])),
-      scrollByMouseWheel: map.getDouble(['scrollByMouseWheel']),
-      scrollByArrowKey: map.getDouble(['scrollByArrowKey']),
+      scrollByMouseWheel: map.getDouble(['scrollByMouseWheel'], def: 0.2),
+      scrollByArrowKey: map.getDouble(['scrollByArrowKey'], def: 25),
       screenOrientationTypes: ScreenOrientationTypes.getType(
         map.getString(['screenOrientationTypes']),
       ),

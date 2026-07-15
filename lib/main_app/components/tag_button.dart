@@ -29,18 +29,17 @@ class _TagButtonState extends State<TagButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      crossAxisAlignment: .center,
-      alignment: .center,
-      children: [
-        IconButton(onPressed: goTagManager, icon: Icon(Icons.tag)),
-        tagWidget,
-      ],
+    return Row(
+      crossAxisAlignment: .start,
+      spacing: 4,
+      children: [IconButton(onPressed: goTagManager, icon: Icon(Icons.tag))],
     );
   }
 
   Widget get tagWidget {
     return Wrap(
+      alignment: .start,
+      crossAxisAlignment: .start,
       spacing: 4,
       runSpacing: 4,
       children: List.generate(tags.length, (index) => tagItem(tags[index])),
@@ -50,6 +49,8 @@ class _TagButtonState extends State<TagButton> {
   Widget tagItem(String tag) {
     return Text(
       '#$tag',
+      overflow: .ellipsis,
+      maxLines: 1,
       style: TextStyle(
         fontWeight: .bold,
         fontSize: 12,

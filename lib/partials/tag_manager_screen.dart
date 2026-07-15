@@ -114,7 +114,7 @@ class _TagManagerScreenState extends State<TagManagerScreen> {
   void _showAddDialog() {
     showTReanmeDialog(
       context,
-      text: 'Tag',
+      text: '',
       submitText: 'New Tag',
       onCheckIsError: (text) {
         if (tags.contains(text.trim())) return 'Already Exists';
@@ -123,7 +123,7 @@ class _TagManagerScreenState extends State<TagManagerScreen> {
       },
       onSubmit: (text) {
         if (!allTags.contains(text)) {
-          allTags.add(text);
+          allTags.add(text.trim());
         }
         tags.add(text.trim());
         setState(() {});

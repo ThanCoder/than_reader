@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:than_pkg/than_pkg.dart';
 
 class VersionInfoWidget extends StatelessWidget {
   const VersionInfoWidget({super.key});
@@ -16,6 +17,11 @@ class VersionInfoWidget extends StatelessWidget {
         return ListTile(
           leading: Icon(Icons.info_rounded),
           title: Text("Version: ${info.version}-${info.buildNumber}"),
+          onTap: () {
+            ThanPkg.platform.launch(
+              'https://github.com/ThanCoder/than_reader/releases',
+            );
+          },
         );
       },
     );
