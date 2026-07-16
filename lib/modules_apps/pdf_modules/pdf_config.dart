@@ -1,7 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_pkg/than_pkg.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
 
+import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
 class PdfConfig {
@@ -18,6 +19,7 @@ class PdfConfig {
   final PdfReaderType readerType;
   final List<PdfBookmark> bookmarkList;
   final List<String> tags;
+  final bool showScrollbar;
   const PdfConfig({
     required this.page,
     required this.zoom,
@@ -32,6 +34,7 @@ class PdfConfig {
     required this.readerType,
     required this.bookmarkList,
     required this.tags,
+    required this.showScrollbar,
   });
 
   static PdfConfig fromPathSync(IConfigStorage storage) {
@@ -65,6 +68,7 @@ class PdfConfig {
       readerType: .autoReader,
       bookmarkList: [],
       tags: [],
+      showScrollbar: true,
     );
   }
 
@@ -83,6 +87,7 @@ class PdfConfig {
       'readerType': readerType.name,
       'bookmarkList': bookmarkList.map((e) => e.toMap()).toList(),
       'tags': tags,
+      'showScrollbar': showScrollbar,
     };
   }
 
@@ -106,6 +111,7 @@ class PdfConfig {
           .map((e) => PdfBookmark.fromMap(e))
           .toList(),
       tags: map.getStringList(['tags'], def: []),
+      showScrollbar: map.getBool(['showScrollbar'], def: true),
     );
   }
 
@@ -123,6 +129,7 @@ class PdfConfig {
     PdfReaderType? readerType,
     List<PdfBookmark>? bookmarkList,
     List<String>? tags,
+    bool? showScrollbar,
   }) {
     return PdfConfig(
       page: page ?? this.page,
@@ -139,6 +146,7 @@ class PdfConfig {
       readerType: readerType ?? this.readerType,
       bookmarkList: bookmarkList ?? this.bookmarkList,
       tags: tags ?? this.tags,
+      showScrollbar: showScrollbar ?? this.showScrollbar,
     );
   }
 }

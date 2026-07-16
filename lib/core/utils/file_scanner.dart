@@ -22,10 +22,10 @@ class FileScanner extends PathScanner {
 
   @override
   PathScannerTest onFileTest(FileSystemEntity file, String name) {
-    final ext = name.extName;
+    // final ext = name.extName;
 
-    // if (name.endsWith('.pdf')) return .add;
-    if (FileType.values.map((e) => e.name).contains(ext)) return .add;
+    if (name.endsWith('.pdf')) return .add;
+    // if (FileType.values.map((e) => e.name).contains(ext)) return .add;
     return .skip;
   }
 

@@ -71,6 +71,8 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
   }
 
   void initConfig() {
+    controller.setScrollbarEnable(config.showScrollbar);
+
     ThanPkg.platform.toggleFullScreen(isFullScreen: config.isFullscreen);
     ThanPkg.platform.toggleKeepScreen(isKeep: config.isKeepScreen);
     if (Platform.isAndroid) {
@@ -102,6 +104,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
             screenOrientationTypes: config.screenOrientationTypes,
             scrollByArrowKey: config.scrollByArrowKey,
             scrollByMouseWheel: config.scrollByMouseWheel,
+            showScrollbar: controller.isEnableScrollbar,
           ),
         );
       },
