@@ -35,14 +35,14 @@ dev_dependencies:
   change_app_package_name: ^1.5.0
   # dart run change_app_package_name:main [com.new.package.name]
   # dart run change_app_package_name:main than.app.novl3.v5
-  # flutter_launcher_icons: ^0.14.4
+  flutter_launcher_icons: ^0.14.4
   # dart run flutter_launcher_icons
   flutter_lints: ^6.0.0
 
 # dev lib
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/images/app_icon.png"
+  image_path: "assets/images/app-icon-2.png"
 
 flutter:
   uses-material-design: true
