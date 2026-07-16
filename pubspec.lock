@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
-  epub_plus:
-    dependency: "direct main"
-    description:
-      name: epub_plus
-      sha256: de0b50c8db19be3642df9bb8a25694297efa09fe208d0f8060570daae6a8d330
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -705,10 +697,10 @@ packages:
     dependency: "direct main"
     description:
       name: t_pdf_reader
-      sha256: c137f1b0fc2398112924c98025aa5a544d196e434834da74876121f28d4635dd
+      sha256: "4caac0f99c65804e1e3bd3bce8fba93298a0aa78dbe4de0a9feacd447a2e519b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   t_widgets:
     dependency: "direct main"
     description:
@@ -737,10 +729,10 @@ packages:
     dependency: "direct main"
     description:
       name: than_pdf_engine
-      sha256: "75c3a3c949e4173cc296a57d1bb1cd6e223a573212d8c780175a3053a5437a51"
+      sha256: b91b6394315b59fe9303296ae511d3166e2ea9c4a30e98c8367588bd48c2dba3
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.3.0"
   than_pkg:
     dependency: "direct main"
     description:

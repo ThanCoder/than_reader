@@ -1,7 +1,7 @@
+import 'package:than_pdf_engine/than_pdf_engine.dart';
 import 'package:than_reader/core/thumbnail_generator/i_thumbnail_generator.dart';
-import 'package:than_reader/core/utils/thumbnail_manager.dart';
 
-class PdfThumbnailGenerator implements IThumbnailGenerator {
+class AppPdfThumbnailGenerator implements IThumbnailGenerator {
   @override
   Future<bool> generate(
     String inputPath,
@@ -12,7 +12,7 @@ class PdfThumbnailGenerator implements IThumbnailGenerator {
     int quality = 70,
     String? password,
   }) async {
-    return await ThumbnailManager.generate(
+    return await PdfThumbnailGenerator.instance.generate(
       inputPath,
       outPath,
       width: width,
