@@ -34,13 +34,12 @@ class SortItem {
     isTrue: true,
   );
   static final sizeSortItem = SortItem(
-  id: 1,
-  title: Text('Size'),
-  isTrue: true,
-  trueTitle: Text("Small To Big"),
-  falseTitle: Text("Big To Small"),
-);
-
+    id: 1,
+    title: Text('Size'),
+    isTrue: true,
+    trueTitle: Text("Small To Big"),
+    falseTitle: Text("Big To Small"),
+  );
 
   SortItem copyWith({
     int? id,
@@ -136,22 +135,29 @@ class _SortProviderDialogState extends State<SortProviderDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints:
-          widget.boxConstraints ?? const BoxConstraints(minHeight: 400),
-      child: SingleChildScrollView(
-        child: Column(
-          spacing: 2,
-          children: [
-            widget.title ?? ListTile(title: Text("Sort By")),
-            Divider(),
-            sortGropWidget,
-            Divider(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.pop<SortItem>(context, item);
+      },
+      child: ConstrainedBox(
+        constraints:
+            widget.boxConstraints ?? const BoxConstraints(minHeight: 400),
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 2,
+            children: [
+              widget.title ?? ListTile(title: Text("Sort By")),
+              Divider(),
+              sortGropWidget,
+              Divider(),
 
-            sortResultWidgt,
-            Divider(),
-            applyWidget,
-          ],
+              sortResultWidgt,
+              Divider(),
+              applyWidget,
+            ],
+          ),
         ),
       ),
     );
