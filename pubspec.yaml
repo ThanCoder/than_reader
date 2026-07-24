@@ -21,13 +21,14 @@ dependencies:
   path_provider: ^2.1.6
   path: ^1.9.1
   pdfrx: ^2.4.4
-  t_pdf_reader: ^0.2.0
+  t_pdf_reader:
+    path: /home/thancoder/projects/dart_plugins/t_pdf_reader
   cfb_store: ^0.3.0
   crypto: ^3.0.7
-  ffi: ^2.2.0
   archive: ^4.0.9
   flutter_html: ^3.0.0
-  than_pdf_engine: ^0.3.0
+  # than_pdf_engine: ^0.4.0
+  desktop_drop: ^0.7.1
 
 dev_dependencies:
   flutter_test:

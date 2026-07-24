@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart' hide SortButton;
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
@@ -31,6 +34,8 @@ class _HomePageState extends State<HomePage> {
     init();
   }
 
+  bool desktopEnable = true;
+
   Future<void> init() async {
     if (!await ThanPkg.platform.isStoragePermissionGranted()) {
       await ThanPkg.platform.requestStoragePermission();
@@ -53,7 +58,20 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
       ),
-      body: _widget,
+      body: desktopDropWidget,
+    );
+  }
+
+  Widget get desktopDropWidget {
+    return DropTarget(
+      enable: desktopEnable,
+      onDragDone: (details) {
+        if (details.files.isEmpty) return;
+        final file = details.files.first;
+        if (!file.path.endsWith('.pdf')) return;
+        goReader(AppFile.fromFile(File(file.path)));
+      },
+      child: _widget,
     );
   }
 
@@ -204,11 +222,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void goReader(AppFile pdf) async {
+    setState(() {
+      desktopEnable = false;
+    });
     await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
       PdfParams(path: pdf.path, configPath: pdf.configPath),
     );
-    setState(() {});
+    setState(() {
+      desktopEnable = true;
+    });
   }
 
   void showPdfMenu(AppFile pdf) {
