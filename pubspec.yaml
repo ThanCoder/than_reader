@@ -23,6 +23,8 @@ dependencies:
   pdfrx: ^2.4.4
   t_pdf_reader:
     path: /home/thancoder/projects/dart_plugins/t_pdf_reader
+  epub_engine:
+    path: /home/thancoder/projects/dart_plugins/epub_engine
   cfb_store: ^0.3.0
   crypto: ^3.0.7
   archive: ^4.0.9

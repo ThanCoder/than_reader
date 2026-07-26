@@ -10,14 +10,14 @@ import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/pdf_state_conroller.dart';
 import 'package:than_reader/main_app/components/all_tags_component.dart';
-import 'package:than_reader/main_app/components/pdf_grid_item.dart';
-import 'package:than_reader/main_app/components/pdf_list_item.dart';
+import 'package:than_reader/main_app/components/app_sliver_view.dart';
+import 'package:than_reader/main_app/components/folder_sliver_view.dart';
+import 'package:than_reader/main_app/components/folder_style_chooser.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
-import 'package:than_reader/main_app/home/pdf_menu.dart';
+import 'package:than_reader/main_app/components/list_style_button.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
-import 'package:than_reader/partials/list_style_button.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+  static final desktopEnable = ValueNotifier<bool>(true);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -34,14 +35,11 @@ class _HomePageState extends State<HomePage> {
     init();
   }
 
-  bool desktopEnable = true;
-
   Future<void> init() async {
     if (!await ThanPkg.platform.isStoragePermissionGranted()) {
       await ThanPkg.platform.requestStoragePermission();
       return;
     }
-
     await PdfStateConroller.instance.fetchList();
   }
 
@@ -63,15 +61,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget get desktopDropWidget {
-    return DropTarget(
-      enable: desktopEnable,
-      onDragDone: (details) {
-        if (details.files.isEmpty) return;
-        final file = details.files.first;
-        if (!file.path.endsWith('.pdf')) return;
-        goReader(AppFile.fromFile(File(file.path)));
+    return ValueListenableBuilder(
+      valueListenable: HomePage.desktopEnable,
+      builder: (context, value, child) {
+        return DropTarget(
+          enable: value,
+          onDragDone: (details) {
+            if (details.files.isEmpty) return;
+            final file = details.files.first;
+            if (!file.path.endsWith('.pdf')) return;
+            goReader(AppFile.fromFile(File(file.path)));
+          },
+          child: _widget,
+        );
       },
-      child: _widget,
     );
   }
 
@@ -95,9 +98,7 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: headerWidget),
-              SliverToBoxAdapter(
-                child: SizedBox(height: 50, width: 200, child: subHeaderWidget),
-              ),
+              subHeaderListCheckerWidget,
               _listWidget(list),
             ],
           ),
@@ -109,9 +110,10 @@ class _HomePageState extends State<HomePage> {
   Widget get headerWidget {
     return Row(
       children: [
-        // FolderStyleButton(),
+        FolderStyleChooser(),
+        favButtonWidget,
         Spacer(),
-        ListStyleButton(value: .list),
+        ListStyleButton(),
         StreamBuilder(
           stream: PdfStateConroller().stream,
           initialData: PdfStateConroller().state,
@@ -128,19 +130,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget get subHeaderListCheckerWidget {
+    return StreamBuilder(
+      stream: PdfStateConroller().stream,
+      builder: (context, asyncSnapshot) {
+        final tagsLeg = PdfStateConroller().allTags.length;
+        if (tagsLeg > 0) {
+          return SliverToBoxAdapter(
+            child: SizedBox(height: 50, width: 200, child: subHeaderWidget),
+          );
+        }
+        return SliverToBoxAdapter();
+      },
+    );
+  }
+
   Widget get subHeaderWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         scrollDirection: .horizontal,
-        child: Row(
-          children: [
-            favButtonWidget,
-            // tagHiddenWidget,
-            SizedBox(width: 15),
-            AllTagsComponent(),
-          ],
-        ),
+        child: Row(children: [AllTagsComponent()]),
       ),
     );
   }
@@ -181,64 +191,39 @@ class _HomePageState extends State<HomePage> {
     return Checkbox.adaptive(value: false, onChanged: (value) {});
   }
 
+  //list widget
   Widget _listWidget(List<AppFile> list) {
     return ValueListenableBuilder(
-      valueListenable: ListStyleButton.listStyleButtonTypeNotifier,
+      valueListenable: FolderStyleChooser.valueNotifier,
       builder: (context, value, child) {
-        if (value == .grid) {
-          return SliverGrid.builder(
-            itemCount: list.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              mainAxisExtent: 200,
-              maxCrossAxisExtent: 180,
-              crossAxisSpacing: 3,
-              mainAxisSpacing: 3,
-            ),
-            itemBuilder: (context, index) => gridItem(list[index]),
-          );
+        if (value == .groupFolder) {
+          return folderViewWidget(list);
         }
-        return SliverList.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) => Card(child: _listItem(list[index])),
-        );
+        return appViewWidget(list);
       },
     );
   }
 
-  Widget _listItem(AppFile pdf) {
-    return PdfListItem(
-      pdf: pdf,
-      onMenuClicked: showPdfMenu,
-      onClicked: goReader,
-    );
+  // folder item list
+  Widget folderViewWidget(List<AppFile> list) {
+    final Map<String, List<AppFile>> folders = {};
+    for (var file in list) {
+      folders.putIfAbsent(file.parentPath.onlyName, () => []).add(file);
+    }
+    return FolderSliverView(folders: folders);
   }
 
-  Widget gridItem(AppFile pdf) {
-    return PdfGridItem(
-      pdf: pdf,
-      onMenuClicked: showPdfMenu,
-      onClicked: goReader,
-    );
+  // pdf item list
+  Widget appViewWidget(List<AppFile> list) {
+    return AppSliverView(list: list);
   }
 
   void goReader(AppFile pdf) async {
-    setState(() {
-      desktopEnable = false;
-    });
+    HomePage.desktopEnable.value = false;
     await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
       context,
       PdfParams(path: pdf.path, configPath: pdf.configPath),
     );
-    setState(() {
-      desktopEnable = true;
-    });
-  }
-
-  void showPdfMenu(AppFile pdf) {
-    showModalBottomSheet(
-      context: context,
-      // isScrollControlled: true,
-      builder: (context) => PdfMenu(pdf: pdf, mainContext: context),
-    );
+    HomePage.desktopEnable.value = true;
   }
 }

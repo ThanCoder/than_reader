@@ -12,6 +12,7 @@ enum FileType { pdf, epub, unknown }
 
 class AppFile {
   final String name;
+  final String parentPath;
   final String path;
   final int size;
   final DateTime date;
@@ -20,6 +21,7 @@ class AppFile {
   const AppFile({
     required this.name,
     required this.path,
+    required this.parentPath,
     required this.date,
     required this.size,
     required this.configId,
@@ -34,6 +36,7 @@ class AppFile {
       date: entry.modifiedDate,
       configId: FileConfigIdGenerator.generateSync(entry.path),
       type: _getFileType(entry.path),
+      parentPath: entry.parent.path,
     );
   }
   factory AppFile.fromFile(File file) {
@@ -44,6 +47,7 @@ class AppFile {
       date: file.modifiedDate,
       configId: FileConfigIdGenerator.generateSync(file.path),
       type: _getFileType(file.path),
+      parentPath: file.parent.path,
     );
   }
 
@@ -75,6 +79,7 @@ class AppFile {
 
   AppFile copyWith({
     String? name,
+    String? parentPath,
     String? path,
     int? size,
     DateTime? date,
@@ -83,6 +88,7 @@ class AppFile {
   }) {
     return AppFile(
       name: name ?? this.name,
+      parentPath: parentPath ?? this.parentPath,
       path: path ?? this.path,
       size: size ?? this.size,
       date: date ?? this.date,
@@ -127,5 +133,3 @@ extension AppFileExtensions on List<AppFile> {
     });
   }
 }
-
-

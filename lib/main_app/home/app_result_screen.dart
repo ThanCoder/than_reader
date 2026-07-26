@@ -6,18 +6,26 @@ import 'package:than_reader/main_app/home/pdf_menu.dart';
 import 'package:than_reader/modules_apps/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
-import 'package:than_reader/partials/list_style_button.dart';
+import 'package:than_reader/main_app/components/list_style_button.dart';
 
-class PdfResultScreen extends StatefulWidget {
+enum AppResultScreenShowType { none, folderResult }
+
+class AppResultScreen extends StatefulWidget {
   final String title;
   final List<AppFile> list;
-  const PdfResultScreen({super.key, required this.title, required this.list});
+  final AppResultScreenShowType type;
+  const AppResultScreen({
+    super.key,
+    required this.title,
+    required this.list,
+    this.type = .none,
+  });
 
   @override
-  State<PdfResultScreen> createState() => _PdfResultScreenState();
+  State<AppResultScreen> createState() => _AppResultScreenState();
 }
 
-class _PdfResultScreenState extends State<PdfResultScreen> {
+class _AppResultScreenState extends State<AppResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +36,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
           maxLines: 1,
           overflow: .ellipsis,
         ),
+        actions: [ListStyleButton()],
       ),
       body: CustomScrollView(slivers: [listStyle]),
     );
@@ -35,7 +44,7 @@ class _PdfResultScreenState extends State<PdfResultScreen> {
 
   Widget get listStyle {
     return ValueListenableBuilder(
-      valueListenable: ListStyleButton.listStyleButtonTypeNotifier,
+      valueListenable: ListStyleButton.valueNotifier,
       builder: (context, value, child) {
         if (value == .grid) {
           return SliverGrid.builder(
