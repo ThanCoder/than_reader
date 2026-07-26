@@ -1,4 +1,4 @@
-import 'package:than_pdf_engine/than_pdf_engine.dart';
+import 'package:t_pdf_reader/t_pdf_reader.dart';
 import 'package:than_reader/core/thumbnail_generator/i_thumbnail_generator.dart';
 
 class AppPdfThumbnailGenerator implements IThumbnailGenerator {
