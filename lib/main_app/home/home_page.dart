@@ -15,7 +15,7 @@ import 'package:than_reader/main_app/components/folder_sliver_view.dart';
 import 'package:than_reader/main_app/components/folder_style_chooser.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
-import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/partials/sort_provider.dart';

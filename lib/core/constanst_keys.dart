@@ -1,0 +1,1 @@
+const String appChooseAutoReaderType = 'app-choose-auto-reader-type';

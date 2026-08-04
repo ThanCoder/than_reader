@@ -5,7 +5,7 @@ import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/home_page.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
-import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 

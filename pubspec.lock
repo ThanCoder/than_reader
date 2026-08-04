@@ -45,10 +45,10 @@ packages:
     dependency: "direct main"
     description:
       name: cfb_store
-      sha256: c28e4b459e138a1fdbb995995cd9e10df335e9c192ea28a7bc518c187521d012
+      sha256: e554a9812c8ce905ea4d1e3376e9dcb9062c44e9bfa5ebec6913636c10be4b0e
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.5.0"
   change_app_package_name:
     dependency: "direct dev"
     description:
@@ -735,9 +735,10 @@ packages:
   t_pdf_reader:
     dependency: "direct main"
     description:
-      path: "/home/thancoder/projects/dart_plugins/t_pdf_reader"
-      relative: false
-    source: path
+      name: t_pdf_reader
+      sha256: "90d48d48bbc4f9432ed9fb699aa4ff2a011d1a9e335af5b7b1d700fa27cd62bb"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.3.0"
   t_widgets:
     dependency: "direct main"

@@ -1,4 +1,3 @@
-import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 
@@ -31,12 +30,7 @@ class _PdfReaderTypeChooserState extends State<PdfReaderTypeChooser> {
       borderRadius: BorderRadius.circular(4),
       value: PdfReaderTypeChooser.readerTypeNotifier.value,
       items: list
-          .map(
-            (e) => DropdownMenuItem(
-              value: e,
-              child: Text(e.name.toCaptalizeWords()),
-            ),
-          )
+          .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
           .toList(),
       onChanged: (value) {
         PdfReaderTypeChooser.readerTypeNotifier.value = value!;

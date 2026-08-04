@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_pkg/than_pkg.dart';
+import 'package:than_reader/modules_apps/pdf_modules/app_pdf_reader_type_chooser.dart';
 
 import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
@@ -65,7 +65,7 @@ class PdfConfig {
       scrollByMouseWheel: 2,
       scrollByArrowKey: 40,
       screenOrientationTypes: .portrait,
-      readerType: .autoReader,
+      readerType: AppAutoReaderTypeChooser.valueNotifier.value,
       bookmarkList: [],
       tags: [],
       showScrollbar: true,

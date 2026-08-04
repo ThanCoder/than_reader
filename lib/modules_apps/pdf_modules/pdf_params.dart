@@ -16,10 +16,7 @@ enum PdfThemeMode {
   dark;
 
   static PdfThemeMode fromName(String name) {
-    if (name == systemFollow.name) return .systemFollow;
-    if (name == light.name) return .light;
-    if (name == dark.name) return .dark;
-    return .appFollow;
+    return values.firstWhere((e) => e.name == name, orElse: () => .appFollow);
   }
 }
 
@@ -28,13 +25,18 @@ enum PdfReaderType {
   thanPdfReader,
   pdfrxReader;
 
+  String get label {
+    return switch (this) {
+      .thanPdfReader => 'Than Reader',
+      .pdfrxReader => 'PdfRx Reader',
+      _ => 'Auto Choose Reader',
+    };
+  }
+
   static PdfReaderType fromName(String name) {
-    if (name == thanPdfReader.name) return .thanPdfReader;
-    if (name == pdfrxReader.name) return .pdfrxReader;
-    return .autoReader;
+    return values.firstWhere((e) => e.name == name, orElse: () => .autoReader);
   }
 }
-
 
 class PdfBookmark {
   final int page;

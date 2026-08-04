@@ -29,12 +29,22 @@ class ThanPdfReaderScreen extends StatefulWidget {
 }
 
 class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
-  final controller = TPdfController();
+  late TPdfController controller;
   late PdfConfig config;
   bool isLoading = false;
 
   @override
   void initState() {
+    controller = TPdfController(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.physicalKey == .keyF) {
+            setFullscreen(!config.isFullscreen);
+          }
+        }
+        return .ignored;
+      },
+    );
     isLoading = true;
     config = widget.config;
     super.initState();
@@ -162,7 +172,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
 
   Widget get pdfReaderWidget {
     return GestureDetector(
-      onDoubleTap: exitFullscreen,
+      onDoubleTap: () => setFullscreen(false),
       onLongPress: showConfigMenu,
       onSecondaryTap: showConfigMenu,
       child: ColorFiltered(
@@ -266,11 +276,12 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     return ThemeData.light();
   }
 
-  void exitFullscreen() async {
-    if (!config.isFullscreen) return;
+  void setFullscreen(bool enableFullscreen) async {
+    // if (!config.isFullscreen) return;
 
-    config = config.copyWith(isFullscreen: false);
-    ThanPkg.platform.toggleFullScreen(isFullScreen: false);
+    config = config.copyWith(isFullscreen: enableFullscreen);
+    ThanPkg.platform.toggleFullScreen(isFullScreen: enableFullscreen);
+    config = config.copyWith(isFullscreen: enableFullscreen);
 
     setState(() {});
   }

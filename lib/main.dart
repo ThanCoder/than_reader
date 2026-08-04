@@ -7,7 +7,8 @@ import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
-import 'package:than_reader/modules_apps/app_manager.dart';
+import 'package:than_reader/modules_apps/pdf_modules/app_pdf_reader_type_chooser.dart';
+import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
 import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_reader_app.dart';
@@ -29,6 +30,8 @@ void main() async {
   await PdfTagDB.instance.open(Utils.instance.getConfigPath('pdf.tags.cfb'));
   await PdfFavController.instance.init();
   await PdfFavController.instance.getAll(); //get all fav list
+  /// app reader type
+  AppAutoReaderTypeChooser.init();
 
   AppManager.instance.register(PdfApp());
   AppManager.instance.register(PdfrxApp());
@@ -40,6 +43,3 @@ void main() async {
 
   runApp(const MyApp());
 }
-
-
-
