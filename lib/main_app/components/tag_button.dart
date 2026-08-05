@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/tag_manager_screen.dart';
 
@@ -65,13 +65,13 @@ class _TagButtonState extends State<TagButton> {
     final updated = await context.push<List<String>>(
       builder: (context) => TagManagerScreen(
         tags: tags,
-        allTags: PdfStateConroller().allTags.toList(),
+        allTags: AppFileAllStateConroller().allTags.toList(),
       ),
     );
     if (updated == null) return;
     tags = updated;
     PdfTagDB.instance.setList(widget.pdf.path, tags);
-    PdfStateConroller().refreshAllTags();
+    AppFileAllStateConroller().refreshAllTags();
     setState(() {});
   }
 }

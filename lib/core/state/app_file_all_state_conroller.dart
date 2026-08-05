@@ -1,69 +1,72 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/pdf_state.dart';
+import 'package:than_reader/core/state/app_file_state.dart';
+import 'package:than_reader/core/state/app_file_sort_controller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/core/utils/file_scanner.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
-class PdfStateConroller {
-  static PdfStateConroller instance = PdfStateConroller._();
-  PdfStateConroller._();
-  factory PdfStateConroller() => instance;
+class AppFileAllStateConroller {
+  static AppFileAllStateConroller instance = AppFileAllStateConroller._();
+  AppFileAllStateConroller._();
+  factory AppFileAllStateConroller() => instance;
 
-  final _controller = StreamController<PdfState>.broadcast();
-  Stream<PdfState> get stream => _controller.stream;
+  final _controller = StreamController<AppFileState>.broadcast();
+  Stream<AppFileState> get stream => _controller.stream;
   final Set<String> _allTags = {};
   Set<String> get allTags => _allTags;
+  // List<AppFile> _allFiles = [];
 
-  PdfState _state = .empty();
-  PdfState get state => _state;
-  final sortList = [
-    SortItem.nameSortItem,
-    SortItem.dateSortItem,
-    SortItem.sizeSortItem,
-  ];
+  AppFileState _state = .empty();
+  AppFileState get state => _state;
+
+  final _sortController = AppFileSortController.instance;
+  SortItem get sortItem => _sortController.currentItem;
+  List<SortItem> get sortList => _sortController.sortList;
+  Set<FileType> fileTypes = {};
+
+  Future<void> init() async {
+    _sortController.stream.listen((event) {
+      sort();
+    });
+
+    _sortController.init();
+  }
 
   Future<void> fetchList() async {
     try {
-      ///Sort
-      SortItem sortItem = SortItem.dateSortItem;
-      final id = CFBStore.getInstance.getInt('pdf_sort_id', -1);
-      if (id != -1) {
-        sortItem = sortList.firstWhere(
-          (e) => e.id == id,
-          orElse: () => SortItem.dateSortItem,
-        );
-        sortItem = sortItem.copyWith(
-          isTrue: CFBStore.getInstance.getBool('pdf_sort_true'),
-        );
-      }
-
       _state = _state.copyWith(isLoading: true, error: '', list: []);
       _controller.add(_state);
 
-      final list = await FileScanner.getAll();
-      _state = _state.copyWith(
-        isLoading: false,
-        error: '',
-        list: list,
-        sortItem: sortItem,
-      );
+      final allFiles = await FileScanner.getAll();
+      for (var file in allFiles) {
+        fileTypes.add(file.type);
+      }
+      _state = _state.copyWith(isLoading: false, error: '', list: allFiles);
       sort();
       // add alltags
       refreshAllTags();
       _controller.add(_state);
       sort();
     } catch (e) {
-      debugPrint('[PdfStateConroller:fetchList]: $e');
+      debugPrint('[AppFileAllStateConroller:fetchList]: $e');
       _state = _state.copyWith(isLoading: false, error: e.toString());
       _controller.add(_state);
     }
+  }
+
+  void setSort(SortItem item) {
+    _sortController.setSort(item);
+  }
+
+  void sort() {
+    _sortController.sort(_state.list);
+    _controller.add(_state);
   }
 
   void refreshState() {
@@ -88,27 +91,6 @@ class PdfStateConroller {
       _allTags.addAll(tags);
     }
     _controller.add(state);
-  }
-
-  void setSort(SortItem item) {
-    _state = _state.copyWith(sortItem: item);
-    CFBStore.getInstance.put('pdf_sort_id', item.id);
-    CFBStore.getInstance.put('pdf_sort_true', item.isTrue);
-    CFBStore.getInstance.writeAll();
-    sort();
-  }
-
-  void sort() {
-    if (_state.sortItem.id == SortItem.dateSortItem.id) {
-      _state.list.sortDate(isNewest: state.sortItem.isTrue);
-    }
-    if (_state.sortItem.id == SortItem.nameSortItem.id) {
-      _state.list.sortA2Z(isA2Z: state.sortItem.isTrue);
-    }
-    if (_state.sortItem.id == SortItem.sizeSortItem.id) {
-      _state.list.sortSize(isSmallest: state.sortItem.isTrue);
-    }
-    _controller.add(_state);
   }
 
   void dispatch(PdfStateEvent event) {
@@ -150,7 +132,9 @@ class PdfStateConroller {
     final newList = List<AppFile>.from(state.list);
     final index = newList.indexWhere((e) => e.name == pdf.name);
     if (index == -1) {
-      debugPrint('[PdfStateConroller:renamePdf]: ${pdf.name} not found index');
+      debugPrint(
+        '[AppFileAllStateConroller:renamePdf]: ${pdf.name} not found index',
+      );
       return;
     }
     newList[index] = newPdf;

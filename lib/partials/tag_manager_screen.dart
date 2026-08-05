@@ -116,6 +116,7 @@ class _TagManagerScreenState extends State<TagManagerScreen> {
       context,
       text: '',
       submitText: 'New Tag',
+      autofocus: true,
       onCheckIsError: (text) {
         if (tags.contains(text.trim())) return 'Already Exists';
 

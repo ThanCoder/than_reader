@@ -17,6 +17,12 @@ class _TagsViewState extends State<TagsView> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant TagsView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    init();
+  }
+
   List<String> tags = [];
 
   void init() {

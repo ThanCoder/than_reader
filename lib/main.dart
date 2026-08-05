@@ -3,6 +3,7 @@ import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/core/utils/utils.dart';
@@ -32,6 +33,9 @@ void main() async {
   await PdfFavController.instance.getAll(); //get all fav list
   /// app reader type
   AppAutoReaderTypeChooser.init();
+
+  // app file all controller
+  await AppFileAllStateConroller.instance.init();
 
   AppManager.instance.register(PdfApp());
   AppManager.instance.register(PdfrxApp());

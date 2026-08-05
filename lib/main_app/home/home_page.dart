@@ -7,12 +7,14 @@ import 'package:t_widgets/t_widgets.dart' hide SortButton;
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/state/app_file_sort_controller.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
-import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/main_app/components/all_tags_component.dart';
 import 'package:than_reader/main_app/components/app_sliver_view.dart';
 import 'package:than_reader/main_app/components/folder_sliver_view.dart';
 import 'package:than_reader/main_app/components/folder_style_chooser.dart';
+import 'package:than_reader/main_app/home/app_file_filter.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
 import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
@@ -40,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       await ThanPkg.platform.requestStoragePermission();
       return;
     }
-    await PdfStateConroller.instance.fetchList();
+    await AppFileAllStateConroller.instance.fetchList();
   }
 
   @override
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           if (TPlatform.isDesktop)
             IconButton(
-              onPressed: PdfStateConroller.instance.fetchList,
+              onPressed: AppFileAllStateConroller.instance.fetchList,
               icon: Icon(Icons.refresh),
             ),
         ],
@@ -80,8 +82,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget get _widget {
     return StreamBuilder(
-      stream: PdfStateConroller.instance.stream,
-      initialData: PdfStateConroller.instance.state,
+      stream: AppFileAllStateConroller.instance.stream,
+      initialData: AppFileAllStateConroller.instance.state,
       builder: (context, snapshot) {
         final state = snapshot.data!;
         if (state.isLoading) {
@@ -98,8 +100,10 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: headerWidget),
+              SliverToBoxAdapter(child: AppFileFilterHeader()),
               subHeaderListCheckerWidget,
-              _listWidget(list),
+
+              AppFileFilter(builder: (context, files) => _listWidget(files)),
             ],
           ),
         );
@@ -115,14 +119,12 @@ class _HomePageState extends State<HomePage> {
         Spacer(),
         ListStyleButton(),
         StreamBuilder(
-          stream: PdfStateConroller().stream,
-          initialData: PdfStateConroller().state,
+          stream: AppFileSortController.instance.stream,
           builder: (context, snapshot) {
-            final state = snapshot.data!;
             return SortButton(
-              value: state.sortItem,
-              list: PdfStateConroller().sortList,
-              onApply: PdfStateConroller().setSort,
+              value: AppFileAllStateConroller.instance.sortItem,
+              list: AppFileAllStateConroller.instance.sortList,
+              onApply: AppFileAllStateConroller.instance.setSort,
             );
           },
         ),
@@ -132,9 +134,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget get subHeaderListCheckerWidget {
     return StreamBuilder(
-      stream: PdfStateConroller().stream,
+      stream: AppFileAllStateConroller().stream,
       builder: (context, asyncSnapshot) {
-        final tagsLeg = PdfStateConroller().allTags.length;
+        final tagsLeg = AppFileAllStateConroller().allTags.length;
         if (tagsLeg > 0) {
           return SliverToBoxAdapter(
             child: SizedBox(height: 50, width: 200, child: subHeaderWidget),

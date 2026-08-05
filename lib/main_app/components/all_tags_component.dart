@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/main_app/home/app_result_screen.dart';
 
 class AllTagsComponent extends StatefulWidget {
@@ -14,9 +14,9 @@ class _AllTagsComponentState extends State<AllTagsComponent> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: PdfStateConroller().stream,
+      stream: AppFileAllStateConroller().stream,
       builder: (context, snapshot) {
-        final allTags = PdfStateConroller().allTags.toList();
+        final allTags = AppFileAllStateConroller().allTags.toList();
         return Row(
           mainAxisAlignment: .start,
           crossAxisAlignment: .start,
@@ -47,10 +47,10 @@ class _AllTagsComponentState extends State<AllTagsComponent> {
   }
 
   void goResutlPage(String tag) async {
-    final list = PdfStateConroller().getFilterTag(tag);
+    final list = AppFileAllStateConroller().getFilterTag(tag);
     await context.push(
       builder: (context) => AppResultScreen(title: tag, list: list),
     );
-    PdfStateConroller().refreshState();
+    AppFileAllStateConroller().refreshState();
   }
 }

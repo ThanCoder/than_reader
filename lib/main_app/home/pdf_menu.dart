@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/pdf_state_conroller.dart';
+import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
@@ -24,7 +24,9 @@ class _PdfMenuState extends State<PdfMenu> {
   late PdfConfig config;
   @override
   void initState() {
-    config = PdfConfig.fromPathSync(ConfigStorageFactory.create(widget.pdf.configPath));
+    config = PdfConfig.fromPathSync(
+      ConfigStorageFactory.create(widget.pdf.configPath),
+    );
     super.initState();
   }
 
@@ -78,7 +80,9 @@ class _PdfMenuState extends State<PdfMenu> {
                   value: config.readerType,
                   onChanged: (value) {
                     config = config.copyWith(readerType: value);
-                    config.savePathSync(ConfigStorageFactory.create(widget.pdf.configPath));
+                    config.savePathSync(
+                      ConfigStorageFactory.create(widget.pdf.configPath),
+                    );
                     setState(() {});
                   },
                 ),
@@ -96,7 +100,7 @@ class _PdfMenuState extends State<PdfMenu> {
       contentText: 'ဖျက်ချင်တာသေချာပြီလား?',
       submitText: 'Delete Forever',
       onSubmit: () {
-        PdfStateConroller.instance.dispatch(PdfDelete(widget.pdf));
+        AppFileAllStateConroller.instance.dispatch(PdfDelete(widget.pdf));
       },
     );
   }
@@ -125,7 +129,7 @@ class _PdfMenuState extends State<PdfMenu> {
       },
 
       onSubmit: (text) {
-        PdfStateConroller().renamePdf(widget.pdf, text);
+        AppFileAllStateConroller().renamePdf(widget.pdf, text);
       },
     );
   }
