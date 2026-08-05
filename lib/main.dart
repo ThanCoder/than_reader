@@ -8,11 +8,11 @@ import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/app_pdf_reader_type_chooser.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_reader_app.dart';
+import 'package:than_reader/modules_apps/reader/app_file_read_manager.dart';
+import 'package:than_reader/modules_apps/reader/epub_reader/epub_app.dart';
+import 'package:than_reader/modules_apps/module_apps.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/app_pdf_reader_type_chooser.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,9 +37,9 @@ void main() async {
   // app file all controller
   await AppFileAllStateConroller.instance.init();
 
-  AppManager.instance.register(PdfApp());
-  AppManager.instance.register(PdfrxApp());
-  AppManager.instance.register(ThanPdfReaderApp());
+  ModuleApps.instance.registerModule(AppFileReadManager());
+  ModuleApps.instance.registerModule(EpubApp());
+  ModuleApps.instance.registerModule(PdfApp());
 
   await TWidgets.instance.init(
     defaultImageAssetsPath: 'assets/images/app_icon.png',

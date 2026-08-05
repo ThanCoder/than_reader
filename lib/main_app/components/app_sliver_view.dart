@@ -5,9 +5,7 @@ import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/home_page.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/router.dart';
 
 class AppSliverView extends StatefulWidget {
   final List<AppFile> list;
@@ -62,10 +60,7 @@ class _AppSliverViewState extends State<AppSliverView> {
 
   void goReader(AppFile pdf) async {
     HomePage.desktopEnable.value = false;
-    await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
-      context,
-      PdfParams(path: pdf.path, configPath: pdf.configPath),
-    );
+    await goReaderModuleApp(context, pdf);
     HomePage.desktopEnable.value = true;
   }
 

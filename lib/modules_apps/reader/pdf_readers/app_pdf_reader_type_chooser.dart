@@ -1,7 +1,7 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/constanst_keys.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_params.dart';
 
 class AppAutoReaderTypeChooser extends StatefulWidget {
   const AppAutoReaderTypeChooser({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/utils/utils.dart';
-import 'package:than_reader/modules_apps/pdf_modules/app_pdf_reader_type_chooser.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/app_pdf_reader_type_chooser.dart';
 import 'package:than_reader/partials/app_theme_chooser.dart';
 import 'package:than_reader/partials/cache_manager.dart';
 import 'package:than_reader/partials/custompath_scanner_manager_widget.dart';

@@ -7,9 +7,9 @@ import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
-import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_reader_type_chooser.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_reader_type_chooser.dart';
 
 class PdfMenu extends StatefulWidget {
   final AppFile pdf;

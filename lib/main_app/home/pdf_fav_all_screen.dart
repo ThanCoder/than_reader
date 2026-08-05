@@ -4,10 +4,8 @@ import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
+import 'package:than_reader/router.dart';
 
 class PdfFavAllScreen extends StatefulWidget {
   const PdfFavAllScreen({super.key});
@@ -75,10 +73,7 @@ class _PdfFavAllScreenState extends State<PdfFavAllScreen> {
   }
 
   void goReader(AppFile pdf) async {
-    await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
-      context,
-      PdfParams(path: pdf.path, configPath: pdf.configPath),
-    );
+    await goReaderModuleApp(context, pdf);
     setState(() {});
   }
 

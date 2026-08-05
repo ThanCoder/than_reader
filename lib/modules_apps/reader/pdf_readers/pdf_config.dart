@@ -1,9 +1,9 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_pkg/than_pkg.dart';
-import 'package:than_reader/modules_apps/pdf_modules/app_pdf_reader_type_chooser.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/app_pdf_reader_type_chooser.dart';
 
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/interfaces/i_config_storage.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_params.dart';
 
 class PdfConfig {
   final int page;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_params.dart';
 
 class PdfBookmarkMenu extends StatefulWidget {
   final PdfConfig config;

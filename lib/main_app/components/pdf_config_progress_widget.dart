@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
 
 class PdfConfigProgressWidget extends StatelessWidget {
   final AppFile pdf;

@@ -1,5 +1,5 @@
 import 'package:cfb_store/cfb_store.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/interfaces/i_config_storage.dart';
 
 class CbfConfigStorage implements IConfigStorage {
   final String path;

@@ -1,14 +1,5 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 
-class PdfParams {
-  final String path;
-  final String? password;
-  final String configPath;
-  PdfParams({required this.path, required this.configPath, this.password});
-}
-
-class PdfResult {}
-
 enum PdfThemeMode {
   systemFollow,
   appFollow,

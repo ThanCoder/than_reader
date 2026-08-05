@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/i_config_storage.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/interfaces/i_config_storage.dart';
 
 class JsonConfigStorage implements IConfigStorage {
   final String path;

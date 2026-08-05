@@ -17,10 +17,8 @@ import 'package:than_reader/main_app/components/folder_style_chooser.dart';
 import 'package:than_reader/main_app/home/app_file_filter.dart';
 import 'package:than_reader/main_app/home/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_app.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
 import 'package:than_reader/partials/sort_provider.dart';
+import 'package:than_reader/router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -222,10 +220,7 @@ class _HomePageState extends State<HomePage> {
 
   void goReader(AppFile pdf) async {
     HomePage.desktopEnable.value = false;
-    await AppManager.instance.go<PdfApp, PdfParams, PdfResult>(
-      context,
-      PdfParams(path: pdf.path, configPath: pdf.configPath),
-    );
+    await goReaderModuleApp(context, pdf);
     HomePage.desktopEnable.value = true;
   }
 }

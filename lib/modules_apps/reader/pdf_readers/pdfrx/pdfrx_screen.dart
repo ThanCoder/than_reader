@@ -4,20 +4,19 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:t_pdf_reader/t_pdf_reader.dart';
+import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
 import 'package:than_reader/core/utils/app_theme.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_bookmark_menu.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config_menu.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config_menu.dart';
 
-class ThanPdfReaderScreen extends StatefulWidget {
+class PdfrxScreen extends StatefulWidget {
   final String path;
   final String? password;
   final PdfConfig config;
-  const ThanPdfReaderScreen({
+  const PdfrxScreen({
     super.key,
     required this.path,
     required this.password,
@@ -25,31 +24,20 @@ class ThanPdfReaderScreen extends StatefulWidget {
   });
 
   @override
-  State<ThanPdfReaderScreen> createState() => _ThanPdfReaderScreenState();
+  State<PdfrxScreen> createState() => _PdfrxScreenState();
 }
 
-class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
-  late TPdfController controller;
+class _PdfrxScreenState extends State<PdfrxScreen> {
+  final controller = PdfViewerController();
+  final loadingNotifier = ValueNotifier<bool>(false);
+  final pageChangedNotifier = ValueNotifier<(int, int)>((0, 0));
   late PdfConfig config;
-  bool isLoading = false;
 
   @override
   void initState() {
-    controller = TPdfController(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.physicalKey == .keyF) {
-            setFullscreen(!config.isFullscreen);
-          }
-        }
-        return .ignored;
-      },
-    );
-    isLoading = true;
     config = widget.config;
+    loadingNotifier.value = true;
     super.initState();
-    setState(() {});
-    init();
     initConfig();
   }
 
@@ -63,27 +51,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     super.dispose();
   }
 
-  void init() {
-    controller.onPdfLoaded.listen((event) {
-      isLoading = false;
-      if (!mounted) return;
-      showTSnackBar(
-        context,
-        'Loaded: ${event.elapsed.autoTimeLabel()}',
-        showCloseIcon: true,
-      );
-      // recent
-      controller.jumpToPage(
-        config.page,
-        offsetX: config.offsetX,
-        zoom: config.zoom,
-      );
-    });
-  }
-
   void initConfig() {
-    controller.setScrollbarEnable(config.showScrollbar);
-
     ThanPkg.platform.toggleFullScreen(isFullScreen: config.isFullscreen);
     ThanPkg.platform.toggleKeepScreen(isKeep: config.isKeepScreen);
     if (Platform.isAndroid) {
@@ -93,29 +61,39 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     }
   }
 
+  void onDocumentLoadFinished() async {
+    loadingNotifier.value = false;
+    pageChangedNotifier.value = (controller.pageCount, controller.pageNumber!);
+
+    await controller.goToPage(pageNumber: config.page);
+    final centerPos = controller.centerPosition;
+    if (config.offsetX != 0) {
+      controller.setZoom(Offset(config.offsetX, centerPos.dy), config.zoom);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (isLoading) {
+        if (loadingNotifier.value) {
           context.pop();
           return;
         }
         context.pop<PdfConfig>(
           config.copyWith(
-            page: controller.currentPage,
-            pageCount: controller.totalPage,
+            page: controller.pageNumber,
+            pageCount: controller.pageCount,
             zoom: controller.currentZoom,
-            offsetX: controller.currentOffsetX,
+            offsetX: controller.centerPosition.dx,
             isFullscreen: config.isFullscreen,
             isKeepScreen: config.isKeepScreen,
             themeMode: config.themeMode,
             screenOrientationTypes: config.screenOrientationTypes,
             scrollByArrowKey: config.scrollByArrowKey,
             scrollByMouseWheel: config.scrollByMouseWheel,
-            showScrollbar: controller.isEnableScrollbar,
           ),
         );
       },
@@ -130,63 +108,92 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
                     style: TextStyle(fontSize: 12),
                   ),
                 ),
-          endDrawer: StreamBuilder(
-            stream: controller.onPageChanged,
-            builder: (context, asyncSnapshot) {
-              return PdfBookmarkMenu(
-                config: config,
-                currentPage: controller.currentPage,
-                onChanged: (config) {
-                  this.config = config;
-                  setState(() {});
-                },
-                onNavigate: (navigatePage) {
-                  controller.jumpToPage(navigatePage);
-                },
-              );
-            },
-          ),
           body: mainWidget,
         ),
       ),
     );
   }
 
+  PdfViewerParams get params => PdfViewerParams(
+    textSelectionParams: PdfTextSelectionParams(enabled: false),
+    pageDropShadow: null,
+    scrollByMouseWheel: config.scrollByMouseWheel,
+    scrollByArrowKey: config.scrollByArrowKey,
+    margin: 0,
+    scrollPhysicsScale: BouncingScrollPhysics(),
+    panAxis: PanAxis.vertical,
+    onDocumentLoadFinished: (documentRef, loadSucceeded) =>
+        onDocumentLoadFinished(),
+    onPageChanged: (pageNumber) {
+      if (pageNumber == null) return;
+      pageChangedNotifier.value = (controller.pageCount, pageNumber);
+    },
+    loadingBannerBuilder: (context, bytesDownloaded, totalBytes) {
+      return Center(child: CircularProgressIndicator.adaptive());
+    },
+    pageOverlaysBuilder: (context, pageRectInViewer, page) => [
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Text(
+          'Page: ${page.pageNumber}',
+          style: const TextStyle(color: Colors.red),
+        ),
+      ),
+    ],
+    onKey: (params, key, isRealKeyPress) {
+      if (key == LogicalKeyboardKey.escape) {
+        exitFullscreen();
+        return true;
+      }
+      return false;
+    },
+    onGeneralTap: (context, controller, details) {
+      if (details.type == .doubleTap) {
+        exitFullscreen();
+        return true;
+      }
+      if (details.type == .secondaryTap || details.type == .longPress) {
+        showConfigMenu();
+        return true;
+      }
+      return false;
+    },
+  );
+
   Widget get mainWidget {
     return Stack(
       children: [
         // pdf
-        Positioned.fill(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          top: config.isFullscreen ? 0 : 50,
-          child: ClipRRect(child: pdfReaderWidget),
+        Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              top: config.isFullscreen ? 0 : 50,
+              child: ClipRRect(child: pdfReaderWidget),
+            ),
+          ],
         ),
 
         // header
         if (!config.isFullscreen)
           Positioned(top: 0, left: 0, right: 0, child: headerWidget),
+        Positioned(top: 0, left: 0, right: 0, child: loaderWidget),
       ],
     );
   }
 
   Widget get pdfReaderWidget {
-    return GestureDetector(
-      onDoubleTap: () => setFullscreen(false),
-      onLongPress: showConfigMenu,
-      onSecondaryTap: showConfigMenu,
-      child: ColorFiltered(
-        colorFilter: ColorFilter.mode(
-          Colors.white,
-          isDarkMode ? BlendMode.difference : BlendMode.darken,
-        ),
-        child: Container(
-          color: Colors.white,
-          width: double.infinity,
-          height: double.infinity,
-          child: TPdfReader(path: widget.path, controller: controller),
-        ),
+    return ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        Colors.white,
+        isDarkMode ? BlendMode.difference : BlendMode.darken,
+      ),
+      child: PdfViewer.file(
+        useProgressiveLoading: false,
+        passwordProvider: () => widget.password,
+        widget.path,
+        controller: controller,
+        params: params,
       ),
     );
   }
@@ -199,24 +206,30 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
         child: Row(
           spacing: 5,
           children: [
-            StreamBuilder(
-              stream: controller.onPageChanged,
-              builder: (context, asyncSnapshot) {
-                // book mark အတွက်
+            ValueListenableBuilder<(int, int)>(
+              valueListenable: pageChangedNotifier,
+              builder: (context, value, child) {
                 return GestureDetector(
                   onTap: showGoToDialog,
                   child: Text(
-                    '${controller.currentPage}/${controller.totalPage}',
+                    '${value.$2}/${value.$1}',
                     style: TextStyle(color: Colors.blue),
                   ),
                 );
               },
             ),
             IconButton(
-              onPressed: controller.zoomOut,
+              onPressed: () {
+                controller.zoomDown();
+              },
               icon: Icon(Icons.zoom_out),
             ),
-            IconButton(onPressed: controller.zoomIn, icon: Icon(Icons.zoom_in)),
+            IconButton(
+              onPressed: () {
+                controller.zoomUp();
+              },
+              icon: Icon(Icons.zoom_in),
+            ),
             IconButton(
               onPressed: () {
                 if (config.themeMode == .appFollow ||
@@ -240,23 +253,21 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
               },
               icon: Icon(Icons.fullscreen),
             ),
-            // scrollbar
-            ValueListenableBuilder(
-              valueListenable: controller.scrollbarNotifier,
-              builder: (context, enable, child) {
-                return IconButton(
-                  onPressed: () {
-                    controller.setScrollbarEnable(!enable);
-                  },
-                  icon: Icon(
-                    enable ? Icons.unfold_less : Icons.unfold_more_rounded,
-                  ),
-                );
-              },
-            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget get loaderWidget {
+    return ValueListenableBuilder(
+      valueListenable: loadingNotifier,
+      builder: (context, value, child) {
+        if (value) {
+          return LinearProgressIndicator();
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 
@@ -277,14 +288,17 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     return ThemeData.light();
   }
 
-  void setFullscreen(bool enableFullscreen) async {
-    // if (!config.isFullscreen) return;
+  void exitFullscreen() async {
+    if (!config.isFullscreen) return;
+    final centerPosition = controller.centerPosition;
+    final zoom = controller.currentZoom;
 
-    config = config.copyWith(isFullscreen: enableFullscreen);
-    ThanPkg.platform.toggleFullScreen(isFullScreen: enableFullscreen);
-    config = config.copyWith(isFullscreen: enableFullscreen);
+    config = config.copyWith(isFullscreen: false);
+    ThanPkg.platform.toggleFullScreen(isFullScreen: false);
 
     setState(() {});
+    await Future.delayed(Duration(seconds: 1));
+    controller.setZoom(centerPosition, zoom);
   }
 
   void showConfigMenu() async {
@@ -299,8 +313,8 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
   }
 
   void showGoToDialog() {
-    final pageNumber = controller.currentPage;
-    final pageCount = controller.totalPage;
+    final pageNumber = controller.pageNumber!;
+    final pageCount = controller.pageCount;
     showTReanmeDialog(
       context,
       text: pageNumber.toString(),
@@ -315,7 +329,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
         return null;
       },
       onSubmit: (text) {
-        controller.jumpToPage(int.parse(text));
+        controller.goToPage(pageNumber: int.parse(text));
       },
     );
   }

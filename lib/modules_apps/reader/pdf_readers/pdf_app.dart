@@ -3,30 +3,40 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/modules_apps/pdf_modules/interfaces/app_manager.dart';
-import 'package:than_reader/modules_apps/pdf_modules/config_storage_factory.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_config.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdfrx/pdfrx_screen.dart';
-import 'package:than_reader/modules_apps/pdf_modules/than_pdf_reader/than_pdf_reader_screen.dart';
+import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/modules_apps/module_apps.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdfrx/pdfrx_screen.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/than_pdf_reader/than_pdf_reader_screen.dart';
 
-class PdfApp extends ModuleApp<PdfParams, PdfResult> {
+class PdfParams extends IModuleAppParams {
+  final AppFile file;
+  PdfParams(this.file);
+}
+
+class PdfResult extends IModuleAppResponse {}
+
+class PdfApp implements IModuleApp<PdfParams, PdfResult> {
+  @override
+  String get appId => 'pdf.reader.app';
+
   @override
   Future<PdfResult?> go(BuildContext context, PdfParams params) async {
-    final configPath = params.configPath;
+    final configPath = params.file.configPath;
 
     final config = PdfConfig.fromPathSync(
       ConfigStorageFactory.create(configPath),
     );
     PdfConfig? changedConfig;
     if (config.readerType == .autoReader) {
-      final file = File(params.path);
+      final file = File(params.file.path);
       if (file.size > ((1024 * 1024) * 10)) {
         // big pdf
         changedConfig = await context.push<PdfConfig>(
           builder: (context) => ThanPdfReaderScreen(
-            path: params.path,
-            password: params.password,
+            path: params.file.path,
+            password: null,
             config: config,
           ),
         );
@@ -34,8 +44,8 @@ class PdfApp extends ModuleApp<PdfParams, PdfResult> {
         //small pdf
         changedConfig = await context.push<PdfConfig>(
           builder: (context) => PdfrxScreen(
-            path: params.path,
-            password: params.password,
+            path: params.file.path,
+            password: null,
             config: config,
           ),
         );
@@ -45,17 +55,14 @@ class PdfApp extends ModuleApp<PdfParams, PdfResult> {
       }
     } else if (config.readerType == .pdfrxReader) {
       changedConfig = await context.push<PdfConfig>(
-        builder: (context) => PdfrxScreen(
-          path: params.path,
-          password: params.password,
-          config: config,
-        ),
+        builder: (context) =>
+            PdfrxScreen(path: params.file.path, password: null, config: config),
       );
     } else if (config.readerType == .thanPdfReader) {
       changedConfig = await context.push<PdfConfig>(
         builder: (context) => ThanPdfReaderScreen(
-          path: params.path,
-          password: params.password,
+          path: params.file.path,
+          password: null,
           config: config,
         ),
       );

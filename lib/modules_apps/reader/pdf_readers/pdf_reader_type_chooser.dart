@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/modules_apps/pdf_modules/pdf_params.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_params.dart';
 
 class PdfReaderTypeChooser extends StatefulWidget {
   final PdfReaderType? value;
