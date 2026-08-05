@@ -92,6 +92,10 @@ class PdfConfig {
   }
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
+    var readerType = map.getString(['readerType']);
+    if (readerType.isEmpty) {
+      readerType = AppAutoReaderTypeChooser.valueNotifier.value.name;
+    }
     return PdfConfig(
       page: map.getInt(['page'], def: 0),
       pageCount: map.getInt(['pageCount'], def: 0),
@@ -105,7 +109,7 @@ class PdfConfig {
       screenOrientationTypes: ScreenOrientationTypes.getType(
         map.getString(['screenOrientationTypes']),
       ),
-      readerType: PdfReaderType.fromName(map.getString(['readerType'])),
+      readerType: PdfReaderType.fromName(readerType),
       bookmarkList: map
           .getList(['bookmarkList'], def: [])
           .map((e) => PdfBookmark.fromMap(e))

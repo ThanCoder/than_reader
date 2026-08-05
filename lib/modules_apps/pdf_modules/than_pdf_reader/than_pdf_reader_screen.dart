@@ -48,6 +48,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
     isLoading = true;
     config = widget.config;
     super.initState();
+    setState(() {});
     init();
     initConfig();
   }
