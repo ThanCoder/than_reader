@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:than_reader/core/thumbnail_generator/epub_thumbnail_gen.dart';
+import 'package:epub_engine/epub_engine.dart';
 import 'package:than_reader/core/thumbnail_generator/i_thumbnail_generator.dart';
 
 class AppEpubThumbnailGenerator implements IThumbnailGenerator {
@@ -14,6 +14,6 @@ class AppEpubThumbnailGenerator implements IThumbnailGenerator {
     int quality = 70,
     String? password,
   }) async {
-    return await EpubThumbnailGen.instance.generate(inputPath, outPath);
+    return await EpubCoverWorker.getInstance.generate(inputPath, outPath);
   }
 }

@@ -15,7 +15,10 @@ class PdfParams extends IModuleAppParams {
   PdfParams(this.file);
 }
 
-class PdfResult extends IModuleAppResponse {}
+class PdfResult extends IModuleAppResponse {
+  final PdfConfig config;
+  PdfResult(this.config);
+}
 
 class PdfApp implements IModuleApp<PdfParams, PdfResult> {
   @override
@@ -66,6 +69,9 @@ class PdfApp implements IModuleApp<PdfParams, PdfResult> {
           config: config,
         ),
       );
+    }
+    if (changedConfig != null) {
+      await changedConfig.savePath(ConfigStorageFactory.create(configPath));
     }
 
     return null;

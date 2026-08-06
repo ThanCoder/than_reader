@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_reader_screen.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
 
@@ -16,11 +17,16 @@ class EpubApp implements IModuleApp<EpubParams, EpubReponse> {
 
   @override
   Future<EpubReponse?> go(BuildContext context, EpubParams params) async {
-    return await Navigator.push<EpubReponse>(
+    final config = EpubConfig.empty();
+
+    final updatedConfig = await Navigator.push<EpubConfig>(
       context,
       MaterialPageRoute(
-        builder: (context) => EpubReaderScreen(file: params.file),
+        builder: (context) =>
+            EpubReaderScreen(file: params.file, config: config),
       ),
     );
+    if (updatedConfig != null) {}
+    return null;
   }
 }

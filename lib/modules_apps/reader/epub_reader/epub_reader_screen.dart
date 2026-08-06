@@ -1,51 +1,65 @@
+import 'package:epub_engine/epub_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:t_widgets/t_widgets.dart';
 
 import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/modules_apps/reader/epub_reader/epub_engine_worker.dart';
+import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
+
+enum EpubReaderFetchingType { prevFetching, nextFetching, none }
 
 class EpubReaderScreen extends StatefulWidget {
   final AppFile file;
-  const EpubReaderScreen({super.key, required this.file});
+  final EpubConfig config;
+  const EpubReaderScreen({super.key, required this.file, required this.config});
 
   @override
   State<EpubReaderScreen> createState() => _EpubReaderScreenState();
 }
 
 class _EpubReaderScreenState extends State<EpubReaderScreen> {
+  late EpubConfig config;
+  final controller = ScrollController();
   @override
   void initState() {
+    config = widget.config;
     super.initState();
     init();
   }
 
   @override
   void dispose() {
-    worker.dispose();
+    epub.dispose();
+    controller.dispose();
     super.dispose();
   }
 
-  final worker = EpubEngineWorker.instance;
-  List<String> hrefList = [];
+  final epub = EpubEngine();
+  List<EpubChapter> chapters = [];
   bool isOpened = false;
   int current = 0;
   int count = 0;
-  List<EpubContentItem> showItems = [];
+  Map<int, EpubContentItem> showItems = {};
   bool isLoading = false;
-  bool isFetching = false;
+  EpubReaderFetchingType fetchingType = .none;
 
   void init() async {
     setState(() {
       isLoading = true;
     });
     try {
-      hrefList = await worker.open(widget.file.path);
-      count = hrefList.length;
+      isOpened = await epub.open(widget.file.path);
+      chapters = epub.chapters;
+      count = chapters.length;
+      current = config.currentIndex;
 
-      if (hrefList.isNotEmpty) {
+      if (chapters.isNotEmpty) {
         current = 1;
-        addShowCurrentItem();
+        final res = await getCurrentChapterContent();
+        showItems[current] = .new(
+          index: current,
+          content: res ?? 'Content Not found!',
+        );
       }
       setState(() {
         isLoading = false;
@@ -60,64 +74,91 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     }
   }
 
+  Future<String?> getCurrentChapterContent() async {
+    if (current > count) return null;
+    final chapter = chapters[current];
+    return await epub.getChapterContent(chapter);
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('index: $current- count: $count');
-    return Scaffold(
-      appBar: AppBar(title: Text('Epub Reader')),
-      body: isLoading
-          ? Center(child: TLoaderRandom())
-          : CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: !isExistsPrev
-                      ? null
-                      : fetchingLoadingWidget(
-                          child: IconButton(
-                            onPressed: goPrevChapter,
-                            icon: Icon(Icons.arrow_back_ios_rounded),
-                          ),
-                        ),
-                ),
-                SliverList.separated(
-                  itemCount: showItems.length,
-                  separatorBuilder: (context, index) => Divider(),
-                  itemBuilder: (context, index) => listItem(showItems[index]),
-                ),
-                SliverToBoxAdapter(
-                  child: !isExistsNext
-                      ? null
-                      : fetchingLoadingWidget(
-                          child: IconButton(
-                            onPressed: goNextChapter,
-                            icon: Icon(Icons.arrow_forward_ios_outlined),
-                          ),
-                        ),
-                ),
-              ],
-            ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        existReader();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: IconButton(
+            onPressed: existReader,
+            icon: Icon(Icons.arrow_back),
+          ),
+        ),
+        drawer: Drawer(),
+        body: bodyWidget,
+      ),
     );
   }
 
-  Widget listItem(EpubContentItem item) {
-    return Column(
-      children: [
-        Text('Index: ${item.index}'),
-        Html(data: item.content),
+  Widget get bodyWidget {
+    if (isLoading) {
+      return Center(child: TLoaderRandom());
+    }
+    return CustomScrollView(
+      controller: controller,
+      slivers: [
+        SliverToBoxAdapter(child: prevChapterFetchWidget),
+        SliverToBoxAdapter(child: listItem(showItems[current])),
+        // SliverList.separated(
+        //   itemCount: showItems.length,
+        //   separatorBuilder: (context, index) => Divider(),
+        //   itemBuilder: (context, index) => listItem(showItems[index]),
+        // ),
+        SliverToBoxAdapter(child: nextChapterFetchWidget),
       ],
     );
   }
 
-  Widget fetchingLoadingWidget({required Widget child}) {
-    if (isFetching) {
+  Widget? get prevChapterFetchWidget {
+    if (!isExistsPrev || isLoading) return null;
+    if (fetchingType == .prevFetching) {
       return TLoader();
     }
-    return child;
+    return IconButton(
+      onPressed: goPrevChapter,
+      icon: Icon(Icons.arrow_back_ios_rounded),
+    );
+  }
+
+  Widget? get nextChapterFetchWidget {
+    if (!isExistsNext || isLoading) return null;
+    if (fetchingType == .nextFetching) {
+      return TLoader();
+    }
+    return IconButton(
+      onPressed: goNextChapter,
+      icon: Icon(Icons.arrow_forward_ios_outlined),
+    );
+  }
+
+  Widget? listItem(EpubContentItem? item) {
+    if (item == null) return null;
+    return Column(
+      children: [
+        Text('Index: ${item.index}'),
+        Html(
+          data: item.content,
+          shrinkWrap: true,
+          style: {'*': Style(fontSize: .large)},
+        ),
+      ],
+    );
   }
 
   bool get isExistsNext => current < count;
   bool get isExistsPrev {
-    if (showItems.isNotEmpty && showItems.first.index != 0) {
+    if (current - 1 != -1) {
       return true;
     }
     return false;
@@ -125,50 +166,56 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
 
   Future<void> goPrevChapter() async {
     if (!isExistsPrev) return;
-    current -= 1;
     setState(() {
-      isFetching = true;
+      fetchingType = .prevFetching;
     });
     try {
-      final item = hrefList[current];
-      final res = await worker.getContent(item);
-      showItems.insert(
-        0,
-        .new(index: current, content: res ?? 'Content Not Found!'),
+      final res = await getCurrentChapterContent();
+
+      showItems[current - 1] = .new(
+        index: current,
+        content: res ?? 'Content Not Found!',
       );
+      current -= 1;
     } catch (e) {
       debugPrint('[goPrevChapter]: $e');
     }
     setState(() {
-      isFetching = false;
+      fetchingType = .none;
     });
   }
 
-  void goNextChapter() {
+  void goNextChapter() async {
     if (!isExistsNext) return;
-    current += 1;
-    addShowCurrentItem();
-  }
-
-  Future<void> addShowCurrentItem() async {
     setState(() {
-      isFetching = true;
+      fetchingType = .nextFetching;
     });
     try {
-      final item = hrefList[current];
-      final res = await worker.getContent(item);
-      showItems.add(.new(index: current, content: res ?? 'Content Not Found!'));
+      final res = await getCurrentChapterContent();
+
+      showItems[current + 1] = .new(
+        index: current,
+        content: res ?? 'Content Not Found!',
+      );
+      current += 1;
     } catch (e) {
-      debugPrint('[addShowCurrentItem]: $e');
+      debugPrint('[goNextChapter]: $e');
     }
     setState(() {
-      isFetching = false;
+      fetchingType = .none;
     });
+    await Future.delayed(Duration(milliseconds: 400));
+    if (!mounted) return;
+    controller.jumpTo(0);
+  }
+
+  void existReader() {
+    Navigator.pop<EpubConfig>(context, config.copyWith(currentIndex: current));
   }
 }
 
 class EpubContentItem {
   final int index;
   final String content;
-  EpubContentItem({required this.index, required this.content});
+  const EpubContentItem({required this.index, required this.content});
 }

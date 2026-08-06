@@ -247,6 +247,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
                 return IconButton(
                   onPressed: () {
                     controller.setScrollbarEnable(!enable);
+                    config = config.copyWith(showScrollbar: !enable);
                   },
                   icon: Icon(
                     enable ? Icons.unfold_less : Icons.unfold_more_rounded,
