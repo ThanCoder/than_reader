@@ -1,3 +1,4 @@
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:epub_engine/epub_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -5,6 +6,7 @@ import 'package:t_widgets/t_widgets.dart';
 
 import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
+import 'package:than_reader/modules_apps/reader/epub_reader/toc_drawer.dart';
 
 enum EpubReaderFetchingType { prevFetching, nextFetching, none }
 
@@ -42,6 +44,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   Map<int, EpubContentItem> showItems = {};
   bool isLoading = false;
   EpubReaderFetchingType fetchingType = .none;
+  List<EpubTocItem> toc = [];
 
   void init() async {
     setState(() {
@@ -49,12 +52,20 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     });
     try {
       isOpened = await epub.open(widget.file.path);
+      if (!isOpened) {
+        if (!mounted) return;
+        showTMessageDialogError(context, 'Opend Error');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
       chapters = epub.chapters;
       count = chapters.length;
       current = config.currentIndex;
+      toc = epub.toc;
 
       if (chapters.isNotEmpty) {
-        current = 1;
         final res = await getCurrentChapterContent();
         showItems[current] = .new(
           index: current,
@@ -75,9 +86,15 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   }
 
   Future<String?> getCurrentChapterContent() async {
-    if (current > count) return null;
-    final chapter = chapters[current];
-    return await epub.getChapterContent(chapter);
+    try {
+      if (current > count) return null;
+      final chapter = chapters[current];
+      return await epub.getChapterContent(chapter);
+    } catch (e) {
+      if (!mounted) return null;
+      showTMessageDialogError(context, e.toString());
+      return null;
+    }
   }
 
   @override
@@ -90,14 +107,51 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: IconButton(
-            onPressed: existReader,
-            icon: Icon(Icons.arrow_back),
-          ),
+          title: !TPlatform.isDesktop
+              ? null
+              : IconButton(
+                  onPressed: existReader,
+                  icon: Icon(Icons.arrow_back),
+                ),
         ),
-        drawer: Drawer(),
+        drawer: tocDrawerWidget,
         body: bodyWidget,
       ),
+    );
+  }
+
+  Widget? get tocDrawerWidget {
+    return TocDrawer(
+      list: toc,
+      currentItem: currentTocItem,
+      onClicked: (item) async {
+        final index = chapters.indexWhere((e) => e.href == item.src);
+
+        if (index == -1) return;
+        current = index;
+
+        setState(() {
+          isLoading = true;
+        });
+        try {
+          if (showItems[current] == null) {
+            final res = await getCurrentChapterContent();
+
+            showItems[current] = .new(
+              index: current,
+              content: res ?? 'Content Not Found!',
+            );
+          }
+        } catch (e) {
+          debugPrint('[toc error]: $e');
+        }
+        setState(() {
+          isLoading = false;
+        });
+        await Future.delayed(Duration(milliseconds: 400));
+        if (!mounted) return;
+        controller.jumpTo(0);
+      },
     );
   }
 
@@ -156,6 +210,13 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     );
   }
 
+  // drawer
+  EpubTocItem? get currentTocItem {
+    // final ch = chapters[current];
+    // final index = toc.index
+    return null;
+  }
+
   bool get isExistsNext => current < count;
   bool get isExistsPrev {
     if (current - 1 != -1) {
@@ -170,13 +231,14 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       fetchingType = .prevFetching;
     });
     try {
-      final res = await getCurrentChapterContent();
-
-      showItems[current - 1] = .new(
-        index: current,
-        content: res ?? 'Content Not Found!',
-      );
       current -= 1;
+      if (showItems[current] == null) {
+        final res = await getCurrentChapterContent();
+        showItems[current] = .new(
+          index: current,
+          content: res ?? 'Content Not Found!',
+        );
+      }
     } catch (e) {
       debugPrint('[goPrevChapter]: $e');
     }
@@ -191,13 +253,15 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       fetchingType = .nextFetching;
     });
     try {
-      final res = await getCurrentChapterContent();
-
-      showItems[current + 1] = .new(
-        index: current,
-        content: res ?? 'Content Not Found!',
-      );
       current += 1;
+      if (showItems[current] == null) {
+        final res = await getCurrentChapterContent();
+
+        showItems[current] = .new(
+          index: current,
+          content: res ?? 'Content Not Found!',
+        );
+      }
     } catch (e) {
       debugPrint('[goNextChapter]: $e');
     }

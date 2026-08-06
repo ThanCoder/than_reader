@@ -4,7 +4,7 @@ class EpubConfig {
   const EpubConfig({required this.currentIndex});
 
   factory EpubConfig.empty() {
-    return EpubConfig(currentIndex: 1);
+    return EpubConfig(currentIndex: 0);
   }
 
   EpubConfig copyWith({int? currentIndex}) {
