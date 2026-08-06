@@ -28,12 +28,14 @@ class AppFileReadManager
         appId: 'epub.reader',
         params: .new(params.file),
       );
+      return null;
     } else if (params.file.type == .pdf) {
       await ModuleApps.instance.go<PdfParams, PdfResult>(
         context,
         appId: 'pdf.reader.app',
         params: .new(params.file),
       );
+      return null;
     } else {
       throw UnsupportedError(
         'UnSupported Reader: Type -> `${params.file.type.name}`',
