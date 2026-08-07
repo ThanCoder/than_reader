@@ -13,16 +13,16 @@ class FavToggleButton extends StatelessWidget {
       initialData: PdfFavController().state,
       builder: (context, snapshot) {
         final exists = PdfFavController().isExists(file);
-        return IconButton(
-          padding: EdgeInsets.all(0),
-          onPressed: () {
+        return InkWell(
+          mouseCursor: SystemMouseCursors.click,
+          onTap: () {
             if (exists) {
               PdfFavController().remove(file);
             } else {
               PdfFavController().add(file);
             }
           },
-          icon: exists
+          child: exists
               ? Icon(
                   Icons.favorite,
                   color: const Color.fromARGB(255, 4, 61, 55),

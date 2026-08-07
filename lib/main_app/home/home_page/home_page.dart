@@ -4,6 +4,7 @@ import 'package:t_widgets/t_widgets.dart' hide SortButton;
 import 'package:than_pkg/than_pkg.dart' show ThanPkg;
 import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/state/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 import 'package:than_reader/core/state/reader_file_sort_controller.dart';
 import 'package:than_reader/main_app/home/home_page/home_page_card_list.dart';
@@ -79,6 +80,7 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: SizedBox(height: 10)),
+              SliverToBoxAdapter(child: favoriteAppFilesWidget()),
               SliverToBoxAdapter(child: latestAppFilesWidget(files)),
               SliverToBoxAdapter(child: pdfFilesWidget(files)),
               SliverToBoxAdapter(child: epubFilesWidget(files)),
@@ -89,10 +91,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget favoriteAppFilesWidget() {
+    return StreamBuilder(
+      stream: PdfFavController.instance.stateStream,
+      builder: (context, asyncSnapshot) {
+        final files = PdfFavController.instance.state.favPathList;
+        if (files.isEmpty) {
+          return SizedBox.shrink();
+        }
+        return HomePageCardList(
+          files: files,
+          title: Text(
+            'Favorite Books',
+            style: TextStyle(color: Colors.teal, fontWeight: .bold),
+          ),
+          onItemClicked: goReader,
+          onItemMenuClicked: showPdfMenu,
+          onShowAllClicked: () async {
+            await context.push(builder: (context) => ReaderFileListPage());
+            setState(() {});
+          },
+        );
+      },
+    );
+  }
+
   Widget latestAppFilesWidget(List<ReaderFile> files) {
     return HomePageCardList(
       files: files,
-      title: Text('Latest Book'),
+      title: Text(
+        'Latest Book',
+        style: TextStyle(color: Colors.blue, fontWeight: .bold),
+      ),
       onItemClicked: goReader,
       onItemMenuClicked: showPdfMenu,
       onShowAllClicked: () async {
@@ -111,7 +141,9 @@ class _HomePageState extends State<HomePage> {
       onItemClicked: goReader,
       onItemMenuClicked: showPdfMenu,
       onShowAllClicked: () async {
-        await context.push(builder: (context) => ReaderFileListPage());
+        await context.push(
+          builder: (context) => ReaderFileListPage(type: .pdf),
+        );
         setState(() {});
       },
     );
@@ -126,7 +158,9 @@ class _HomePageState extends State<HomePage> {
       onItemClicked: goReader,
       onItemMenuClicked: showPdfMenu,
       onShowAllClicked: () async {
-        await context.push(builder: (context) => ReaderFileListPage());
+        await context.push(
+          builder: (context) => ReaderFileListPage(type: .epub),
+        );
         setState(() {});
       },
     );

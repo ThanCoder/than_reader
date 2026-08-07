@@ -21,7 +21,8 @@ import 'package:than_reader/partials/sort_provider.dart';
 import 'package:than_reader/router.dart';
 
 class ReaderFileListPage extends StatefulWidget {
-  const ReaderFileListPage({super.key});
+  final FileType? type;
+  const ReaderFileListPage({super.key, this.type});
 
   @override
   State<ReaderFileListPage> createState() => _ReaderFileListPageState();
@@ -36,6 +37,9 @@ class _ReaderFileListPageState extends State<ReaderFileListPage> {
   }
 
   Future<void> init() async {
+    if (widget.type != null) {
+      AppFileFilterHeader.valueNotifier.value = widget.type!.name.toLowerCase();
+    }
     if (!await ThanPkg.platform.isStoragePermissionGranted()) {
       await ThanPkg.platform.requestStoragePermission();
       return;
@@ -187,10 +191,6 @@ class _ReaderFileListPageState extends State<ReaderFileListPage> {
         );
       },
     );
-  }
-
-  Widget get tagHiddenWidget {
-    return Checkbox.adaptive(value: false, onChanged: (value) {});
   }
 
   //list widget

@@ -6,6 +6,7 @@ class HomePageCardList extends StatelessWidget {
   final List<ReaderFile> files;
   final int maxShowCount;
   final double itemHeight;
+  final double itemWidth;
   final Widget title;
   final void Function()? onShowAllClicked;
   final void Function(ReaderFile file)? onItemClicked;
@@ -16,6 +17,7 @@ class HomePageCardList extends StatelessWidget {
     required this.title,
     this.maxShowCount = 10,
     this.itemHeight = 240,
+    this.itemWidth = 140,
     this.onShowAllClicked,
     this.onItemClicked,
     this.onItemMenuClicked,
@@ -23,48 +25,51 @@ class HomePageCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final len = files.length.clamp(0, 10);
-    return SizedBox(
-      height: 240,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          spacing: 4,
-          children: [
-            Row(
-              children: [
-                title,
-                Spacer(),
-                IconButton(
-                  color: Colors.blue,
-                  onPressed: onShowAllClicked,
-                  icon: Icon(Icons.next_plan),
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: .horizontal,
-                itemCount: len,
-                itemBuilder: (context, index) {
-                  final item = files[index];
-
-                  return Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: SizedBox(
-                      // height: 180,
-                      width: 140,
-                      child: PdfGridItem(
-                        pdf: item,
-                        onClicked: onItemClicked,
-                        onMenuClicked: onItemMenuClicked,
-                      ),
-                    ),
-                  );
-                },
+    final len = files.length.clamp(0, maxShowCount);
+    return Container(
+      margin: EdgeInsets.only(bottom: 6),
+      child: SizedBox(
+        height: itemHeight,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            spacing: 4,
+            children: [
+              Row(
+                children: [
+                  title,
+                  Spacer(),
+                  IconButton(
+                    color: Colors.blue,
+                    onPressed: onShowAllClicked,
+                    icon: Icon(Icons.next_plan),
+                  ),
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: .horizontal,
+                  itemCount: len,
+                  itemBuilder: (context, index) {
+                    final item = files[index];
+
+                    return Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: SizedBox(
+                        // height: 180,
+                        width: itemWidth,
+                        child: PdfGridItem(
+                          pdf: item,
+                          onClicked: onItemClicked,
+                          onMenuClicked: onItemMenuClicked,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
