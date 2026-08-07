@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 
 class TagsView extends StatefulWidget {
-  final AppFile pdf;
+  final ReaderFile pdf;
   const TagsView({super.key, required this.pdf});
 
   @override

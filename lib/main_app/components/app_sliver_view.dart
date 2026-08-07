@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
-import 'package:than_reader/main_app/home/home_page.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
+import 'package:than_reader/main_app/home/home_page/reader_file_list_page.dart';
 import 'package:than_reader/router.dart';
 
 class AppSliverView extends StatefulWidget {
-  final List<AppFile> list;
+  final List<ReaderFile> list;
   const AppSliverView({super.key, required this.list});
 
   @override
@@ -42,7 +42,7 @@ class _AppSliverViewState extends State<AppSliverView> {
     );
   }
 
-  Widget _listItem(AppFile pdf) {
+  Widget _listItem(ReaderFile pdf) {
     return PdfListItem(
       pdf: pdf,
       onMenuClicked: showPdfMenu,
@@ -50,7 +50,7 @@ class _AppSliverViewState extends State<AppSliverView> {
     );
   }
 
-  Widget gridItem(AppFile pdf) {
+  Widget gridItem(ReaderFile pdf) {
     return PdfGridItem(
       pdf: pdf,
       onMenuClicked: showPdfMenu,
@@ -58,13 +58,13 @@ class _AppSliverViewState extends State<AppSliverView> {
     );
   }
 
-  void goReader(AppFile pdf) async {
-    HomePage.desktopEnable.value = false;
+  void goReader(ReaderFile pdf) async {
+    ReaderFileListPage.desktopEnable.value = false;
     await goReaderModuleApp(context, pdf);
-    HomePage.desktopEnable.value = true;
+    ReaderFileListPage.desktopEnable.value = true;
   }
 
-  void showPdfMenu(AppFile pdf) {
+  void showPdfMenu(ReaderFile pdf) {
     showModalBottomSheet(
       context: context,
       // isScrollControlled: true,

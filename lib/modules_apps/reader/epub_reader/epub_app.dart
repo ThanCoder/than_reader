@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_reader_screen.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
 
 class EpubParams extends IModuleAppParams {
-  final AppFile file;
+  final ReaderFile file;
   final String cachePath;
   EpubParams(this.file, this.cachePath);
 }

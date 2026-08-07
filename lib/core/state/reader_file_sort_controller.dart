@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:cfb_store/cfb_store.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
-class AppFileSortController {
-  static AppFileSortController instance = AppFileSortController._();
-  AppFileSortController._();
-  factory AppFileSortController() => instance;
+class ReaderFileSortController {
+  static ReaderFileSortController instance = ReaderFileSortController._();
+  ReaderFileSortController._();
+  factory ReaderFileSortController() => instance;
 
   final _controller = StreamController<SortItem>.broadcast();
   Stream<SortItem> get stream => _controller.stream;
@@ -44,7 +44,7 @@ class AppFileSortController {
     _controller.add(currentItem);
   }
 
-  void sort(List<AppFile> list) {
+  void sort(List<ReaderFile> list) {
     if (currentItem.id == SortItem.dateSortItem.id) {
       list.sortDate(isNewest: currentItem.isTrue);
     }

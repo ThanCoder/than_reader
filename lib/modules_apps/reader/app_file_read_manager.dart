@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_app.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_app.dart';
 
 class AppFileReadManagerParams extends IModuleAppParams {
-  final AppFile file;
+  final ReaderFile file;
   final String cachePath;
   AppFileReadManagerParams(this.file, this.cachePath);
 }

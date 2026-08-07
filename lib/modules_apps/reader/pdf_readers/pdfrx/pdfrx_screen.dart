@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg/than_pkg.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
+import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/utils/app_theme.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config_menu.dart';

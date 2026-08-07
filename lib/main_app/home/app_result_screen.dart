@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
@@ -10,7 +10,7 @@ enum AppResultScreenShowType { none, folderResult }
 
 class AppResultScreen extends StatefulWidget {
   final String title;
-  final List<AppFile> list;
+  final List<ReaderFile> list;
   final AppResultScreenShowType type;
   const AppResultScreen({
     super.key,
@@ -64,7 +64,7 @@ class _AppResultScreenState extends State<AppResultScreen> {
     );
   }
 
-  Widget _listItem(AppFile pdf) {
+  Widget _listItem(ReaderFile pdf) {
     return Card(
       child: PdfListItem(
         pdf: pdf,
@@ -74,7 +74,7 @@ class _AppResultScreenState extends State<AppResultScreen> {
     );
   }
 
-  Widget gridItem(AppFile pdf) {
+  Widget gridItem(ReaderFile pdf) {
     return PdfGridItem(
       pdf: pdf,
       onMenuClicked: showPdfMenu,
@@ -82,13 +82,13 @@ class _AppResultScreenState extends State<AppResultScreen> {
     );
   }
 
-  void goReader(AppFile pdf) async {
+  void goReader(ReaderFile pdf) async {
     await goReaderModuleApp(context, pdf);
 
     setState(() {});
   }
 
-  void showPdfMenu(AppFile pdf) {
+  void showPdfMenu(ReaderFile pdf) {
     showModalBottomSheet(
       context: context,
       // isScrollControlled: true,

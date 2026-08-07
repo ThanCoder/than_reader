@@ -5,12 +5,12 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/thumbnail_generator/thumbnail_generator_factory.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {
-  final AppFile file;
+  final ReaderFile file;
   final int width;
   final int height;
   const PdfThumbnail({

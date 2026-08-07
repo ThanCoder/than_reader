@@ -10,7 +10,7 @@ import 'package:than_reader/partials/pdf_config_path_manager.dart';
 // enum FileType { pdf, epub, mobi, txt, unknown }
 enum FileType { pdf, epub, unknown }
 
-class AppFile {
+class ReaderFile {
   final String name;
   final String parentPath;
   final String path;
@@ -18,7 +18,7 @@ class AppFile {
   final DateTime date;
   final String configId;
   final FileType type;
-  const AppFile({
+  const ReaderFile({
     required this.name,
     required this.path,
     required this.parentPath,
@@ -28,8 +28,8 @@ class AppFile {
     required this.type,
   });
 
-  factory AppFile.fromEntry(FileSystemEntity entry) {
-    return AppFile(
+  factory ReaderFile.fromEntry(FileSystemEntity entry) {
+    return ReaderFile(
       name: entry.getName(),
       path: entry.path,
       size: entry.size,
@@ -39,8 +39,8 @@ class AppFile {
       parentPath: entry.parent.path,
     );
   }
-  factory AppFile.fromFile(File file) {
-    return AppFile(
+  factory ReaderFile.fromFile(File file) {
+    return ReaderFile(
       name: file.getName(),
       path: file.path,
       size: file.size,
@@ -77,7 +77,7 @@ class AppFile {
     return Utils.instance.getConfigPath('$configId-config');
   }
 
-  AppFile copyWith({
+  ReaderFile copyWith({
     String? name,
     String? parentPath,
     String? path,
@@ -86,7 +86,7 @@ class AppFile {
     String? configId,
     FileType? type,
   }) {
-    return AppFile(
+    return ReaderFile(
       name: name ?? this.name,
       parentPath: parentPath ?? this.parentPath,
       path: path ?? this.path,
@@ -98,7 +98,7 @@ class AppFile {
   }
 }
 
-extension AppFileExtensions on List<AppFile> {
+extension AppFileExtensions on List<ReaderFile> {
   void sortA2Z({bool isA2Z = true}) {
     sort((a, b) {
       if (isA2Z) {

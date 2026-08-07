@@ -1,18 +1,18 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:epub_engine/epub_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:t_widgets/t_widgets.dart';
 
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
-import 'package:than_reader/modules_apps/reader/epub_reader/epub_utils.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/toc_drawer.dart';
 
-enum EpubReaderFetchingType { prevFetching, nextFetching, none }
+// enum EpubReaderFetchingType { prevFetching, nextFetching, none }
 
 class EpubReaderScreen extends StatefulWidget {
-  final AppFile file;
+  final ReaderFile file;
   final EpubConfig config;
   final String cachePath;
   const EpubReaderScreen({
@@ -53,7 +53,6 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   int count = 0;
   Map<int, EpubContentItem> showItems = {};
   bool isLoading = false;
-  EpubReaderFetchingType fetchingType = .none;
   List<EpubTocItem> toc = [];
 
   void init() async {
@@ -111,6 +110,8 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   Future<String?> getCurrentChapterContent() async {
     try {
       if (current > count) return null;
+
+      // fetch engine
       final chapter = chapters[current];
       var html = await epub.getChapterContent(chapter);
 
@@ -183,7 +184,13 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
                 icon: Icon(Icons.arrow_back),
               ),
             ),
-          Text('Count: $count'),
+          InkWell(
+            onTap: showJumpIndexDialog,
+            child: Text(
+              'Count: $count',
+              style: TextStyle(fontWeight: .bold, color: Colors.blue),
+            ),
+          ),
         ],
       ),
     );
@@ -227,29 +234,36 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   }
 
   Widget get bodyWidget {
-    if (isLoading) {
-      return Center(child: TLoaderRandom());
-    }
     return CustomScrollView(
       controller: controller,
       slivers: [
-        SliverToBoxAdapter(child: prevChapterFetchWidget),
-        SliverToBoxAdapter(child: listItem(showItems[current])),
+        SliverToBoxAdapter(child: navWidget),
+        if (isLoading)
+          SliverFillRemaining(child: Center(child: TLoaderRandom()))
+        else
+          SliverToBoxAdapter(child: resultWidget(showItems[current])),
         // SliverList.separated(
         //   itemCount: showItems.length,
         //   separatorBuilder: (context, index) => Divider(),
         //   itemBuilder: (context, index) => listItem(showItems[index]),
         // ),
-        SliverToBoxAdapter(child: nextChapterFetchWidget),
+        SliverToBoxAdapter(child: navWidget),
       ],
     );
   }
 
+  Widget get navWidget {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Row(
+        crossAxisAlignment: .center,
+        children: [?prevChapterFetchWidget, Spacer(), ?nextChapterFetchWidget],
+      ),
+    );
+  }
+
   Widget? get prevChapterFetchWidget {
-    if (!isExistsPrev || isLoading) return null;
-    if (fetchingType == .prevFetching) {
-      return TLoader();
-    }
+    if (!isExistsPrev) return null;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: IconButton(
@@ -264,9 +278,6 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
 
   Widget? get nextChapterFetchWidget {
     if (!isExistsNext || isLoading) return null;
-    if (fetchingType == .nextFetching) {
-      return TLoader();
-    }
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: IconButton(
@@ -279,7 +290,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     );
   }
 
-  Widget? listItem(EpubContentItem? item) {
+  Widget? resultWidget(EpubContentItem? item) {
     if (item == null) return null;
     return Column(
       spacing: 4,
@@ -335,7 +346,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   Future<void> goPrevChapter() async {
     if (!isExistsPrev) return;
     setState(() {
-      fetchingType = .prevFetching;
+      isLoading = true;
     });
     try {
       current -= 1;
@@ -350,14 +361,14 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       debugPrint('[goPrevChapter]: $e');
     }
     setState(() {
-      fetchingType = .none;
+      isLoading = false;
     });
   }
 
   void goNextChapter() async {
     if (!isExistsNext) return;
     setState(() {
-      fetchingType = .nextFetching;
+      isLoading = true;
     });
     try {
       current += 1;
@@ -373,7 +384,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       debugPrint('[goNextChapter]: $e');
     }
     setState(() {
-      fetchingType = .none;
+      isLoading = false;
     });
     await Future.delayed(Duration(milliseconds: 400));
     if (!mounted) return;
@@ -393,6 +404,48 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
         currentScroll: controller.offset,
         maxScroll: controller.position.maxScrollExtent,
       ),
+    );
+  }
+
+  void showJumpIndexDialog() {
+    showTReanmeDialog(
+      context,
+      text: current.toString(),
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      textInputType: .number,
+      autofocus: true,
+      submitText: 'Jump Page',
+      onCheckIsError: (text) {
+        final num = int.tryParse(text) ?? 0;
+        if (num > count) {
+          return 'Page Range `0-$count`';
+        }
+        return null;
+      },
+      onSubmit: (text) async {
+        try {
+          setState(() {
+            isLoading = true;
+          });
+          current = int.parse(text);
+
+          if (showItems[current] == null) {
+            final html = await getCurrentChapterContent();
+
+            showItems[current] = .new(
+              index: current,
+              content: html ?? 'Content Not Found!',
+            );
+          }
+          if (!mounted) return;
+          setState(() {
+            isLoading = false;
+          });
+        } catch (e) {
+          if (!mounted) return;
+          showTMessageDialogError(context, e.toString());
+        }
+      },
     );
   }
 }

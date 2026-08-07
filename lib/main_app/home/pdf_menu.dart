@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
+import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_reader_type_chooser.dart';
 
 class PdfMenu extends StatefulWidget {
-  final AppFile pdf;
+  final ReaderFile pdf;
   final BuildContext mainContext;
   const PdfMenu({super.key, required this.pdf, required this.mainContext});
 
@@ -100,7 +100,7 @@ class _PdfMenuState extends State<PdfMenu> {
       contentText: 'ဖျက်ချင်တာသေချာပြီလား?',
       submitText: 'Delete Forever',
       onSubmit: () {
-        AppFileAllStateConroller.instance.dispatch(PdfDelete(widget.pdf));
+        ReaderFileAllStateConroller.instance.dispatch(PdfDelete(widget.pdf));
       },
     );
   }
@@ -129,7 +129,7 @@ class _PdfMenuState extends State<PdfMenu> {
       },
 
       onSubmit: (text) {
-        AppFileAllStateConroller().renamePdf(widget.pdf, text);
+        ReaderFileAllStateConroller().renamePdf(widget.pdf, text);
       },
     );
   }

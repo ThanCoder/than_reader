@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
+import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/tag_manager_screen.dart';
 
 class TagButton extends StatefulWidget {
-  final AppFile pdf;
+  final ReaderFile pdf;
   const TagButton({super.key, required this.pdf});
 
   @override
@@ -65,13 +65,13 @@ class _TagButtonState extends State<TagButton> {
     final updated = await context.push<List<String>>(
       builder: (context) => TagManagerScreen(
         tags: tags,
-        allTags: AppFileAllStateConroller().allTags.toList(),
+        allTags: ReaderFileAllStateConroller().allTags.toList(),
       ),
     );
     if (updated == null) return;
     tags = updated;
     PdfTagDB.instance.setList(widget.pdf.path, tags);
-    AppFileAllStateConroller().refreshAllTags();
+    ReaderFileAllStateConroller().refreshAllTags();
     setState(() {});
   }
 }

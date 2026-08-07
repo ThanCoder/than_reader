@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 
 class PdfFavState {
-  final List<AppFile> favPathList;
+  final List<ReaderFile> favPathList;
   final bool isLoading;
   final String error;
   const PdfFavState({
@@ -15,7 +15,7 @@ class PdfFavState {
   }
 
   PdfFavState copyWith({
-    List<AppFile>? favPathList,
+    List<ReaderFile>? favPathList,
     bool? isLoading,
     String? error,
   }) {

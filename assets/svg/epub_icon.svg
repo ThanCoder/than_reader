@@ -1,0 +1,61 @@
+<svg
+  width="128"
+  height="128"
+  viewBox="0 0 128 128"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Document -->
+  <path
+    d="M28 8H78L104 34V116C104 118.209 102.209 120 100 120H28C25.791 120 24 118.209 24 116V12C24 9.791 25.791 8 28 8Z"
+    fill="#FFFFFF"
+    stroke="#D1D5DB"
+    stroke-width="3"
+  />
+
+  <!-- Folded corner -->
+  <path
+    d="M78 8V30C78 32.209 79.791 34 82 34H104L78 8Z"
+    fill="#E5E7EB"
+  />
+
+  <!-- EPUB symbol -->
+  <path
+    d="M64 43
+       C53.507 43 45 51.507 45 62
+       C45 72.493 53.507 81 64 81
+       C68.971 81 73.474 79.09 76.798 75.98
+       L71.15 70.33
+       C69.25 72.03 66.76 73 64 73
+       C57.925 73 53 68.075 53 62
+       C53 55.925 57.925 51 64 51
+       C66.76 51 69.25 51.97 71.15 53.67
+       L76.798 48.02
+       C73.474 44.91 68.971 43 64 43Z"
+    fill="#22C55E"
+  />
+
+  <!-- EPUB text background -->
+  <rect
+    x="35"
+    y="88"
+    width="58"
+    height="22"
+    rx="5"
+    fill="#16A34A"
+  />
+
+  <!-- EPUB text -->
+  <text
+    x="64"
+    y="104"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="13"
+    font-weight="700"
+    letter-spacing="0.5"
+    fill="white"
+  >
+    EPUB
+  </text>
+</svg>

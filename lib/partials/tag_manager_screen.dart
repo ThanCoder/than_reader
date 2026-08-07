@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
+import 'package:than_reader/core/context_extensions.dart';
 
 class TagManagerScreen extends StatefulWidget {
   final List<String> tags;

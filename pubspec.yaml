@@ -29,8 +29,10 @@ dependencies:
   crypto: ^3.0.7
   archive: ^4.0.9
   flutter_html: ^3.0.0
-  # than_pdf_engine: ^0.4.0
   desktop_drop: ^0.7.1
+  flutter_svg: ^2.3.0
+  # iconify_flutter: ^0.0.7
+  # icons_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/svg/
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

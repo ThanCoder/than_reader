@@ -1,12 +1,12 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
 import 'package:than_reader/main_app/home/app_result_screen.dart';
 
 class FolderSliverView extends StatefulWidget {
-  final Map<String, List<AppFile>> folders;
+  final Map<String, List<ReaderFile>> folders;
   const FolderSliverView({super.key, required this.folders});
 
   @override
@@ -41,7 +41,7 @@ class _FolderSliverViewState extends State<FolderSliverView> {
     );
   }
 
-  Widget listStyle(MapEntry<String, List<AppFile>> entry) {
+  Widget listStyle(MapEntry<String, List<ReaderFile>> entry) {
     final allSize = entry.value.fold(0, (prev, ele) => prev + ele.size);
     return InkWell(
       onTap: () => goResultPage(entry),
@@ -61,7 +61,7 @@ class _FolderSliverViewState extends State<FolderSliverView> {
     );
   }
 
-  Widget gridStyle(MapEntry<String, List<AppFile>> entry) {
+  Widget gridStyle(MapEntry<String, List<ReaderFile>> entry) {
     final allSize = entry.value.fold(0, (prev, ele) => prev + ele.size);
     return InkWell(
       onTap: () => goResultPage(entry),
@@ -81,7 +81,7 @@ class _FolderSliverViewState extends State<FolderSliverView> {
     );
   }
 
-  void goResultPage(MapEntry<String, List<AppFile>> entry) {
+  void goResultPage(MapEntry<String, List<ReaderFile>> entry) {
     context.push(
       builder: (context) =>
           AppResultScreen(title: entry.key, list: entry.value),

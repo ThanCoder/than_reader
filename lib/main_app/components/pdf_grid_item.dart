@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
 import 'package:than_reader/main_app/components/pdf_config_progress_widget.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
 
 class PdfGridItem extends StatelessWidget {
-  final AppFile pdf;
-  final void Function(AppFile pdf)? onClicked;
-  final void Function(AppFile pdf)? onMenuClicked;
+  final ReaderFile pdf;
+  final void Function(ReaderFile pdf)? onClicked;
+  final void Function(ReaderFile pdf)? onMenuClicked;
   const PdfGridItem({
     super.key,
     required this.pdf,
@@ -47,6 +48,7 @@ class PdfGridItem extends StatelessWidget {
                     child: FavToggleButton(file: pdf),
                   ),
                 ),
+                Positioned(top: 0, right: 0, child: bookTypeIconWidget),
                 // progress
                 Positioned(left: 0, right: 0, bottom: 0, child: progressWidget),
               ],
@@ -61,6 +63,28 @@ class PdfGridItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget get bookTypeIconWidget {
+    if (pdf.type == .epub) {
+      return SvgPicture.asset(
+        'assets/svg/epub-svgrepo-com.svg',
+        width: 30,
+        height: 30,
+      );
+    }
+    if (pdf.type == .pdf) {
+      return SvgPicture.asset(
+        'assets/svg/pdf-file-svgrepo-com.svg',
+        width: 30,
+        height: 30,
+      );
+    }
+    return SvgPicture.asset(
+      'assets/svg/file-unknown-svgrepo-com.svg',
+      width: 30,
+      height: 30,
     );
   }
 

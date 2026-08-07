@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:than_reader/main_app/home/home_page.dart';
-import 'package:than_reader/main_app/home/more_page.dart';
+import 'package:than_reader/main_app/home/home_page/home_page.dart';
+import 'package:than_reader/main_app/home/more/more_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

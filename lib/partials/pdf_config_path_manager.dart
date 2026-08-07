@@ -4,7 +4,7 @@ import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_pkg/than_pkg.dart';
-import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
+import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfConfigPathManager extends StatefulWidget {
@@ -47,7 +47,7 @@ class _PdfConfigPathManagerState extends State<PdfConfigPathManager> {
       }
       PdfConfigPathManager.pathFolderNotifier.value = path;
       // refresh list state
-      AppFileAllStateConroller().refreshState();
+      ReaderFileAllStateConroller().refreshState();
     } catch (e) {
       debugPrint('[_PdfConfigPathManagerState:init]: $e');
     }

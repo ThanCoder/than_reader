@@ -5,11 +5,11 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart' hide SortButton;
 import 'package:than_pkg/than_pkg.dart' hide TPlatform;
-import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/app_file_sort_controller.dart';
+import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/state/reader_file_sort_controller.dart';
 import 'package:than_reader/core/state/pdf_fav_controller.dart';
-import 'package:than_reader/core/state/app_file_all_state_conroller.dart';
+import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 import 'package:than_reader/main_app/components/all_tags_component.dart';
 import 'package:than_reader/main_app/components/app_sliver_view.dart';
 import 'package:than_reader/main_app/components/folder_sliver_view.dart';
@@ -20,15 +20,15 @@ import 'package:than_reader/main_app/components/list_style_button.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 import 'package:than_reader/router.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class ReaderFileListPage extends StatefulWidget {
+  const ReaderFileListPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ReaderFileListPage> createState() => _ReaderFileListPageState();
   static final desktopEnable = ValueNotifier<bool>(true);
 }
 
-class _HomePageState extends State<HomePage> {
+class _ReaderFileListPageState extends State<ReaderFileListPage> {
   @override
   void initState() {
     super.initState();
@@ -40,7 +40,9 @@ class _HomePageState extends State<HomePage> {
       await ThanPkg.platform.requestStoragePermission();
       return;
     }
-    await AppFileAllStateConroller.instance.fetchList();
+    if (ReaderFileAllStateConroller.instance.state.list.isEmpty) {
+      await ReaderFileAllStateConroller.instance.fetchList();
+    }
   }
 
   @override
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           if (TPlatform.isDesktop)
             IconButton(
-              onPressed: AppFileAllStateConroller.instance.fetchList,
+              onPressed: ReaderFileAllStateConroller.instance.fetchList,
               icon: Icon(Icons.refresh),
             ),
         ],
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget get desktopDropWidget {
     return ValueListenableBuilder(
-      valueListenable: HomePage.desktopEnable,
+      valueListenable: ReaderFileListPage.desktopEnable,
       builder: (context, value, child) {
         return DropTarget(
           enable: value,
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             if (details.files.isEmpty) return;
             final file = details.files.first;
             if (!file.path.endsWith('.pdf')) return;
-            goReader(AppFile.fromFile(File(file.path)));
+            goReader(ReaderFile.fromFile(File(file.path)));
           },
           child: _widget,
         );
@@ -80,8 +82,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget get _widget {
     return StreamBuilder(
-      stream: AppFileAllStateConroller.instance.stream,
-      initialData: AppFileAllStateConroller.instance.state,
+      stream: ReaderFileAllStateConroller.instance.stream,
+      initialData: ReaderFileAllStateConroller.instance.state,
       builder: (context, snapshot) {
         final state = snapshot.data!;
         if (state.isLoading) {
@@ -117,12 +119,12 @@ class _HomePageState extends State<HomePage> {
         Spacer(),
         ListStyleButton(),
         StreamBuilder(
-          stream: AppFileSortController.instance.stream,
+          stream: ReaderFileSortController.instance.stream,
           builder: (context, snapshot) {
             return SortButton(
-              value: AppFileAllStateConroller.instance.sortItem,
-              list: AppFileAllStateConroller.instance.sortList,
-              onApply: AppFileAllStateConroller.instance.setSort,
+              value: ReaderFileAllStateConroller.instance.sortItem,
+              list: ReaderFileAllStateConroller.instance.sortList,
+              onApply: ReaderFileAllStateConroller.instance.setSort,
             );
           },
         ),
@@ -132,9 +134,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget get subHeaderListCheckerWidget {
     return StreamBuilder(
-      stream: AppFileAllStateConroller().stream,
+      stream: ReaderFileAllStateConroller().stream,
       builder: (context, asyncSnapshot) {
-        final tagsLeg = AppFileAllStateConroller().allTags.length;
+        final tagsLeg = ReaderFileAllStateConroller().allTags.length;
         if (tagsLeg > 0) {
           return SliverToBoxAdapter(
             child: SizedBox(height: 50, width: 200, child: subHeaderWidget),
@@ -192,7 +194,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //list widget
-  Widget _listWidget(List<AppFile> list) {
+  Widget _listWidget(List<ReaderFile> list) {
     return ValueListenableBuilder(
       valueListenable: FolderStyleChooser.valueNotifier,
       builder: (context, value, child) {
@@ -205,8 +207,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   // folder item list
-  Widget folderViewWidget(List<AppFile> list) {
-    final Map<String, List<AppFile>> folders = {};
+  Widget folderViewWidget(List<ReaderFile> list) {
+    final Map<String, List<ReaderFile>> folders = {};
     for (var file in list) {
       folders.putIfAbsent(file.parentPath.onlyName, () => []).add(file);
     }
@@ -214,13 +216,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   // pdf item list
-  Widget appViewWidget(List<AppFile> list) {
+  Widget appViewWidget(List<ReaderFile> list) {
     return AppSliverView(list: list);
   }
 
-  void goReader(AppFile pdf) async {
-    HomePage.desktopEnable.value = false;
+  void goReader(ReaderFile pdf) async {
+    ReaderFileListPage.desktopEnable.value = false;
     await goReaderModuleApp(context, pdf);
-    HomePage.desktopEnable.value = true;
+    ReaderFileListPage.desktopEnable.value = true;
   }
 }

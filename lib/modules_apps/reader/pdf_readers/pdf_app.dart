@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/extensions/context_extensions.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
@@ -11,7 +11,7 @@ import 'package:than_reader/modules_apps/reader/pdf_readers/pdfrx/pdfrx_screen.d
 import 'package:than_reader/modules_apps/reader/pdf_readers/than_pdf_reader/than_pdf_reader_screen.dart';
 
 class PdfParams extends IModuleAppParams {
-  final AppFile file;
+  final ReaderFile file;
   PdfParams(this.file);
 }
 

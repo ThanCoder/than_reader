@@ -5,7 +5,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:than_pkg/than_pkg.dart';
-import 'package:than_reader/core/models/app_file.dart';
+import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/partials/custompath_scanner_manager_widget.dart';
 import 'package:than_reader/core/utils/path_scanner.dart';
 
@@ -29,7 +29,7 @@ class FileScanner extends PathScanner {
     return .skip;
   }
 
-  static Future<List<AppFile>> getAll() async {
+  static Future<List<ReaderFile>> getAll() async {
     final scanFolders = <String>[];
     if (Platform.isLinux) {
       try {
@@ -55,10 +55,10 @@ class FileScanner extends PathScanner {
 
     // print(scanFolders);
     return await Isolate.run(() async {
-      final list = <AppFile>[];
+      final list = <ReaderFile>[];
       final entries = await FileScanner(scanFolders: scanFolders).scan();
       for (var entry in entries) {
-        list.add(AppFile.fromEntry(entry));
+        list.add(ReaderFile.fromEntry(entry));
       }
       list.sortDate();
       // sort newest

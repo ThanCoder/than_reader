@@ -3,29 +3,29 @@ import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:than_reader/core/models/app_file.dart';
-import 'package:than_reader/core/state/app_file_state.dart';
-import 'package:than_reader/core/state/app_file_sort_controller.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/state/reader_file_state.dart';
+import 'package:than_reader/core/state/reader_file_sort_controller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/core/utils/file_scanner.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 
-class AppFileAllStateConroller {
-  static AppFileAllStateConroller instance = AppFileAllStateConroller._();
-  AppFileAllStateConroller._();
-  factory AppFileAllStateConroller() => instance;
+class ReaderFileAllStateConroller {
+  static ReaderFileAllStateConroller instance = ReaderFileAllStateConroller._();
+  ReaderFileAllStateConroller._();
+  factory ReaderFileAllStateConroller() => instance;
 
-  final _controller = StreamController<AppFileState>.broadcast();
-  Stream<AppFileState> get stream => _controller.stream;
+  final _controller = StreamController<ReaderFileState>.broadcast();
+  Stream<ReaderFileState> get stream => _controller.stream;
   final Set<String> _allTags = {};
   Set<String> get allTags => _allTags;
-  // List<AppFile> _allFiles = [];
+  // List<ReaderFile> _allFiles = [];
 
-  AppFileState _state = .empty();
-  AppFileState get state => _state;
+  ReaderFileState _state = .empty();
+  ReaderFileState get state => _state;
 
-  final _sortController = AppFileSortController.instance;
+  final _sortController = ReaderFileSortController.instance;
   SortItem get sortItem => _sortController.currentItem;
   List<SortItem> get sortList => _sortController.sortList;
   Set<FileType> fileTypes = {};
@@ -54,7 +54,7 @@ class AppFileAllStateConroller {
       _controller.add(_state);
       sort();
     } catch (e) {
-      debugPrint('[AppFileAllStateConroller:fetchList]: $e');
+      debugPrint('[ReaderFileAllStateConroller:fetchList]: $e');
       _state = _state.copyWith(isLoading: false, error: e.toString());
       _controller.add(_state);
     }
@@ -73,8 +73,8 @@ class AppFileAllStateConroller {
     _controller.add(_state);
   }
 
-  List<AppFile> getFilterTag(String tag) {
-    List<AppFile> list = [];
+  List<ReaderFile> getFilterTag(String tag) {
+    List<ReaderFile> list = [];
     for (var pdf in state.list) {
       final tags = PdfTagDB.instance.getList(pdf.path);
       if (tags.contains(tag)) {
@@ -119,7 +119,7 @@ class AppFileAllStateConroller {
     }
   }
 
-  void renamePdf(AppFile pdf, String rename) {
+  void renamePdf(ReaderFile pdf, String rename) {
     final oldPdf = File(pdf.path);
 
     final renamePath = PathBuf(oldPdf.parentPath).join('$rename.pdf').path;
@@ -129,11 +129,11 @@ class AppFileAllStateConroller {
     // new class ပြောင်း
     final newPdf = pdf.copyWith(path: renamePath, name: renamePath.getName());
     // ပြီးတော့ List မှာပြောင်း
-    final newList = List<AppFile>.from(state.list);
+    final newList = List<ReaderFile>.from(state.list);
     final index = newList.indexWhere((e) => e.name == pdf.name);
     if (index == -1) {
       debugPrint(
-        '[AppFileAllStateConroller:renamePdf]: ${pdf.name} not found index',
+        '[ReaderFileAllStateConroller:renamePdf]: ${pdf.name} not found index',
       );
       return;
     }
