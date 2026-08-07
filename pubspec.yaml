@@ -31,6 +31,7 @@ dependencies:
   flutter_html: ^3.0.0
   desktop_drop: ^0.7.1
   flutter_svg: ^2.3.0
+  html: ^0.15.6
   # iconify_flutter: ^0.0.7
   # icons_plus: ^5.0.0
 
@@ -56,12 +57,22 @@ flutter:
     - assets/
     - assets/images/
     - assets/svg/
+    - assets/fonts/
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Winnwa
+      fonts:
+        - asset: assets/fonts/WINNWA.TTF
+        
+    - family: Zawgyi-One-V3.1
+      fonts:
+        - asset: assets/fonts/ZAWGYI-ONE_V3.1.TTF
+
   # fonts:
   #   - family: Schyler
   #     fonts:

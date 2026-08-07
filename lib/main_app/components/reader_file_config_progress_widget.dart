@@ -14,7 +14,7 @@ class ReaderFileConfigProgressWidget extends StatelessWidget {
       initialData: PdfConfig.empty(),
       builder: (context, snapshot) {
         final config = snapshot.data!;
-        int page = config.pageCount;
+        int page = config.page;
         int pageCount = config.pageCount;
 
         if (page == -1 || pageCount == 0) {

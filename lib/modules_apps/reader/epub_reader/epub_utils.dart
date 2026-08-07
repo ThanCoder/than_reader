@@ -1,13 +1,31 @@
-import 'package:epub_engine/epub_engine.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:html/parser.dart' as html_parser;
+import 'package:html/dom.dart';
 
 class EpubUtils {
-  final EpubEngine epub;
-  const EpubUtils(this.epub);
+  static List<String> splitHtmlBlocks(String html) {
+    final document = html_parser.parseFragment(html);
 
-  // String replaceEpubImages(
-  //   String html,
-  //   String Function(String href) resolvePath,
-  // ) {
-    
-  // }
+    final blocks = <String>[];
+
+    for (final node in document.nodes) {
+      if (node is Element) {
+        blocks.add(node.outerHtml);
+      }
+    }
+
+    return blocks;
+  }
+
+  Future<void> loadFontFromFile(String path, {required String family}) async {
+    final bytes = await File(path).readAsBytes();
+
+    final loader = FontLoader(family);
+    loader.addFont(
+      Future.value(ByteData.sublistView(Uint8List.fromList(bytes))),
+    );
+
+    await loader.load();
+  }
 }

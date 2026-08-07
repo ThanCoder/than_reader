@@ -9,12 +9,16 @@ class EpubConfig {
   final double currentScroll;
   final double lastDrawerListOffset;
   final Map<String, bool> expansionTileState;
+  final String fontFamily;
+  final double fontSize;
   const EpubConfig({
     required this.currentIndex,
     required this.currentScroll,
     required this.maxScroll,
     required this.lastDrawerListOffset,
     required this.expansionTileState,
+    this.fontFamily = '',
+    this.fontSize = -1,
   });
 
   static EpubConfig fromPathSync(IConfigStorage storage) {
@@ -50,6 +54,8 @@ class EpubConfig {
       'maxScroll': maxScroll,
       'lastDrawerListOffset': lastDrawerListOffset,
       'expansionTileState': expansionTileState,
+      'fontFamily': fontFamily,
+      'fontSize': fontSize,
     };
   }
 
@@ -64,10 +70,10 @@ class EpubConfig {
       maxScroll: map.getDouble(['maxScroll']),
       lastDrawerListOffset: map.getDouble(['lastDrawerListOffset']),
       expansionTileState: expansionTileState,
+      fontFamily: map.getString(['fontFamily'], def: '-1'),
+      fontSize: map.getDouble(['fontSize'], def: -1),
     );
   }
-
-
 
   EpubConfig copyWith({
     int? currentIndex,
@@ -75,6 +81,8 @@ class EpubConfig {
     double? currentScroll,
     double? lastDrawerListOffset,
     Map<String, bool>? expansionTileState,
+    String? fontFamily,
+    double? fontSize,
   }) {
     return EpubConfig(
       currentIndex: currentIndex ?? this.currentIndex,
@@ -82,11 +90,13 @@ class EpubConfig {
       currentScroll: currentScroll ?? this.currentScroll,
       lastDrawerListOffset: lastDrawerListOffset ?? this.lastDrawerListOffset,
       expansionTileState: expansionTileState ?? this.expansionTileState,
+      fontFamily: fontFamily ?? this.fontFamily,
+      fontSize: fontSize ?? this.fontSize,
     );
   }
 
   @override
   String toString() {
-    return 'EpubConfig(currentIndex: $currentIndex, maxScroll: $maxScroll, currentScroll: $currentScroll, lastDrawerListOffset: $lastDrawerListOffset, expansionTileState: $expansionTileState)';
+    return 'EpubConfig(currentIndex: $currentIndex, maxScroll: $maxScroll, currentScroll: $currentScroll, lastDrawerListOffset: $lastDrawerListOffset, expansionTileState: $expansionTileState, fontFamily: $fontFamily, fontSize: $fontSize)';
   }
 }

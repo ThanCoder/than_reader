@@ -28,13 +28,22 @@ class ReaderFileRecentController {
   List<String> get list => _db.getStringList('list');
 
   List<ReaderFile> get files {
-    final res = ReaderFileAllStateConroller.instance.state.list;
-    return res.where((e) {
-      if (list.contains(e.path)) {
-        final f = File(e.path);
-        return f.existsSync();
+    final allFiles = ReaderFileAllStateConroller.instance.state.list;
+
+    final fileMap = <String, ReaderFile>{
+      for (final file in allFiles) file.path: file,
+    };
+
+    final result = <ReaderFile>[];
+
+    for (final path in list) {
+      final file = fileMap[path];
+
+      if (file != null && File(path).existsSync()) {
+        result.add(file);
       }
-      return false;
-    }).toList();
+    }
+
+    return result;
   }
 }
