@@ -274,7 +274,6 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
         if (isLoading)
           SliverFillRemaining(child: Center(child: TLoaderRandom()))
         else
-          // SliverToBoxAdapter(child: resultWidget(showItems[current])),
           SliverToBoxAdapter(
             child: Text(
               'Index: $current',

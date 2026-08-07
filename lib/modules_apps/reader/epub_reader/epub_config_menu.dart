@@ -84,6 +84,7 @@ class _EpubConfigMenuState extends State<EpubConfigMenu> {
             fontSize: config.fontSize != -1 ? config.fontSize.toInt() : 17,
             onChange: (fontSize) {
               config = config.copyWith(fontSize: fontSize.toDouble());
+              useFontSize = true;
               setState(() {});
             },
           ),
