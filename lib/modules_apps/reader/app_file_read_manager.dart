@@ -6,7 +6,8 @@ import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_app.dart';
 
 class AppFileReadManagerParams extends IModuleAppParams {
   final AppFile file;
-  AppFileReadManagerParams(this.file);
+  final String cachePath;
+  AppFileReadManagerParams(this.file, this.cachePath);
 }
 
 class AppFileReadManagerResponse extends IModuleAppResponse {}
@@ -26,7 +27,7 @@ class AppFileReadManager
       await ModuleApps.instance.go<EpubParams, EpubReponse>(
         context,
         appId: 'epub.reader',
-        params: .new(params.file),
+        params: .new(params.file, params.cachePath),
       );
       return null;
     } else if (params.file.type == .pdf) {

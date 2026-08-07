@@ -3,10 +3,12 @@ import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_reader_screen.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
+import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
 
 class EpubParams extends IModuleAppParams {
   final AppFile file;
-  EpubParams(this.file);
+  final String cachePath;
+  EpubParams(this.file, this.cachePath);
 }
 
 class EpubReponse extends IModuleAppResponse {}
@@ -17,16 +19,25 @@ class EpubApp implements IModuleApp<EpubParams, EpubReponse> {
 
   @override
   Future<EpubReponse?> go(BuildContext context, EpubParams params) async {
-    final config = EpubConfig.empty();
+    final configPath = params.file.configPath;
+
+    final config = EpubConfig.fromPathSync(
+      ConfigStorageFactory.create(configPath),
+    );
 
     final updatedConfig = await Navigator.push<EpubConfig>(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            EpubReaderScreen(file: params.file, config: config),
+        builder: (context) => EpubReaderScreen(
+          file: params.file,
+          config: config,
+          cachePath: params.cachePath,
+        ),
       ),
     );
-    if (updatedConfig != null) {}
+    if (updatedConfig != null) {
+      await updatedConfig.savePath(ConfigStorageFactory.create(configPath));
+    }
     return null;
   }
 }

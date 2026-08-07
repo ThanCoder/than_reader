@@ -37,7 +37,7 @@ class FileScanner extends PathScanner {
         scanFolders.add((await getDownloadsDirectory())!.path);
         final homePath = Platform.environment['HOME'];
         if (homePath != null) {
-          scanFolders.add(homePath.join('Desktop'));
+          scanFolders.add(PathBuf(homePath).join('Desktop').path);
         }
       } catch (e) {
         debugPrint('[FileScanner:getAll:linux]: $e');

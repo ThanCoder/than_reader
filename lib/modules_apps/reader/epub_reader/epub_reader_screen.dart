@@ -6,6 +6,7 @@ import 'package:t_widgets/t_widgets.dart';
 
 import 'package:than_reader/core/models/app_file.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/epub_config.dart';
+import 'package:than_reader/modules_apps/reader/epub_reader/epub_utils.dart';
 import 'package:than_reader/modules_apps/reader/epub_reader/toc_drawer.dart';
 
 enum EpubReaderFetchingType { prevFetching, nextFetching, none }
@@ -13,7 +14,13 @@ enum EpubReaderFetchingType { prevFetching, nextFetching, none }
 class EpubReaderScreen extends StatefulWidget {
   final AppFile file;
   final EpubConfig config;
-  const EpubReaderScreen({super.key, required this.file, required this.config});
+  final String cachePath;
+  const EpubReaderScreen({
+    super.key,
+    required this.file,
+    required this.config,
+    required this.cachePath,
+  });
 
   @override
   State<EpubReaderScreen> createState() => _EpubReaderScreenState();
@@ -26,7 +33,9 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   void initState() {
     config = widget.config;
     super.initState();
-    init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
+    });
   }
 
   @override
@@ -37,6 +46,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   }
 
   final epub = EpubEngine();
+  // late final utils = EpubUtils(epub);
   List<EpubChapter> chapters = [];
   bool isOpened = false;
   int current = 0;
@@ -61,7 +71,7 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
         return;
       }
       chapters = epub.chapters;
-      count = chapters.length;
+      count = chapters.length - 1;
       current = config.currentIndex;
       toc = epub.toc;
 
@@ -75,6 +85,19 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
       setState(() {
         isLoading = false;
       });
+
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // go scroll
+      if (config.currentScroll > 0) {
+        // scroll ရှိနေလို့
+        if (!controller.hasClients) return;
+        controller.animateTo(
+          config.currentScroll,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.linear,
+        );
+      }
     } catch (e) {
       debugPrint('[_EpubReaderScreenState:init]: $e');
       if (!mounted) return;
@@ -89,7 +112,33 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     try {
       if (current > count) return null;
       final chapter = chapters[current];
-      return await epub.getChapterContent(chapter);
+      var html = await epub.getChapterContent(chapter);
+
+      if (html == null) return null;
+      final resolverList = <CachePathResolver>[];
+      html = epub.resolveHtmlContent(
+        html,
+        onResolve: (tag, attribute, content) {
+          final zipInnerPath = epub.getZipFullpath(content);
+          final cacheFullpathPath = PathBuf(
+            widget.cachePath,
+          ).join(zipInnerPath).path;
+
+          // print('tag: $tag - attribute: $attribute - content: $content');
+          // print('zipInnerPath: $zipInnerPath');
+          // print('cacheFullpathPath: $cacheFullpathPath');
+
+          final resv = CachePathResolver(
+            zipInnerPath: zipInnerPath,
+            cacheFullpathPath: cacheFullpathPath,
+          );
+          resolverList.add(resv);
+          return resv.cacheFullpathPath;
+        },
+      );
+      await epub.resolveCaches(resolverList);
+
+      return html;
     } catch (e) {
       if (!mounted) return null;
       showTMessageDialogError(context, e.toString());
@@ -106,16 +155,36 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
         existReader();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: !TPlatform.isDesktop
-              ? null
-              : IconButton(
-                  onPressed: existReader,
-                  icon: Icon(Icons.arrow_back),
-                ),
-        ),
+        appBar: appbarWidget,
         drawer: tocDrawerWidget,
+        onDrawerChanged: (isOpened) {
+          // print('isOpened: $isOpened');
+          if (isOpened) return;
+          config = config.copyWith(
+            lastDrawerListOffset: TocDrawer.recentListOffsetStatic,
+            expansionTileState: TocDrawer.expansionTileStateStatic,
+          );
+        },
         body: bodyWidget,
+      ),
+    );
+  }
+
+  PreferredSizeWidget get appbarWidget {
+    return AppBar(
+      titleTextStyle: TextStyle(fontSize: 14),
+      title: Row(
+        children: [
+          if (TPlatform.isDesktop)
+            Container(
+              margin: EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: existReader,
+                icon: Icon(Icons.arrow_back),
+              ),
+            ),
+          Text('Count: $count'),
+        ],
       ),
     );
   }
@@ -123,9 +192,11 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
   Widget? get tocDrawerWidget {
     return TocDrawer(
       list: toc,
-      currentItem: currentTocItem,
-      onClicked: (item) async {
-        final index = chapters.indexWhere((e) => e.href == item.src);
+      expansionTileState: config.expansionTileState,
+      recentListOffset: config.lastDrawerListOffset,
+      currentSrc: currentTocSrc,
+      onClicked: (src) async {
+        final index = chapters.indexWhere((e) => e.href == src);
 
         if (index == -1) return;
         current = index;
@@ -179,9 +250,15 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     if (fetchingType == .prevFetching) {
       return TLoader();
     }
-    return IconButton(
-      onPressed: goPrevChapter,
-      icon: Icon(Icons.arrow_back_ios_rounded),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: IconButton(
+        style: IconButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 25, 124, 205),
+        ),
+        onPressed: goPrevChapter,
+        icon: Icon(Icons.arrow_back_ios_rounded),
+      ),
     );
   }
 
@@ -190,31 +267,61 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     if (fetchingType == .nextFetching) {
       return TLoader();
     }
-    return IconButton(
-      onPressed: goNextChapter,
-      icon: Icon(Icons.arrow_forward_ios_outlined),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: IconButton(
+        style: IconButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 25, 124, 205),
+        ),
+        onPressed: goNextChapter,
+        icon: Icon(Icons.arrow_forward_ios_outlined),
+      ),
     );
   }
 
   Widget? listItem(EpubContentItem? item) {
     if (item == null) return null;
     return Column(
+      spacing: 4,
       children: [
-        Text('Index: ${item.index}'),
-        Html(
-          data: item.content,
-          shrinkWrap: true,
-          style: {'*': Style(fontSize: .large)},
+        Text(
+          'Index: ${item.index}',
+          style: TextStyle(fontSize: 20, fontWeight: .bold),
+        ),
+        htmlWidget(item.content),
+      ],
+    );
+  }
+
+  Widget htmlWidget(String htmlData) {
+    // print('content: $htmlData');
+    return Html(
+      data: htmlData,
+      shrinkWrap: true,
+      style: {'*': Style(fontSize: .large)},
+      extensions: [
+        TagExtension(
+          tagsToExtend: {'img'},
+          builder: (ext) {
+            final attrs = ext.attributes;
+            final src = attrs['src'];
+
+            if (attrs.isEmpty || src == null || src.isEmpty) {
+              return SizedBox.shrink();
+            }
+
+            return TImage(source: src);
+          },
         ),
       ],
     );
   }
 
   // drawer
-  EpubTocItem? get currentTocItem {
-    // final ch = chapters[current];
-    // final index = toc.index
-    return null;
+  String? get currentTocSrc {
+    if (chapters.isEmpty) return null;
+    final ch = chapters[current];
+    return ch.href;
   }
 
   bool get isExistsNext => current < count;
@@ -270,11 +377,23 @@ class _EpubReaderScreenState extends State<EpubReaderScreen> {
     });
     await Future.delayed(Duration(milliseconds: 400));
     if (!mounted) return;
-    controller.jumpTo(0);
+    controller.animateTo(
+      0,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.bounceIn,
+    );
   }
 
   void existReader() {
-    Navigator.pop<EpubConfig>(context, config.copyWith(currentIndex: current));
+    // print('${controller.offset}-${controller.position.maxScrollExtent}');
+    Navigator.pop<EpubConfig>(
+      context,
+      config.copyWith(
+        currentIndex: current,
+        currentScroll: controller.offset,
+        maxScroll: controller.position.maxScrollExtent,
+      ),
+    );
   }
 }
 

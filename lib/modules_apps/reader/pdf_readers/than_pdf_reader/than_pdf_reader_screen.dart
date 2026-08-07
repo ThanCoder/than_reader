@@ -69,7 +69,7 @@ class _ThanPdfReaderScreenState extends State<ThanPdfReaderScreen> {
       if (!mounted) return;
       showTSnackBar(
         context,
-        'Loaded: ${event.elapsed.autoTimeLabel()}',
+        'Loaded: ${event.elapsed.formatTimeLable()}',
         showCloseIcon: true,
       );
       // recent

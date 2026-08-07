@@ -122,7 +122,7 @@ class AppFileAllStateConroller {
   void renamePdf(AppFile pdf, String rename) {
     final oldPdf = File(pdf.path);
 
-    final renamePath = oldPdf.parentPath.join('$rename.pdf');
+    final renamePath = PathBuf(oldPdf.parentPath).join('$rename.pdf').path;
     // pdf အရင်ပြောင်း
     if (oldPdf.existsSync()) oldPdf.renameSync(renamePath);
 

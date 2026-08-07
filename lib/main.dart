@@ -17,7 +17,7 @@ import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  pdfrxInitialize();
+  pdfrxFlutterInitialize();
 
   await Utils.instance.init();
 

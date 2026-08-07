@@ -70,9 +70,9 @@ class AppFile {
 
   String get configPath {
     if (PdfConfigPathManager.enableNotifier.value) {
-      return PdfConfigPathManager.pathFolderNotifier.value.join(
-        '$configId-config',
-      );
+      return PathBuf(
+        PdfConfigPathManager.pathFolderNotifier.value,
+      ).join('$configId-config').path;
     }
     return Utils.instance.getConfigPath('$configId-config');
   }

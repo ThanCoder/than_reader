@@ -111,10 +111,10 @@ class PdfConfig {
       ),
       readerType: PdfReaderType.fromName(readerType),
       bookmarkList: map
-          .getList(['bookmarkList'], def: [])
+          .getList(['bookmarkList'])
           .map((e) => PdfBookmark.fromMap(e))
           .toList(),
-      tags: map.getStringList(['tags'], def: []),
+      tags: map.getStringList(['tags']),
       showScrollbar: map.getBool(['showScrollbar'], def: true),
     );
   }

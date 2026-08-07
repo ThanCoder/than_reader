@@ -21,9 +21,9 @@ class PdfThumbnail extends StatelessWidget {
   });
 
   File get cacheFile => File(
-    Utils.instance.cachePath.join(
-      '${file.path.getName(withExt: false)}-w-$width-h-$height.jpg',
-    ),
+    PathBuf(
+      Utils.instance.cachePath,
+    ).join('${file.path.getName(withExt: false)}-w-$width-h-$height.jpg').path,
   );
 
   @override

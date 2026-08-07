@@ -19,7 +19,7 @@ class Utils {
     final cacheDir = await getApplicationCacheDirectory();
     final configDir = await getApplicationSupportDirectory();
     cachePath = cacheDir.path;
-    final cfDir = Directory(configDir.path.join('config'));
+    final cfDir = Directory(PathBuf(configDir.path).join('config').path);
     if (!cfDir.existsSync()) {
       cfDir.createSync();
     }
@@ -28,12 +28,13 @@ class Utils {
   }
 
   String getCachePath([String? name]) {
-    final dir = Directory(cachePath);
-    if (!dir.existsSync()) {
-      dir.createSync();
-    }
     if (name == null) return cachePath;
-    return cachePath.join(name);
+    final dir = PathBuf(cachePath).join(name).directory;
+
+    if (!dir.existsSync()) {
+      dir.createSync(recursive: true);
+    }
+    return dir.path;
   }
 
   String getConfigPath([String? name]) {
@@ -42,7 +43,7 @@ class Utils {
       dir.createSync();
     }
     if (name == null) return configPath;
-    return configPath.join(name);
+    return PathBuf(configPath).join(name).path;
   }
 
   /// ### Return -> [(count,size)]

@@ -35,7 +35,9 @@ class _PdfConfigPathManagerState extends State<PdfConfigPathManager> {
       PdfConfigPathManager.enableNotifier.value = usePath;
       if (path.isEmpty) {
         path = '${await ThanPkg.platform.getAppExternalPath()}';
-        path = path.join('.${Utils().packageInfo.appName}').join('config');
+        path = PathBuf(
+          path,
+        ).join('.${Utils().packageInfo.appName}').join('config').path;
       }
       if (usePath) {
         final folder = Directory(path);
