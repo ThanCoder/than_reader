@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/list_style_button.dart';
-import 'package:than_reader/main_app/home/app_result_screen.dart';
+import 'package:than_reader/main_app/home/home_page/app_result_screen.dart';
 
 class FolderSliverView extends StatefulWidget {
   final Map<String, List<ReaderFile>> folders;

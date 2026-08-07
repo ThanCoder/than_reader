@@ -6,7 +6,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/thumbnail_generator/thumbnail_generator_factory.dart';
+import 'package:than_reader/apps/thumbnail_generator/thumbnail_generator_factory.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {

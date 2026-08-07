@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
-import 'package:than_reader/core/state/pdf_fav_controller.dart';
+import 'package:than_reader/apps/favorite/pdf_fav_controller.dart';
+import 'package:than_reader/apps/recent/reader_file_recent_controller.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/main_app/my_app.dart';
@@ -30,7 +31,12 @@ void main() async {
   );
   await PdfTagDB.instance.open(Utils.instance.getConfigPath('pdf.tags.cfb'));
   await PdfFavController.instance.init();
-  await PdfFavController.instance.getAll(); //get all fav list
+  //get all fav list
+  await PdfFavController.instance.getAll();
+  await ReaderFileRecentController.instance.init(
+    Utils.instance.getConfigPath('reader.file.recent.cfb'),
+  );
+
   /// app reader type
   AppAutoReaderTypeChooser.init();
 

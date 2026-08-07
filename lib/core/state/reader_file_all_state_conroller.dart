@@ -5,7 +5,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/state/reader_file_state.dart';
-import 'package:than_reader/core/state/reader_file_sort_controller.dart';
+import 'package:than_reader/apps/sort/reader_file_sort_controller.dart';
 import 'package:than_reader/core/state/pdf_state_event.dart';
 import 'package:than_reader/core/utils/file_scanner.dart';
 import 'package:than_reader/core/utils/pdf_tag_db.dart';

@@ -2,13 +2,15 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart' hide SortButton;
 import 'package:than_pkg/than_pkg.dart' show ThanPkg;
+import 'package:than_reader/apps/recent/reader_file_recent_controller.dart';
 import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/state/pdf_fav_controller.dart';
+import 'package:than_reader/apps/favorite/pdf_fav_controller.dart';
 import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
-import 'package:than_reader/core/state/reader_file_sort_controller.dart';
+import 'package:than_reader/apps/sort/reader_file_sort_controller.dart';
 import 'package:than_reader/main_app/home/home_page/home_page_card_list.dart';
 import 'package:than_reader/main_app/home/home_page/reader_file_list_page.dart';
+import 'package:than_reader/apps/favorite/pdf_fav_all_screen.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';
 import 'package:than_reader/partials/sort_provider.dart';
 import 'package:than_reader/router.dart';
@@ -80,12 +82,38 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: SizedBox(height: 10)),
+              SliverToBoxAdapter(child: recentAppFilesWidget()),
               SliverToBoxAdapter(child: favoriteAppFilesWidget()),
               SliverToBoxAdapter(child: latestAppFilesWidget(files)),
               SliverToBoxAdapter(child: pdfFilesWidget(files)),
               SliverToBoxAdapter(child: epubFilesWidget(files)),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Widget recentAppFilesWidget() {
+    return StreamBuilder(
+      stream: ReaderFileRecentController.instance.events,
+      builder: (context, asyncSnapshot) {
+        final files = ReaderFileRecentController.instance.files;
+        if (files.isEmpty) {
+          return SizedBox.shrink();
+        }
+        return HomePageCardList(
+          files: files,
+          title: Text(
+            'Recent Books',
+            style: TextStyle(color: Colors.teal, fontWeight: .bold),
+          ),
+          onItemClicked: goReader,
+          // onItemMenuClicked: showPdfMenu,
+          // onShowAllClicked: () async {
+          //   await context.push(builder: (context) => ReaderFileListPage());
+          //   setState(() {});
+          // },
         );
       },
     );
@@ -108,7 +136,7 @@ class _HomePageState extends State<HomePage> {
           onItemClicked: goReader,
           onItemMenuClicked: showPdfMenu,
           onShowAllClicked: () async {
-            await context.push(builder: (context) => ReaderFileListPage());
+            await context.push(builder: (context) => PdfFavAllScreen());
             setState(() {});
           },
         );

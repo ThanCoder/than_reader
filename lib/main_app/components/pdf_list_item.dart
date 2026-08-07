@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/main_app/components/fav_toggle_button.dart';
-import 'package:than_reader/main_app/components/pdf_config_progress_widget.dart';
+import 'package:than_reader/main_app/components/reader_file_config_progress_widget.dart';
 import 'package:than_reader/main_app/components/pdf_thumbnail.dart';
 import 'package:than_reader/main_app/components/tag_button.dart';
 import 'package:than_reader/main_app/components/tags_view.dart';
@@ -101,7 +101,7 @@ class PdfListItem extends StatelessWidget {
   }
 
   Widget get progressWidget {
-    return PdfConfigProgressWidget(pdf: pdf);
+    return ReaderFileConfigProgressWidget(pdf: pdf);
   }
 
   Widget get thumbnail {

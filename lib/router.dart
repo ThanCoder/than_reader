@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:than_reader/apps/recent/reader_file_recent_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/modules_apps/module_apps.dart';
@@ -11,4 +12,5 @@ Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
         appId: 'app.file.read.manager',
         params: .new(file, Utils.instance.getCachePath(file.configId)),
       );
+  ReaderFileRecentController.instance.addList(file.path);
 }

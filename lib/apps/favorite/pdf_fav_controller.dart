@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/state/pdf_fav_state.dart';
+import 'package:than_reader/apps/favorite/pdf_fav_state.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
 class PdfFavController {

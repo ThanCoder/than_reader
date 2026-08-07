@@ -1,5 +1,5 @@
 import 'package:t_pdf_reader/t_pdf_reader.dart';
-import 'package:than_reader/core/thumbnail_generator/i_thumbnail_generator.dart';
+import 'package:than_reader/apps/thumbnail_generator/i_thumbnail_generator.dart';
 
 class AppPdfThumbnailGenerator implements IThumbnailGenerator {
   @override

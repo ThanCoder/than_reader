@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:epub_engine/epub_engine.dart';
-import 'package:than_reader/core/thumbnail_generator/i_thumbnail_generator.dart';
+import 'package:than_reader/apps/thumbnail_generator/i_thumbnail_generator.dart';
 
 class AppEpubThumbnailGenerator implements IThumbnailGenerator {
   @override

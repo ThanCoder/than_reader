@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
-import 'package:than_reader/main_app/home/app_result_screen.dart';
+import 'package:than_reader/main_app/home/home_page/app_result_screen.dart';
 
 class AllTagsComponent extends StatefulWidget {
   const AllTagsComponent({super.key});

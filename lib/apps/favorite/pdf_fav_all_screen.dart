@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/state/pdf_fav_controller.dart';
+import 'package:than_reader/apps/favorite/pdf_fav_controller.dart';
 import 'package:than_reader/main_app/components/pdf_grid_item.dart';
 import 'package:than_reader/main_app/components/pdf_list_item.dart';
 import 'package:than_reader/main_app/home/pdf_menu.dart';

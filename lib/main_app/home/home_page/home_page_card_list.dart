@@ -16,7 +16,7 @@ class HomePageCardList extends StatelessWidget {
     required this.files,
     required this.title,
     this.maxShowCount = 10,
-    this.itemHeight = 240,
+    this.itemHeight = 260,
     this.itemWidth = 140,
     this.onShowAllClicked,
     this.onItemClicked,

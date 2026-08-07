@@ -3,22 +3,21 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/config_storage_factory.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_config.dart';
 
-class PdfConfigProgressWidget extends StatelessWidget {
+class ReaderFileConfigProgressWidget extends StatelessWidget {
   final ReaderFile pdf;
-  const PdfConfigProgressWidget({super.key, required this.pdf});
+  const ReaderFileConfigProgressWidget({super.key, required this.pdf});
 
   @override
   Widget build(BuildContext context) {
-    // final config = PdfConfig.fromPathSync(JsonConfigStorage(pdf.configPath));
-    // if (config.pageCount == -1 || config.pageCount == 0) {
-    //   return SizedBox.shrink();
-    // }
     return FutureBuilder(
       future: PdfConfig.fromPath(ConfigStorageFactory.create(pdf.configPath)),
       initialData: PdfConfig.empty(),
       builder: (context, snapshot) {
         final config = snapshot.data!;
-        if (config.pageCount == -1 || config.pageCount == 0) {
+        int page = config.pageCount;
+        int pageCount = config.pageCount;
+
+        if (page == -1 || pageCount == 0) {
           return SizedBox.shrink();
         }
         return Column(
@@ -26,10 +25,10 @@ class PdfConfigProgressWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${((config.page / config.pageCount) * 100).toStringAsFixed(2)}% - ${config.page}/${config.pageCount}',
+              '${((page / pageCount) * 100).toStringAsFixed(2)}% - $page/$pageCount',
               style: TextStyle(fontSize: 13, color: Colors.amber[700]),
             ),
-            LinearProgressIndicator(value: config.page / config.pageCount),
+            LinearProgressIndicator(value: page / config.pageCount),
           ],
         );
       },
