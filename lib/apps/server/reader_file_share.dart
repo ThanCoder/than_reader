@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:linux_sys_ffi/linux_sys_ffi.dart';
 import 'package:t_server/t_server.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
+import 'package:than_reader/apps/thumbnail_generator/thumbnail_generator_factory.dart';
 import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
 
 class ReaderFileShare {
@@ -95,7 +96,14 @@ class ReaderFileShare {
         return;
       }
       final file = files[index];
-      await ctx.response.download(File(file.cacheCoverPath));
+      final coverFile = File(file.cacheCoverPath);
+      //cover မရှိရင် gen ထုတ်ခိုင်းမယ်
+      if (!coverFile.existsSync()) {
+        await ThumbnailGeneratorFactory.create(
+          file,
+        ).generate(file.path, coverFile.path);
+      }
+      await ctx.response.download(coverFile);
     });
 
     _router.get('/api/book/download-path', (ctx) async {
@@ -137,8 +145,6 @@ class ReaderFileShare {
   }
 
   Future<List<String>> get allWifiList async {
-    List<String> wifiList = [];
-
     if (Platform.isLinux) {
       final wifi = LinuxSysFfi.instance.wifi;
       final infoBuf = StringBuffer();
@@ -160,17 +166,17 @@ class ReaderFileShare {
 
       final ipv4Regex = RegExp(r'\b\d{1,3}(?:\.\d{1,3}){3}\b');
 
-      wifiList = ipv4Regex
+      return ipv4Regex
           .allMatches(infoBuf.toString())
           .map((e) => e.group(0)!)
           .toList();
     } else if (Platform.isAndroid) {
       final res = await ThanPkgAndroid.getInstance.wifiHandler.getWifiDetails();
       if (res != null) {
-        wifiList = res.ipdAddressList;
+        return res.ipdAddressList;
       }
     }
 
-    return wifiList;
+    return [];
   }
 }

@@ -50,6 +50,10 @@ class PdfThumbnail extends StatelessWidget {
         return TImageFile(
           path: cacheFile.path,
           defaultAssetsPath: 'assets/images/pdf-icon.webp',
+          errorBuilder: (context, error, stackTrace) {
+            cacheFile.deleteSync();
+            return Text('error');
+          },
         );
       },
     );

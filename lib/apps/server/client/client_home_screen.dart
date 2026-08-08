@@ -6,6 +6,7 @@ import 'package:than_reader/apps/server/client/client_ui_page.dart';
 import 'package:than_reader/apps/server/reader_file_share.dart';
 import 'package:than_reader/apps/server/utils.dart';
 import 'package:than_reader/core/context_extensions.dart';
+import 'package:than_reader/than_dev.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -21,10 +22,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     checkConnection();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   static String? activeHost;
   final share = ReaderFileShare.instance;
   final client = TClient();
   bool isLoading = false;
+  List<String> allWifiList = [];
 
   Future<void> checkConnection() async {
     try {
@@ -33,12 +40,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       });
       // final wifiList = await share.allWifiList;
       activeHost = await findActiveHostAddress(port: 4445);
+      allWifiList = await share.allWifiList;
 
       if (!mounted) return;
       setState(() {
         isLoading = false;
       });
     } catch (e) {
+      devPrint(e.toString());
       if (!mounted) return;
       setState(() {
         isLoading = false;
@@ -49,6 +58,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // devPrint('activeHost: $activeHost - ${activeHost == null}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Client'),
@@ -84,12 +94,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       return Center(child: TLoaderRandom());
     }
     if (activeHost == null) {
-      Center(
-        child: Text(
-          'Server Not Found!',
-          style: TextStyle(fontSize: 18, fontWeight: .bold, color: Colors.red),
-        ),
-      );
+      return hostNullWidget;
     }
 
     return IndexedStack(
@@ -99,12 +104,54 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         ClientApiPage(hostUrl: activeHost ?? ''),
       ],
     );
+  }
 
-    // return Center(
-    //   child: Text(
-    //     'Active Host: $activeHost',
-    //     style: TextStyle(fontSize: 18, fontWeight: .bold, color: Colors.green),
-    //   ),
-    // );
+  Widget get hostNullWidget {
+    return Center(
+      child: Column(
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
+        spacing: 5,
+        children: [
+          Text(
+            'Server Not Found!',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: .bold,
+              color: Colors.red,
+            ),
+          ),
+          IconButton(
+            color: Colors.blue,
+            onPressed: checkConnection,
+            icon: Icon(Icons.connect_without_contact, size: 50),
+          ),
+          if (allWifiList.isNotEmpty) Text('Scanned Wifi List:'),
+          Column(
+            children: allWifiList
+                .map(
+                  (e) => TextButton(
+                    onPressed: () {
+                      checkHostAddress(e);
+                    },
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void checkHostAddress(String hostAddresss) async {
+    setState(() {
+      isLoading = true;
+    });
+    activeHost = await checkHost(hostAddresss, share.server.port!);
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
   }
 }

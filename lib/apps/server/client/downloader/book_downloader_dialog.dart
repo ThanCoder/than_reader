@@ -124,12 +124,13 @@ class _BookDownloaderDialogState extends State<BookDownloaderDialog> {
 
   List<Widget> get actionWidget {
     return [
-      TextButton(
-        onPressed: () {
-          startDownload();
-        },
-        child: Text(isDownload ? 'Redownload' : 'Start Download'),
-      ),
+      if (!isDownloading)
+        TextButton(
+          onPressed: () {
+            startDownload();
+          },
+          child: Text(isDownload ? 'Redownload' : 'Start Download'),
+        ),
       TextButton(
         onPressed: isDownloading
             ? null

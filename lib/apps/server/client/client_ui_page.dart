@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:t_client/t_client.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_pkg/than_pkg.dart';
+import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/apps/server/client/book_grid_item.dart';
 import 'package:than_reader/apps/server/client/book_item_menu.dart';
 import 'package:than_reader/core/models/reader_file.dart';
@@ -97,7 +99,14 @@ class _ClientUiPageState extends State<ClientUiPage> {
   }
 
   void showItemMenu(ReaderFile book) async {
-    final outDir = await getDownloadsDirectory();
+    Directory? outDir;
+    if (Platform.isAndroid) {
+      outDir = Directory(
+        ThanPkgAndroid.getInstance.pathHandler.getDownloadPath(),
+      );
+    } else if (Platform.isLinux) {
+      outDir = await getDownloadsDirectory();
+    }
 
     if (!mounted) return;
     if (outDir == null) {

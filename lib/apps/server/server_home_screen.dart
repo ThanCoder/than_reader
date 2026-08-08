@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_pkg/than_pkg.dart';
 
 import 'package:than_reader/apps/server/reader_file_share.dart';
 
@@ -11,18 +14,26 @@ class ServerHomeScreen extends StatefulWidget {
 }
 
 class _ServerHomeScreenState extends State<ServerHomeScreen> {
-  final share = ReaderFileShare.instance;
-  static List<ShareResultItem> list = [];
-  List<String> wifiList = [];
-
   @override
   void initState() {
+    ThanPkg.platform.toggleKeepScreen(isKeep: true);
     super.initState();
     init();
   }
 
+  @override
+  void dispose() {
+    ThanPkg.platform.toggleKeepScreen(isKeep: false);
+    super.dispose();
+  }
+
+  final share = ReaderFileShare.instance;
+  static List<ShareResultItem> list = [];
+  List<String> wifiList = [];
+
   Future<void> init() async {
     try {
+      list.clear();
       wifiList = await share.allWifiList;
     } catch (e) {
       if (!mounted) return;
@@ -57,6 +68,23 @@ class _ServerHomeScreenState extends State<ServerHomeScreen> {
                     // wifi list
                     wifiListWidget,
                   if (wifiList.isNotEmpty) SliverToBoxAdapter(child: Divider()),
+
+                  if (Platform.isAndroid)
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          Text(
+                            'if `Android` KepScreening...',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.teal,
+                              fontWeight: .bold,
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                    ),
                   // list
                   shareResultListWidget,
                 ],
