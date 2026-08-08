@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:than_reader/apps/server/client/client_home_screen.dart';
+import 'package:than_reader/apps/server/server_home_screen.dart';
+import 'package:than_reader/core/context_extensions.dart';
 import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/modules_apps/reader/pdf_readers/app_pdf_reader_type_chooser.dart';
 import 'package:than_reader/partials/app_theme_chooser.dart';
@@ -29,6 +32,20 @@ class MorePage extends StatelessWidget {
               CustompathScannerManagerWidget(),
               PdfConfigPathManager(),
               AppAutoReaderTypeChooser(),
+
+              // share
+              ListTile(
+                title: Text('Server: [Share]'),
+                trailing: Icon(Icons.share),
+                onTap: () =>
+                    context.push(builder: (context) => ServerHomeScreen()),
+              ),
+              ListTile(
+                title: Text('Client: [Receive]'),
+                trailing: Icon(Icons.cloud_download_outlined),
+                onTap: () =>
+                    context.push(builder: (context) => ClientHomeScreen()),
+              ),
             ],
           ),
         ),

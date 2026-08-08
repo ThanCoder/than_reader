@@ -25,6 +25,8 @@ dependencies:
     path: /home/thancoder/projects/dart_plugins/t_pdf_reader
   epub_engine:
     path: /home/thancoder/projects/dart_plugins/epub_engine
+  t_server:
+    path: /home/thancoder/projects/dart_plugins/t_server
   cfb_store: ^0.5.0
   crypto: ^3.0.7
   archive: ^4.0.9
@@ -32,6 +34,10 @@ dependencies:
   desktop_drop: ^0.7.1
   flutter_svg: ^2.3.0
   html: ^0.15.6
+  than_pkg_linux: ^0.0.1
+  than_pkg_android: ^0.2.1
+  linux_sys_ffi: ^0.1.0
+  t_client: ^0.3.0
   # iconify_flutter: ^0.0.7
   # icons_plus: ^5.0.0
 

@@ -2,12 +2,10 @@
 
 import 'dart:io';
 
-import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/thumbnail_generator/thumbnail_generator_factory.dart';
-import 'package:than_reader/core/utils/utils.dart';
 
 class PdfThumbnail extends StatelessWidget {
   final ReaderFile file;
@@ -21,9 +19,10 @@ class PdfThumbnail extends StatelessWidget {
   });
 
   File get cacheFile => File(
-    PathBuf(
-      Utils.instance.cachePath,
-    ).join('${file.path.getName(withExt: false)}-w-$width-h-$height.jpg').path,
+    file.cacheCoverPath,
+    // PathBuf(
+    //   Utils.instance.cachePath,
+    // ).join('${file.path.getName(withExt: false)}-w-$width-h-$height.jpg').path,
   );
 
   @override
@@ -36,22 +35,6 @@ class PdfThumbnail extends StatelessWidget {
         defaultAssetsPath: 'assets/images/pdf-icon.webp',
       );
     }
-    // if (Platform.isAndroid) {
-    //   return FutureBuilder(
-    //     future: ThanPkg.android.thumbnail.genPdfThumbnail(
-    //       pathList: [SrcDistType(src: pdfPath, dist: cacheFile.path)],
-    //     ),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == .waiting) {
-    //         return Center(child: CircularProgressIndicator.adaptive());
-    //       }
-    //       return TImageFile(
-    //         path: cacheFile.path,
-    //         defaultAssetsPath: 'assets/images/pdf-icon.webp',
-    //       );
-    //     },
-    //   );
-    // }
     return FutureBuilder(
       future: ThumbnailGeneratorFactory.create(file).generate(
         file.path,

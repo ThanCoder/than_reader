@@ -431,6 +431,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
+  linux_sys_ffi:
+    dependency: "direct main"
+    description:
+      name: linux_sys_ffi
+      sha256: "735f3e7900fceb44e97033105643499bf365f22d0bec98f13e2563117ad9eb28"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   list_counter:
     dependency: transitive
     description:
@@ -756,6 +764,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1+1"
+  t_client:
+    dependency: "direct main"
+    description:
+      name: t_client
+      sha256: "770fee2a804ab355109c9f978e658e4199240ae6ac5e06a032b071918a8f4d93"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   t_pdf_reader:
     dependency: "direct main"
     description:
@@ -763,6 +779,13 @@ packages:
       relative: false
     source: path
     version: "0.4.0"
+  t_server:
+    dependency: "direct main"
+    description:
+      path: "/home/thancoder/projects/dart_plugins/t_server"
+      relative: false
+    source: path
+    version: "3.1.0"
   t_widgets:
     dependency: "direct main"
     description:
@@ -803,6 +826,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  than_pkg_android:
+    dependency: "direct main"
+    description:
+      name: than_pkg_android
+      sha256: "038a79fb1895019e7e09271d6354674283ef12e9ff2e966416dab5adbd415fb5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
+  than_pkg_linux:
+    dependency: "direct main"
+    description:
+      name: than_pkg_linux
+      sha256: "0aff22fb3b0e545b7e5d51bff26cd2cf4431896d2b99237e0a0c20730c4da589"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   timeago:
     dependency: transitive
     description:

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
@@ -8,7 +7,15 @@ import 'package:than_reader/core/utils/utils.dart';
 import 'package:than_reader/partials/pdf_config_path_manager.dart';
 
 // enum FileType { pdf, epub, mobi, txt, unknown }
-enum FileType { pdf, epub, unknown }
+enum FileType {
+  pdf,
+  epub,
+  unknown;
+
+  static FileType fromValue(String val) {
+    return values.firstWhere((e) => e.name == val, orElse: () => unknown);
+  }
+}
 
 class ReaderFile {
   final String name;
@@ -77,6 +84,10 @@ class ReaderFile {
     return Utils.instance.getConfigPath('$configId-config');
   }
 
+  String get cacheCoverPath {
+    return PathBuf(Utils.instance.cachePath).join('${path.onlyName}.jpg').path;
+  }
+
   ReaderFile copyWith({
     String? name,
     String? parentPath,
@@ -94,6 +105,30 @@ class ReaderFile {
       date: date ?? this.date,
       configId: configId ?? this.configId,
       type: type ?? this.type,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'parentPath': parentPath,
+      'path': path,
+      'size': size,
+      'date': date.millisecondsSinceEpoch,
+      'configId': configId,
+      'type': type.name,
+    };
+  }
+
+  factory ReaderFile.fromMap(Map<String, dynamic> map) {
+    return ReaderFile(
+      name: map['name'] as String,
+      parentPath: map['parentPath'] as String,
+      path: map['path'] as String,
+      size: map['size'] as int,
+      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      configId: map['configId'] as String,
+      type: FileType.fromValue(map.getString(['type'])),
     );
   }
 }
