@@ -19,5 +19,19 @@ class AppPdfThumbnailGenerator implements IThumbnailGenerator {
       height: height,
       quality: 90,
     );
+    // if (Platform.isLinux) {
+    // return await PdfThumbnailGenerator.instance.generate(
+    //   inputPath,
+    //   outPath,
+    //   width: width,
+    //   height: height,
+    //   quality: 90,
+    // );
+    // } else {
+    //   return await ThanPkgAndroid.getInstance.pdfHandler.saveToThumbnail(
+    //     pdfPathOrUri: inputPath,
+    //     targetPath: outPath,
+    //   );
+    // }
   }
 }

@@ -813,11 +813,10 @@ packages:
   than_pdf_engine:
     dependency: transitive
     description:
-      name: than_pdf_engine
-      sha256: "0b47bcf67a134c4ab7fe144a443cb69fe8af527e3c1bf8e1035cf033b88d3903"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
+      path: "/home/thancoder/projects/dart_plugins/than_pdf_engine"
+      relative: false
+    source: path
+    version: "0.5.0"
   than_pkg:
     dependency: "direct main"
     description:
