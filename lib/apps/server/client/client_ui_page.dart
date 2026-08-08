@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:t_client/t_client.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_pkg/than_pkg.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/apps/server/client/book_grid_item.dart';
 import 'package:than_reader/apps/server/client/book_item_menu.dart';

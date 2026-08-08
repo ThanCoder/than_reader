@@ -8,7 +8,7 @@ Future<String?> findActiveHostAddress({required int port}) async {
     type: InternetAddressType.IPv4,
     includeLoopback: false,
   );
-  print(interfaces);
+  // print(interfaces);
 
   for (final interface in interfaces) {
     for (final address in interface.addresses) {
