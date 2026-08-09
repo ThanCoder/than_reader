@@ -21,6 +21,14 @@
 
 <summary>Android</summary> -->
 
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/1.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/2.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/3.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/4.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/5.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/6.png?raw=true" width="300">
+<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/7.png?raw=true" width="300">
+
 <img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-14-16-16-24-265_than.app.novl3.v5.jpg?raw=true" width="300">
 <img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-33-58-940_than.app.novl3.v5.jpg?raw=true" width="300">
 <img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-06-117_than.app.novl3.v5.jpg?raw=true" width="300">
