@@ -7,6 +7,7 @@
   
 ## **Supported Formats** 
 + [x] PDF
++ [x] Epub
 
 ## Download App
 [Latest Releases](https://github.com/ThanCoder/than_reader/releases)

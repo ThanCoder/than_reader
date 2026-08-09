@@ -778,7 +778,7 @@ packages:
       path: "/home/thancoder/projects/dart_plugins/t_pdf_reader"
       relative: false
     source: path
-    version: "0.4.0"
+    version: "0.5.0"
   t_server:
     dependency: "direct main"
     description:
@@ -813,9 +813,10 @@ packages:
   than_pdf_engine:
     dependency: transitive
     description:
-      path: "/home/thancoder/projects/dart_plugins/than_pdf_engine"
-      relative: false
-    source: path
+      name: than_pdf_engine
+      sha256: d9e65ac2d540cfd1a4fadeb746d0cd3e1484e1cbc9642085406425e35bda02d1
+      url: "https://pub.dev"
+    source: hosted
     version: "0.5.0"
   than_pkg:
     dependency: "direct main"
