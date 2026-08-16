@@ -1,9 +1,9 @@
 name: than_reader
-description: "PDF Reader App."
+description: "PDF Reader App Material UI."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 repository: https://github.com/ThanCoder/than_reader.git
 
-version: 1.5.0
+version: 2.0.0
 
 environment:
   sdk: ^3.12.0
@@ -12,34 +12,29 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  package_info_plus: ^10.1.0
-  than_pkg: ^5.1.0
   dart_core_extensions: ^0.5.0
-  t_widgets: ^2.7.0
+  t_widgets:
+    path: /home/thancoder/projects/dart_plugins/t_widgets
   mime: ^2.0.0
-  cf_lite: ^0.3.1
-  path_provider: ^2.1.6
-  path: ^1.9.1
-  pdfrx: ^2.4.4
   t_pdf_reader:
     path: /home/thancoder/projects/dart_plugins/t_pdf_reader
   epub_engine:
     path: /home/thancoder/projects/dart_plugins/epub_engine
   t_server:
     path: /home/thancoder/projects/dart_plugins/t_server
-  cfb_store: ^0.5.0
+  cfb_store: ^0.7.0
   crypto: ^3.0.7
   archive: ^4.0.9
   flutter_html: ^3.0.0
   desktop_drop: ^0.7.1
   flutter_svg: ^2.3.0
   html: ^0.15.6
-  than_pkg_linux: ^0.0.1
-  than_pkg_android: ^0.2.1
+  than_pkg_linux: ^0.2.0
+  than_pkg_android: ^0.6.1
   linux_sys_ffi: ^0.1.0
   t_client: ^0.3.0
-  # iconify_flutter: ^0.0.7
-  # icons_plus: ^5.0.0
+  than_pkg: ^6.0.0
+  flutter_colorpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +49,7 @@ dev_dependencies:
 # dev lib
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/images/app-icon-2.png"
+  image_path: "assets/images/app-icon-3.png"
 
 flutter:
   uses-material-design: true

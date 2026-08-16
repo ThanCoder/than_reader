@@ -1,55 +1,33 @@
-import 'package:cf_lite/cf_lite.dart';
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
-import 'package:pdfrx/pdfrx.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/state/reader_file_all_state_conroller.dart';
-import 'package:than_reader/apps/favorite/pdf_fav_controller.dart';
-import 'package:than_reader/apps/recent/reader_file_recent_controller.dart';
-import 'package:than_reader/core/utils/pdf_tag_db.dart';
-import 'package:than_reader/core/utils/utils.dart';
-import 'package:than_reader/main_app/my_app.dart';
-import 'package:than_reader/modules_apps/reader/app_file_read_manager.dart';
-import 'package:than_reader/modules_apps/reader/epub_reader/epub_app.dart';
-import 'package:than_reader/modules_apps/module_apps.dart';
-import 'package:than_reader/modules_apps/reader/pdf_readers/app_pdf_reader_type_chooser.dart';
-import 'package:than_reader/modules_apps/reader/pdf_readers/pdf_app.dart';
+import 'package:than_reader/core/controller/i_controller.dart';
+import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
+import 'package:than_reader/platforms/platform_app.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  pdfrxFlutterInitialize();
-
-  await Utils.instance.init();
+  await AppUtils.instance.init();
 
   // recent
-  await CFLite.getInstance().init(
-    dbPath: Utils.instance.getConfigPath('app.cf.json'),
-  );
+  await CFBStore.instance.open(AppUtils.instance.getConfigPath('app.cf.json'));
+
   await CFBStore.getInstance.open(
-    Utils.instance.getConfigPath('app.config.cfb'),
-  );
-  await PdfTagDB.instance.open(Utils.instance.getConfigPath('pdf.tags.cfb'));
-  await PdfFavController.instance.init();
-  //get all fav list
-  await PdfFavController.instance.getAll();
-  await ReaderFileRecentController.instance.init(
-    Utils.instance.getConfigPath('reader.file.recent.cfb'),
+    AppUtils.instance.getConfigPath('app.config.cfb'),
   );
 
-  /// app reader type
-  AppAutoReaderTypeChooser.init();
+  ControllerManager.register(AllFileController());
+  await ControllerManager.initAll();
 
-  // app file all controller
-  await ReaderFileAllStateConroller.instance.init();
-
-  ModuleApps.instance.registerModule(AppFileReadManager());
-  ModuleApps.instance.registerModule(EpubApp());
-  ModuleApps.instance.registerModule(PdfApp());
+  // ModuleApps.instance.registerModule(AppFileReadManager());
+  // ModuleApps.instance.registerModule(EpubApp());
+  // ModuleApps.instance.registerModule(PdfApp());
 
   await TWidgets.instance.init(
     defaultImageAssetsPath: 'assets/images/app_icon.png',
   );
 
-  runApp(const MyApp());
+  runApp(const PlatformApp());
 }

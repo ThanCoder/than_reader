@@ -1,12 +1,6 @@
-import 'dart:io';
-
+// enum FileType { pdf, epub, mobi, txt, unknown }
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 
-import 'package:than_reader/core/utils/file_config_id_generator.dart';
-import 'package:than_reader/core/utils/utils.dart';
-import 'package:than_reader/partials/pdf_config_path_manager.dart';
-
-// enum FileType { pdf, epub, mobi, txt, unknown }
 enum FileType {
   pdf,
   epub,
@@ -14,6 +8,11 @@ enum FileType {
 
   static FileType fromValue(String val) {
     return values.firstWhere((e) => e.name == val, orElse: () => unknown);
+  }
+
+  static FileType fromPath(String path) {
+    final ext = path.extension;
+    return values.firstWhere((e) => e.name == ext, orElse: () => unknown);
   }
 }
 
@@ -34,60 +33,6 @@ class ReaderFile {
     required this.configId,
     required this.type,
   });
-
-  factory ReaderFile.fromEntry(FileSystemEntity entry) {
-    return ReaderFile(
-      name: entry.getName(),
-      path: entry.path,
-      size: entry.size,
-      date: entry.modifiedDate,
-      configId: FileConfigIdGenerator.generateSync(entry.path),
-      type: _getFileType(entry.path),
-      parentPath: entry.parent.path,
-    );
-  }
-  factory ReaderFile.fromFile(File file) {
-    return ReaderFile(
-      name: file.getName(),
-      path: file.path,
-      size: file.size,
-      date: file.modifiedDate,
-      configId: FileConfigIdGenerator.generateSync(file.path),
-      type: _getFileType(file.path),
-      parentPath: file.parent.path,
-    );
-  }
-
-  // Path ကနေပြီး file extension ကို ရှာပြီး FileType သတ်မှတ်ပေးမယ့် helper method
-  static FileType _getFileType(String path) {
-    final ext = path.split('.').last.toLowerCase();
-    switch (ext) {
-      case 'pdf':
-        return FileType.pdf;
-      case 'epub':
-        return FileType.epub;
-      // case 'mobi':
-      //   return FileType.mobi;
-      // case 'txt':
-      //   return FileType.txt;
-      default:
-        return FileType.unknown;
-    }
-  }
-
-  String get configPath {
-    if (PdfConfigPathManager.enableNotifier.value) {
-      return PathBuf(
-        PdfConfigPathManager.pathFolderNotifier.value,
-      ).join('$configId-config').path;
-    }
-    return Utils.instance.getConfigPath('$configId-config');
-  }
-
-  String get cacheCoverPath {
-    return PathBuf(Utils.instance.cachePath).join('${path.onlyName}.jpg').path;
-  }
-
   ReaderFile copyWith({
     String? name,
     String? parentPath,

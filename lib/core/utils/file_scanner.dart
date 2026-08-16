@@ -3,10 +3,10 @@ import 'dart:isolate';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:than_pkg/than_pkg.dart';
+import 'package:than_pkg_linux/core/utils/path_ext.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/partials/custompath_scanner_manager_widget.dart';
+import 'package:than_reader/core/utils/file_config_id_generator.dart';
 import 'package:than_reader/core/utils/path_scanner.dart';
 
 class FileScanner extends PathScanner {
@@ -29,28 +29,21 @@ class FileScanner extends PathScanner {
     return .skip;
   }
 
-  static Future<List<ReaderFile>> getAll() async {
+  static Future<List<ReaderFile>> scanAll() async {
     final scanFolders = <String>[];
     if (Platform.isLinux) {
-      try {
-        scanFolders.add((await getApplicationDocumentsDirectory()).path);
-        scanFolders.add((await getDownloadsDirectory())!.path);
-        final homePath = Platform.environment['HOME'];
-        if (homePath != null) {
-          scanFolders.add(PathBuf(homePath).join('Desktop').path);
-        }
-      } catch (e) {
-        debugPrint('[FileScanner:getAll:linux]: $e');
+      final home = Platform.environment['HOME'];
+      if (home != null) {
+        scanFolders.add(home.join('Desktop'));
+        scanFolders.add(home.join('Documents'));
+        scanFolders.add(home.join('Downloads'));
+        scanFolders.add(home.join('Music'));
+        scanFolders.add(home.join('Pictures'));
+        scanFolders.add(home.join('Videos'));
       }
     }
     if (Platform.isAndroid) {
       scanFolders.add(ThanPkg.android.app.getAppExternalPath());
-    }
-    // custom scan path
-    final customPathList = CustompathScannerManagerWidget.customPathList
-        .toList();
-    if (customPathList.isNotEmpty) {
-      scanFolders.addAll(customPathList);
     }
 
     // print(scanFolders);
@@ -58,7 +51,16 @@ class FileScanner extends PathScanner {
       final list = <ReaderFile>[];
       final entries = await FileScanner(scanFolders: scanFolders).scan();
       for (var entry in entries) {
-        list.add(ReaderFile.fromEntry(entry));
+        final reader = ReaderFile(
+          name: entry.name,
+          path: entry.path,
+          parentPath: entry.parent.path,
+          date: entry.modifiedDate,
+          size: entry.size,
+          configId: FileConfigIdGenerator.generateSync(entry.path),
+          type: FileType.fromPath(entry.path),
+        );
+        list.add(reader);
       }
       list.sortDate();
       // sort newest
