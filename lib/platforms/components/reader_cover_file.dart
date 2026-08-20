@@ -18,9 +18,9 @@ class ReaderCoverFile extends StatelessWidget {
     }
     if (file.type == .pdf) {
       return FutureBuilder(
-        future: PdfThumbnailGenerator.instance.generate(
+        future: PdfImageGenerator.instance.generate(
           file.path,
-          cacheFile.path,
+          outPath: cacheFile.path,
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == .waiting) {

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:than_pkg/than_pkg.dart';
 import 'package:than_pkg_linux/core/utils/path_ext.dart';
 import 'package:than_reader/core/models/reader_file.dart';

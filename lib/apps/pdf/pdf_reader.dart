@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
-import 'package:than_reader/apps/pdf/pdf_jump_page_dialog.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class PdfReader extends StatefulWidget {
@@ -23,31 +22,29 @@ class _PdfReaderState extends State<PdfReader> {
   @override
   void initState() {
     controller = TPdfController(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.physicalKey == .keyF) {
-            toggleFullscreen();
-            return .handled;
+      eventBuilder: TPdfEventBuilder(
+        onKeyEventAfterConfig: (node, event) {
+          if (event is KeyDownEvent) {
+            if (event.physicalKey == .keyF) {
+              toggleFullscreen();
+              return .handled;
+            }
+            if (event.physicalKey == .escape) {
+              existsFullscreen();
+              return .handled;
+            }
+            // print(event.physicalKey);
+            if (event.physicalKey == .minus) {
+              controller.action.zoomOut();
+              return .handled;
+            }
+            if (event.physicalKey == .equal) {
+              controller.action.zoomIn();
+              return .handled;
+            }
           }
-          if (event.physicalKey == .escape) {
-            existsFullscreen();
-            return .handled;
-          }
-          // print(event.physicalKey);
-          if (event.physicalKey == .minus) {
-            controller.zoomOut();
-            return .handled;
-          }
-          if (event.physicalKey == .equal) {
-            controller.zoomIn();
-            return .handled;
-          }
-        }
-        return .ignored;
-      },
-      scrollbarWidget: (thumbWidth, thumbHeight) => defaultScrollbarNeon(
-        thumbWidth: thumbWidth,
-        thumbHeight: thumbHeight,
+          return .ignored;
+        },
       ),
     );
     super.initState();
@@ -120,33 +117,7 @@ class _PdfReaderState extends State<PdfReader> {
           spacing: 8,
           children: [
             SizedBox(width: 40),
-            InkWell(
-              borderRadius: .circular(30),
-              onTap: showGoToDialog,
-              child: Container(
-                padding: .all(8),
-                decoration: BoxDecoration(
-                  color: col.primary.withValues(alpha: .45),
-                  borderRadius: .circular(15),
-                  boxShadow: [
-                    .new(
-                      color: col.primary.withValues(alpha: .60),
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: StreamBuilder(
-                  stream: controller.onPageChanged,
-                  builder: (context, asyncSnapshot) {
-                    return Text(
-                      '${controller.currentPage}/${controller.totalPage}',
-                      style: TextStyle(color: col.onPrimary),
-                    );
-                  },
-                ),
-              ),
-            ),
+            PdfPageListener(controller: controller),
             SizedBox(width: 20),
             // dark mode
             IconButton(
@@ -174,64 +145,16 @@ class _PdfReaderState extends State<PdfReader> {
               ),
             ),
             // zoom out
-            IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: col.surfaceContainer,
-                foregroundColor: col.onSurfaceVariant,
-              ),
-              onPressed: () {
-                controller.zoomOut();
-              },
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: .circular(30),
-                  boxShadow: [
-                    .new(
-                      color: col.primary.withValues(alpha: .45),
-                      blurRadius: 12,
-                    ),
-                  ],
-                ),
-                child: Icon(Icons.zoom_out),
-              ),
-            ),
+            PdfZoomOut(controller: controller),
             // zoom int
-            IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: col.surfaceContainer,
-                foregroundColor: col.onSurfaceVariant,
-              ),
-              onPressed: () {
-                controller.zoomIn();
-              },
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: .circular(30),
-                  boxShadow: [
-                    .new(
-                      color: col.primary.withValues(alpha: .45),
-                      blurRadius: 12,
-                    ),
-                  ],
-                ),
-                child: Icon(Icons.zoom_in),
-              ),
-            ),
+            PdfZoomIn(controller: controller),
+
+            PdfZoomListener(controller: controller),
+            PdfScrollbarToggler(controller: controller),
+            PdfCacheImageListener(controller: controller),
           ],
         ),
       ),
     );
-  }
-
-  void showGoToDialog() async {
-    final jump = await showDialog<int>(
-      context: context,
-      builder: (context) => PdfJumpPageDialog(
-        current: controller.currentPage,
-        maxPage: controller.totalPage,
-      ),
-    );
-    if (jump == null) return;
-    controller.jumpToPage(jump);
   }
 }
