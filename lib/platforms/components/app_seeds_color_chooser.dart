@@ -77,8 +77,10 @@ class _AppSeedsColorChooserState extends State<AppSeedsColorChooser> {
                   ),
                   Text(
                     'How To Changed App Color Seeds.',
+                    maxLines: 2,
+                    overflow: .ellipsis,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: .w400,
                       color: !colorEnable
                           ? col.onSurfaceVariant.withValues(alpha: .45)
@@ -87,7 +89,7 @@ class _AppSeedsColorChooserState extends State<AppSeedsColorChooser> {
                   ),
                 ],
               ),
-              SizedBox(width: 50),
+              // SizedBox(width: 50),
               if (colorEnable)
                 InkWell(
                   onTap: () => pickColor(seedColor),

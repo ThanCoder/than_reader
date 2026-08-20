@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/constanst_keys.dart';
-import 'package:than_reader/platforms/desktop/desktop_home.dart';
+import 'package:than_reader/platforms/platform_app_switcher.dart';
 
 class PlatformApp extends StatefulWidget {
   const PlatformApp({super.key});
@@ -48,7 +48,7 @@ class _PlatformAppState extends State<PlatformApp> {
           onChanged: (TMaterialThemeProviderType type) {
             cf.putAndWriteAll(appThemeKeys, type.name);
           },
-          child: DesktopHome(),
+          child: PlatformAppSwitcher(),
         );
       },
     );

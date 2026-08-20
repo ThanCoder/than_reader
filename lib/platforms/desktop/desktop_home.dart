@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
-import 'package:than_reader/platforms/desktop/more_page.dart';
+import 'package:than_reader/platforms/pages/more_page.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({super.key});

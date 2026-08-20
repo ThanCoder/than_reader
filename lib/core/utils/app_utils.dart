@@ -18,6 +18,8 @@ class AppUtils {
   late String packageName;
   late String versionName;
 
+  Directory get cacheDir => _cacheDir;
+
   Future<void> init() async {
     if (Platform.isLinux) {
       final pkg = ThanPkgLinux.getInstance.pathHandler;

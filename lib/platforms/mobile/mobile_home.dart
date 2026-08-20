@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
+import 'package:than_pkg_android/than_pkg_android.dart';
+import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/platforms/mobile/mobile_home_page.dart';
+import 'package:than_reader/platforms/pages/more_page.dart';
+
+class MobileHome extends StatefulWidget {
+  const MobileHome({super.key});
+
+  @override
+  State<MobileHome> createState() => _MobileHomeState();
+}
+
+class _MobileHomeState extends State<MobileHome> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => init());
+    super.initState();
+  }
+
+  void init() async {
+    try {
+      final pkg = ThanPkgAndroid.getInstance.storagePermissionHandler;
+
+      if (!await pkg.isStoragePermissionGranted()) {
+        await pkg.requestStoragePermission();
+        return;
+      }
+    } catch (e) {
+      if (!mounted) return;
+      showErrorDialog(context, e.toString());
+    }
+  }
+
+  int index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final col = context.colorScheme;
+
+    return Scaffold(
+      body: IndexedStack(
+        index: index,
+        children: [MobileHomePage(), MorePage()],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: col.surfaceContainerHighest,
+        selectedItemColor: col.primary,
+        unselectedItemColor: col.onSurfaceVariant,
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
+        currentIndex: index,
+        onTap: (value) {
+          setState(() {
+            index = value;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.grid_view_outlined),
+            label: 'More',
+          ),
+        ],
+      ),
+    );
+  }
+}
