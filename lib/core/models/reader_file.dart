@@ -3,7 +3,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 
 enum FileType {
   pdf,
-  epub,
+  // epub,
   unknown;
 
   static FileType fromValue(String val) {
@@ -79,9 +79,9 @@ class ReaderFile {
 }
 
 extension AppFileExtensions on List<ReaderFile> {
-  void sortA2Z({bool isA2Z = true}) {
+  void sortA2Z({bool a2z = true}) {
     sort((a, b) {
-      if (isA2Z) {
+      if (a2z) {
         return a.name.compareTo(b.name);
       } else {
         return b.name.compareTo(a.name);
@@ -89,9 +89,9 @@ extension AppFileExtensions on List<ReaderFile> {
     });
   }
 
-  void sortDate({bool isNewest = true}) {
+  void sortDate({bool new2old = true}) {
     sort((a, b) {
-      if (isNewest) {
+      if (new2old) {
         return b.date.millisecondsSinceEpoch.compareTo(
           a.date.millisecondsSinceEpoch,
         );
@@ -103,9 +103,9 @@ extension AppFileExtensions on List<ReaderFile> {
     });
   }
 
-  void sortSize({bool isSmallest = true}) {
+  void sortSize({bool small2big = true}) {
     sort((a, b) {
-      if (isSmallest) {
+      if (small2big) {
         return a.size.compareTo(b.size);
       } else {
         return b.size.compareTo(a.size);

@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
+import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
@@ -18,6 +20,23 @@ class PdfReader extends StatefulWidget {
 
   @override
   State<PdfReader> createState() => _PdfReaderState();
+
+  static final cf = CFBStore();
+  static const String darkModeEnableKey = 'darkModeEnableKey';
+  static const String fullscreenEnableKey = 'fullscreenEnableKey';
+  static const String zoomInEnableKey = 'zoomInEnableKey';
+  static const String zoomOutEnableKey = 'zoomOutEnableKey';
+  static const String zoomLableEnableKey = 'zoomLableEnableKey';
+  static const String scrollbarEnableKey = 'scrollbarEnableKey';
+  static const String cacheLableEnableKey = 'cacheLableEnableKey';
+
+  static bool isEnable(String key) {
+    return cf.getBool(key, true);
+  }
+
+  static void put(String key, bool value) {
+    cf.put(key, value);
+  }
 }
 
 class _PdfReaderState extends State<PdfReader> {
@@ -29,8 +48,16 @@ class _PdfReaderState extends State<PdfReader> {
     config = widget.config;
     controller = TPdfController(
       widgetBuilder: TPdfWidgetBuilder(
-        footerBuilder: (context, page) =>
-            isDarkMode ? SizedBox.shrink() : Text('Page: $page'),
+        footerBuilder: (context, pageOffset) => Container(
+          width: pageOffset.width,
+          color: Colors.white,
+          child: Center(
+            child: Text(
+              'Page: ${pageOffset.pageIndex + 1}',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ),
       ),
       eventBuilder: TPdfEventBuilder(
         onKeyEventAfterConfig: (node, event) {
@@ -137,10 +164,59 @@ class _PdfReaderState extends State<PdfReader> {
     setState(() {});
   }
 
+  ThemeData get currentTheme {
+    if (config.readerThemeMode == .light) return .light();
+    if (config.readerThemeMode == .dark) return .dark();
+
+    return context.isDarkMode ? .dark() : .light();
+  }
+
+  bool get isDarkMode {
+    return currentTheme == .dark() ? true : false;
+  }
+
+  void saveConfig() {
+    final state = controller.state;
+    final newCof = config.copyWith(
+      page: state.page,
+      totalPage: state.totalPage,
+      offsetX: state.currentOffsetX,
+      scrollbarEnable: state.scrollbarEnable,
+      zoom: state.zoom,
+    );
+    PdfReader.cf.writeAll();
+    Navigator.pop<PdfConfig>(context, newCof);
+  }
+
+  void showMenu() async {
+    final res = await showModalBottomSheet<PdfConfig>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 180,
+            maxHeight: MediaQuery.of(context).size.height * .8,
+          ),
+          child: PdfConfigMenu(config: config),
+        ),
+      ),
+    );
+    if (res != null) {
+      config = res;
+      controller.action.scrollbarEnable(res.scrollbarEnable);
+      setState(() {});
+      changedConfig();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onDoubleTap: existsFullscreen,
+      onLongPress: showMenu,
+      onSecondaryTap: showMenu,
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
@@ -196,92 +272,80 @@ class _PdfReaderState extends State<PdfReader> {
   }
 
   Widget _header(ColorScheme col) {
-    return SingleChildScrollView(
-      scrollDirection: .horizontal,
-      child: Padding(
-        padding: .all(8),
-        child: Row(
-          spacing: 8,
-          children: [
-            SizedBox(width: 2),
-            PdfPageListener(
-              controller: controller,
-              onClicked: () {
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      PdfPageJumpDialog(controller: controller),
-                );
-              },
+    return StreamBuilder(
+      stream: PdfReader.cf.stream.put,
+      builder: (context, asyncSnapshot) {
+        return SingleChildScrollView(
+          scrollDirection: .horizontal,
+          child: Padding(
+            padding: .all(8),
+            child: Row(
+              spacing: 8,
+              children: [
+                SizedBox(width: 2),
+                PdfPageListener(
+                  controller: controller,
+                  onClicked: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          PdfPageJumpDialog(controller: controller),
+                    );
+                  },
+                ),
+                SizedBox(width: 2),
+                // dark mode
+                if (PdfReader.isEnable(PdfReader.darkModeEnableKey))
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: col.surfaceContainerHigh,
+                      foregroundColor: col.onSurface,
+                    ),
+                    onPressed: () {
+                      ReaderThemeMode? newMode;
+                      if (config.readerThemeMode == .light) {
+                        newMode = .dark;
+                      } else if (config.readerThemeMode == .dark) {
+                        newMode = .light;
+                      } else {
+                        newMode = .dark;
+                      }
+                      config = config.copyWith(readerThemeMode: newMode);
+                      setState(() {});
+                    },
+                    icon: Icon(
+                      isDarkMode
+                          ? Icons.dark_mode_outlined
+                          : Icons.light_mode_outlined,
+                    ),
+                  ),
+                // fullscreen
+                if (PdfReader.isEnable(PdfReader.fullscreenEnableKey))
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: col.surfaceContainerHigh,
+                      foregroundColor: col.onSurface,
+                    ),
+                    onPressed: toggleFullscreen,
+                    icon: Icon(Icons.fullscreen),
+                  ),
+                if (PdfReader.isEnable(PdfReader.zoomOutEnableKey))
+                  // zoom out
+                  PdfZoomOut(controller: controller),
+                if (PdfReader.isEnable(PdfReader.zoomInEnableKey))
+                  // zoom int
+                  PdfZoomIn(controller: controller),
+                if (PdfReader.isEnable(PdfReader.zoomLableEnableKey))
+                  PdfZoomListener(controller: controller),
+                if (PdfReader.isEnable(PdfReader.scrollbarEnableKey))
+                  PdfScrollbarToggler(controller: controller),
+                if (PdfReader.isEnable(PdfReader.cacheLableEnableKey))
+                  PdfCacheImageListener(controller: controller),
+              ],
             ),
-            SizedBox(width: 2),
-            // dark mode
-            IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: col.surfaceContainerHigh,
-                foregroundColor: col.onSurface,
-              ),
-              onPressed: () {
-                ReaderThemeMode? newMode;
-                if (config.readerThemeMode == .light) {
-                  newMode = .dark;
-                } else if (config.readerThemeMode == .dark) {
-                  newMode = .light;
-                } else {
-                  newMode = .dark;
-                }
-                config = config.copyWith(readerThemeMode: newMode);
-                setState(() {});
-              },
-              icon: Icon(
-                isDarkMode
-                    ? Icons.dark_mode_outlined
-                    : Icons.light_mode_outlined,
-              ),
-            ),
-            // fullscreen
-            IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: col.surfaceContainerHigh,
-                foregroundColor: col.onSurface,
-              ),
-              onPressed: toggleFullscreen,
-              icon: Icon(Icons.fullscreen),
-            ),
-            // zoom out
-            PdfZoomOut(controller: controller),
-            // zoom int
-            PdfZoomIn(controller: controller),
-
-            PdfZoomListener(controller: controller),
-            PdfScrollbarToggler(controller: controller),
-            PdfCacheImageListener(controller: controller),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
-  }
-
-  ThemeData get currentTheme {
-    if (config.readerThemeMode == .light) return .light();
-    if (config.readerThemeMode == .dark) return .dark();
-
-    return context.isDarkMode ? .dark() : .light();
-  }
-
-  bool get isDarkMode {
-    return currentTheme == .dark() ? true : false;
-  }
-
-  void saveConfig() {
-    final state = controller.state;
-    final newCof = config.copyWith(
-      page: state.page,
-      totalPage: state.totalPage,
-      offsetX: state.currentOffsetX,
-      scrollbarEnable: state.scrollbarEnable,
-      zoom: state.zoom,
-    );
-    Navigator.pop<PdfConfig>(context, newCof);
   }
 }

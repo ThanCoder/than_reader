@@ -47,7 +47,19 @@ class _MobileHomePageState extends State<MobileHomePage> {
   }
 
   List<Widget> _actions(ColorScheme col) {
-    return [];
+    return [
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: .circular(15),
+          color: col.tertiaryContainer,
+        ),
+        child: IconButton(
+          color: col.primary,
+          onPressed: () => init(useCache: false),
+          icon: Icon(Icons.refresh, color: col.onTertiaryContainer),
+        ),
+      ),
+    ];
   }
 
   Widget _body() {

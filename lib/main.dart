@@ -1,6 +1,7 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/platforms/platform_app.dart';
@@ -20,6 +21,10 @@ void main() async {
 
   ControllerManager.register(AllFileController());
   await ControllerManager.initAll();
+  // reader
+  await PdfReader.cf.open(
+    AppUtils.instance.getConfigPath('pdf.reader.config.cfb'),
+  );
 
   // ModuleApps.instance.registerModule(AppFileReadManager());
   // ModuleApps.instance.registerModule(EpubApp());

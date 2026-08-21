@@ -574,10 +574,10 @@ packages:
     dependency: transitive
     description:
       name: than_pdf_engine
-      sha256: f3c8b83c42af6abeff73a9b80716ec591c156976712e19067f2c5e5af736ffa9
+      sha256: cc196f4810a5719c9bcfffbfde59fcb9cf12de31cf298201f6be58a64be8f97d
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   than_pkg_android:
     dependency: "direct main"
     description:

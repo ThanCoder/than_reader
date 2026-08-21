@@ -54,6 +54,23 @@ class _DesktopListPageState extends State<DesktopListPage> {
           icon: Icon(Icons.refresh, color: col.onTertiaryContainer),
         ),
       ),
+      SizedBox(width: 10),
+      StreamBuilder(
+        stream: allC.events.whereType<AllFileControllerStateChanged>(),
+        builder: (context, asyncSnapshot) {
+          return TSortProviderButton(
+            value: allC.currentSort,
+            list: allC.sortList,
+            onApply: (item) {
+              if (item.id == allC.currentSort.id &&
+                  item.isTrue == allC.currentSort.isTrue) {
+                return;
+              }
+              allC.setSort(item);
+            },
+          );
+        },
+      ),
     ];
   }
 
