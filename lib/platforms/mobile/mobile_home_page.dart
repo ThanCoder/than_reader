@@ -48,16 +48,21 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   List<Widget> _actions(ColorScheme col) {
     return [
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: .circular(15),
-          color: col.tertiaryContainer,
-        ),
-        child: IconButton(
-          color: col.primary,
-          onPressed: () => init(useCache: false),
-          icon: Icon(Icons.refresh, color: col.onTertiaryContainer),
-        ),
+      StreamBuilder(
+        stream: allC.events.whereType<AllFileControllerStateChanged>(),
+        builder: (context, asyncSnapshot) {
+          return TSortProviderButton(
+            value: allC.currentSort,
+            list: allC.sortList,
+            onApply: (item) {
+              if (item.id == allC.currentSort.id &&
+                  item.isTrue == allC.currentSort.isTrue) {
+                return;
+              }
+              allC.setSort(item);
+            },
+          );
+        },
       ),
     ];
   }
@@ -77,20 +82,23 @@ class _MobileHomePageState extends State<MobileHomePage> {
         }
         return Padding(
           padding: const EdgeInsets.all(4.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverGrid.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: .68,
-                  crossAxisSpacing: 6,
-                  mainAxisSpacing: 6,
+          child: RefreshIndicator.adaptive(
+            onRefresh: () => init(useCache: false),
+            child: CustomScrollView(
+              slivers: [
+                SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: .68,
+                    crossAxisSpacing: 6,
+                    mainAxisSpacing: 6,
+                  ),
+                  itemCount: files.length,
+                  itemBuilder: (context, index) =>
+                      MobileGridItem(file: files[index], onClicked: onClicked),
                 ),
-                itemCount: files.length,
-                itemBuilder: (context, index) =>
-                    MobileGridItem(file: files[index], onClicked: onClicked),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
