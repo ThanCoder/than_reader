@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cfb_store/cfb_store.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/all_files/all_file_state.dart';
@@ -7,6 +9,11 @@ import 'package:than_reader/core/utils/file_scanner.dart';
 
 /// ***********Events******************
 class AllFileControllerLoaded extends IControllerEvent {}
+
+class AllFileControllerDeleted extends IControllerEvent {
+  final ReaderFile file;
+  const AllFileControllerDeleted(this.file);
+}
 
 class AllFileControllerError extends IControllerEvent {
   final String message;
@@ -65,6 +72,29 @@ class AllFileController extends IController {
     onSort();
     addEvent(AllFileControllerStateChanged());
     cf.put(sortIdKey, item.id).put(sortIsTRueKey, item.isTrue).writeAll();
+  }
+
+  ReaderFile? getById(String configId) {
+    final index = list.indexWhere((e) => e.configId == configId);
+    if (index != -1) {
+      return list[index];
+    }
+    return null;
+  }
+
+  void deleteForever(ReaderFile file) async {
+    final index = list.indexWhere((e) => e.path == file.path);
+    if (index == -1) return;
+    list.removeAt(index);
+
+    // remove disk
+    final f = File(file.path);
+    if (f.existsSync()) {
+      await f.delete();
+    }
+
+    addEvent(AllFileControllerLoaded());
+    addEvent(AllFileControllerDeleted(file));
   }
 
   void onSort() {

@@ -129,7 +129,6 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
     subtitle: Text('Theme Appy Mode'),
     trailing: DropdownButtonHideUnderline(
       child: DropdownButton<ReaderThemeMode>(
-        icon: Icon(Icons.color_lens_outlined),
         dropdownColor: col.surfaceContainer,
         style: TextStyle(fontWeight: .w600, color: col.onSurface),
         padding: .symmetric(vertical: 8, horizontal: 10),

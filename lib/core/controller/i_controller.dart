@@ -1,6 +1,8 @@
 import 'dart:async';
 
-abstract class IControllerEvent {}
+abstract class IControllerEvent {
+  const IControllerEvent();
+}
 
 abstract class IController {
   Future<void> init();

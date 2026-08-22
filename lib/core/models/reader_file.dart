@@ -6,6 +6,12 @@ enum FileType {
   // epub,
   unknown;
 
+  String get label {
+    if (this == pdf) return 'PDF';
+    // if (this == epub) return 'EPUB';
+    return 'Unknown';
+  }
+
   static FileType fromValue(String val) {
     return values.firstWhere((e) => e.name == val, orElse: () => unknown);
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 
 class MobileGridItem extends StatelessWidget {
@@ -26,13 +27,18 @@ class MobileGridItem extends StatelessWidget {
       child: InkWell(
         mouseCursor: SystemMouseCursors.click,
         onTap: () => onClicked(file),
-        onSecondaryTap: () => onRightClicked?.call(file),
-        child: Column(
-          crossAxisAlignment: .center,
+        onLongPress: () => onRightClicked?.call(file),
+        child: Stack(
           children: [
-            Expanded(child: ReaderCoverFile(file: file)),
-            SizedBox(height: 10),
-            _content(col),
+            Column(
+              crossAxisAlignment: .center,
+              children: [
+                Expanded(child: ReaderCoverFile(file: file)),
+                SizedBox(height: 10),
+                _content(col),
+              ],
+            ),
+            Positioned(left: 0, top: 0, child: FavLabel(file: file)),
           ],
         ),
       ),

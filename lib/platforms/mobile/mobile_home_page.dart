@@ -3,6 +3,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/platforms/components/mobile_grid_item.dart';
 import 'package:than_reader/router.dart';
 
@@ -94,8 +95,11 @@ class _MobileHomePageState extends State<MobileHomePage> {
                     mainAxisSpacing: 6,
                   ),
                   itemCount: files.length,
-                  itemBuilder: (context, index) =>
-                      MobileGridItem(file: files[index], onClicked: onClicked),
+                  itemBuilder: (context, index) => MobileGridItem(
+                    file: files[index],
+                    onClicked: onClicked,
+                    onRightClicked: onRightClicked,
+                  ),
                 ),
               ],
             ),
@@ -141,5 +145,14 @@ class _MobileHomePageState extends State<MobileHomePage> {
     await goReaderModuleApp(context, file);
     if (!mounted) return;
     setState(() {});
+  }
+
+  void onRightClicked(ReaderFile file) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => ItemMenu(file: file),
+    );
   }
 }

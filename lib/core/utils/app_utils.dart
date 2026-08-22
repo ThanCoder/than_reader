@@ -51,7 +51,7 @@ class AppUtils {
       versionName = info.versionName;
 
       _androidEmulatedStorageConfigDir = Directory(
-        pkg.getDeviceStoragePath().join(info.packageName),
+        pkg.getDeviceStoragePath().join('.${info.packageName}'),
       );
     } else {
       throw UnsupportedError('Unsupported Platform path Provider');
@@ -83,6 +83,13 @@ class AppUtils {
     if (name == null) return _androidEmulatedStorageConfigDir.path;
 
     return _androidEmulatedStorageConfigDir.path.join(name);
+  }
+
+  String getPlatfromExternalConfigPath([String? name]) {
+    if (Platform.isAndroid) {
+      return getAndroidExternalConfigPath(name);
+    }
+    return getConfigPath(name);
   }
 
   /// ### Return -> [(count,size)]

@@ -4,6 +4,7 @@ import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/desktop_grid_item.dart';
+import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/router.dart';
 
 class DesktopListPage extends StatefulWidget {
@@ -96,8 +97,11 @@ class _DesktopListPageState extends State<DesktopListPage> {
                   mainAxisSpacing: 16,
                 ),
                 itemCount: files.length,
-                itemBuilder: (context, index) =>
-                    DesktopGridItem(file: files[index], onClicked: onClicked),
+                itemBuilder: (context, index) => DesktopGridItem(
+                  file: files[index],
+                  onClicked: onClicked,
+                  onRightClicked: onRightClicked,
+                ),
               ),
             ],
           ),
@@ -110,5 +114,14 @@ class _DesktopListPageState extends State<DesktopListPage> {
     await goReaderModuleApp(context, file);
     if (!mounted) return;
     setState(() {});
+  }
+
+  void onRightClicked(ReaderFile file) async {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => ItemMenu(file: file),
+    );
   }
 }
