@@ -76,7 +76,12 @@ class _CacheCleanerState extends State<CacheCleaner>
     try {
       count = 0;
       size = 0;
-      final confirm = await showConfirmDialog(context, 'Do You Want To Clean!');
+      final confirm = await showConfirmDialog(
+        context,
+        'Do You Want To Clean!',
+        confirmColor: col.error,
+        confirmForegroundColor: col.onError,
+      );
       if (!confirm) return;
       scanIconAniController.repeat();
       setState(() {

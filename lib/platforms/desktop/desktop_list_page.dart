@@ -46,12 +46,12 @@ class _DesktopListPageState extends State<DesktopListPage> {
       Container(
         decoration: BoxDecoration(
           borderRadius: .circular(15),
-          color: col.tertiaryContainer,
+          color: col.surfaceContainerHighest,
         ),
         child: IconButton(
           color: col.primary,
           onPressed: () => init(useCache: false),
-          icon: Icon(Icons.refresh, color: col.onTertiaryContainer),
+          icon: Icon(Icons.refresh, color: col.onSurface),
         ),
       ),
       SizedBox(width: 10),

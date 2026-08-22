@@ -88,9 +88,9 @@ class _PdfReaderState extends State<PdfReader> {
     controller.attached.listen((_) {
       controller.stream.ready.listen((_) {
         init();
+        changedConfig();
       });
     });
-    changedConfig();
   }
 
   @override
@@ -121,6 +121,7 @@ class _PdfReaderState extends State<PdfReader> {
     if (Platform.isLinux) {
       ThanPkgLinux.getInstance.window.setFullscreen(config.isFullscreen);
     }
+    controller.action.scrollbarEnable(config.scrollbarEnable);
   }
 
   bool isReady = false;

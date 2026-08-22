@@ -2,6 +2,7 @@ import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
+import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
 
 class PdfConfigMenu extends StatefulWidget {
@@ -77,6 +78,7 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
                 ),
               ),
             ),
+
             SwitchListTile.adaptive(
               tileColor: col.surfaceContainer,
               shape: RoundedRectangleBorder(borderRadius: .circular(15)),
@@ -108,11 +110,39 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
                 setState(() {});
               },
             ),
+            _readerThemeMode(),
           ],
         ),
       ),
     );
   }
+
+  final readerModes = ReaderThemeMode.values
+      .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+      .toList();
+
+  ListTile _readerThemeMode() => ListTile(
+    tileColor: col.surfaceContainer,
+    shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+    // leading: Icon(Icons.color_lens_outlined),
+    title: Text('Reader Theme Mode'),
+    subtitle: Text('Theme Appy Mode'),
+    trailing: DropdownButtonHideUnderline(
+      child: DropdownButton<ReaderThemeMode>(
+        icon: Icon(Icons.color_lens_outlined),
+        dropdownColor: col.surfaceContainer,
+        style: TextStyle(fontWeight: .w600, color: col.onSurface),
+        padding: .symmetric(vertical: 8, horizontal: 10),
+        borderRadius: .circular(15),
+        value: config.readerThemeMode,
+        items: readerModes,
+        onChanged: (value) {
+          config = config.copyWith(readerThemeMode: value);
+          setState(() {});
+        },
+      ),
+    ),
+  );
 
   Widget _allReaderConfig() {
     return StreamBuilder(
