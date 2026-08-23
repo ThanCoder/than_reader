@@ -1,15 +1,15 @@
 name: Flutter Build and Release
 
 on:
-  push:
-    tags:
-      - "v*"
-
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (ဥပမာ: v1.0.0)"
+        required: true
+        type: string
 
 permissions:
   contents: write
-
 
 jobs:
 
@@ -57,14 +57,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
 
-      - name: Check Android environment
-        run: |
-          flutter doctor -v
-          echo "System CMake:"
-          cmake --version
-          echo "Android SDK:"
-          echo "$ANDROID_HOME"
-
       - name: Install dependencies
         run: flutter pub get
 
@@ -72,14 +64,15 @@ jobs:
         run: |
           flutter build apk \
             --release \
-            --split-per-abi \
-            -v
+            --split-per-abi
 
       - name: Upload Android APKs
         uses: actions/upload-artifact@v4
         with:
           name: android-apks
           path: build/app/outputs/flutter-apk/*.apk
+
+
   # ─────────────────────────────────────
   # Linux
   # ─────────────────────────────────────
@@ -120,7 +113,6 @@ jobs:
         run: |
           cd build/linux/x64/release/bundle
           zip -r ../../../../../linux-x64-release.zip *
-          cd -
 
       - name: Upload Linux Build
         uses: actions/upload-artifact@v4
@@ -159,6 +151,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
           files: |
             artifacts/android/*.apk
             artifacts/linux/linux-x64-release.zip
