@@ -1,138 +1,69 @@
-name: Flutter Build & Release
+name: Flutter Build and Release
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
   workflow_dispatch:
-
-permissions:
-  contents: write
-
-
-# ─────────────────────────────────────────────
-# Android
-# ─────────────────────────────────────────────
-
+  
 jobs:
-
-  build-android:
-    name: Build Android
+  build:
+    name: Build and Release
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.0'
-          channel: stable
-          cache: true
+          flutter-version: "3.x"
+          channel: "stable"
 
-      - name: Flutter Pub Get
-        run: flutter pub get
-
-      - name: Build Android
+      - name: Accept Android Licenses
         run: |
-          flutter build apk \
-            --release \
-            --target-platform android-arm,android-arm64 \
-            --split-per-abi
-
-      - name: Upload Android APKs
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apks
-          path: build/app/outputs/flutter-apk/*.apk
-
-# ─────────────────────────────────────────────
-# Linux
-# ─────────────────────────────────────────────
-
-  build-linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || \
+          yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 
-          sudo apt-get install -y \
-            clang \
-            cmake \
-            ninja-build \
-            pkg-config \
-            libgtk-3-dev \
-            liblzma-dev
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.47.0'
-          channel: stable
-          cache: true
-
-      - name: Flutter Pub Get
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Linux
+      # 1. Build Android (Split per ABI)
+      - name: Build Android APK
+        run: flutter build apk --release --split-per-abi
+
+      # 2. Build Linux
+      - name: Build Linux Desktop
         run: flutter build linux --release
 
-      - name: Compress Linux
+      - name: Compress Linux Build
         run: |
-          tar -czf linux-release.tar.gz \
-            -C build/linux/x64/release/bundle .
+          cd build/linux/x64/release/bundle
+          zip -r ../../../../../linux-x64-release.zip *
+          cd -
 
-      - name: Upload Linux
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-release
-          path: linux-release.tar.gz
-
-
-# ─────────────────────────────────────────────
-# GitHub Release
-# ─────────────────────────────────────────────
-
-  create-release:
-    name: Create Release
-    needs:
-      - build-android
-      - build-linux
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download Android
-        uses: actions/download-artifact@v4
-        with:
-          name: android-apks
-          path: artifacts/android
-
-      - name: Download Linux
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-release
-          path: artifacts/linux
-
+      # 4. Create Release and Upload Files
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/android/*.apk
-            artifacts/linux/*.tar.gz
+            build/app/outputs/flutter-apk/*.apk
+            linux-x64-release.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
