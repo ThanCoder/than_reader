@@ -33,7 +33,7 @@ class _AppVersionViewState extends State<AppVersionView> {
         style: TextStyle(color: col.onSurface),
       ),
       subtitle: Text('Check for updates and view release notes'),
-      trailing: Icon(Icons.arrow_forward_ios_outlined),
+      trailing: Icon(Icons.launch_outlined),
       onTap: () {
         if (Platform.isLinux) {
           ThanPkgLinux.getInstance.launcher.launchUrl(

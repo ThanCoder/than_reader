@@ -21,9 +21,16 @@ class ReaderHistoryController extends IController {
         'reader.history.config.cfb',
       ),
     );
-    _allC.events.whereType<AllFileControllerLoaded>().listen((event) {
+    _allC.events.whereType<AllFileControllerLoaded>().listen((event) async {
+      await _cf.reload();
       reload();
     });
+  }
+
+  void clear() {
+    historyMap.clear();
+    allFileMap.clear();
+    addEvent(ReaderHistoryControllerValueChanged());
   }
 
   Future<void> reload() async {

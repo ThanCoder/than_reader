@@ -111,7 +111,7 @@ class _ItemMenuState extends State<ItemMenu> {
               ListTile(
                 shape: RoundedRectangleBorder(borderRadius: .circular(15)),
                 tileColor: col.surfaceContainer,
-                leading: Icon(Icons.favorite, color: col.onPrimary),
+                leading: Icon(Icons.favorite, color: col.primary),
                 title: Text('Add Favorite'),
                 trailing: Icon(
                   Icons.add,
@@ -126,7 +126,7 @@ class _ItemMenuState extends State<ItemMenu> {
               ListTile(
                 shape: RoundedRectangleBorder(borderRadius: .circular(15)),
                 tileColor: col.surfaceContainer,
-                leading: Icon(Icons.favorite, color: col.onError),
+                leading: Icon(Icons.favorite, color: col.error),
                 title: Text('Remove Favorite'),
                 trailing: Icon(
                   Icons.remove,

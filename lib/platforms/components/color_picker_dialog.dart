@@ -26,6 +26,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
     final col = context.colorScheme;
 
     return AlertDialog.adaptive(
+      scrollable: true,
       content: ColorPicker(
         pickerColor: pickerColor,
         onColorChanged: (value) {

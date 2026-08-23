@@ -555,7 +555,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a9503ced80867a901c4d3ea00ef19607b7488a13
+      resolved-ref: "3f65bf1f78da86797bc40b0e21c09b2c53c18030"
       url: "https://github.com/ThanCoder/t_pdf_reader.git"
     source: git
     version: "1.0.0"
@@ -564,7 +564,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "3c386351765c16831e872566dec778d5e7f1fbfa"
+      resolved-ref: b9aa9549b8fec49a159a501b22f2feac7478dad7
       url: "https://github.com/ThanCoder/t_server.git"
     source: git
     version: "3.1.0"
@@ -573,7 +573,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b639be0388b8f4ce880bfa0a798d800b8d8e1f46
+      resolved-ref: "2659fdae13e404c5c9b70d267ad2f3f6e927d80e"
       url: "https://github.com/ThanCoder/t_widgets.git"
     source: git
     version: "2.7.0"

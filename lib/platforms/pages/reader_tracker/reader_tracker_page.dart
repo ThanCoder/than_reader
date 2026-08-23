@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
@@ -32,6 +31,16 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
 
     return Scaffold(
       backgroundColor: col.surface,
+      // appBar: AppBar(
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {
+      //         hisCon.clear();
+      //       },
+      //       icon: Icon(Icons.lock_reset),
+      //     ),
+      //   ],
+      // ),
       body: StreamBuilder(
         stream: hisCon.events.whereType<ReaderHistoryControllerValueChanged>(),
         builder: (context, asyncSnapshot) {
@@ -176,7 +185,7 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
                 foregroundColor: col.onSurfaceVariant,
               ),
               onPressed: () {
-                context.pop();
+                hisCon.reload();
               },
               icon: Icon(Icons.arrow_back_ios_new_outlined),
             ),
