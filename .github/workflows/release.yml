@@ -38,24 +38,48 @@ jobs:
           channel: "stable"
           cache: true
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Accept Android Licenses
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || \
-          yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+          yes | sdkmanager --licenses || true
+
+      - name: Install Android dependencies
+        run: |
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
+
+      - name: Install CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+
+      - name: Check Android environment
+        run: |
+          flutter doctor -v
+          echo "System CMake:"
+          cmake --version
+          echo "Android SDK:"
+          echo "$ANDROID_HOME"
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build Android APK
-        run: flutter build apk --release --split-per-abi
+        run: |
+          flutter build apk \
+            --release \
+            --split-per-abi \
+            -v
 
       - name: Upload Android APKs
         uses: actions/upload-artifact@v4
         with:
           name: android-apks
           path: build/app/outputs/flutter-apk/*.apk
-
-
   # ─────────────────────────────────────
   # Linux
   # ─────────────────────────────────────
