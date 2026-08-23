@@ -14,55 +14,42 @@ permissions:
 # ─────────────────────────────────────────────
 # Android
 # ─────────────────────────────────────────────
+build-android:
+  name: Build Android
+  runs-on: ubuntu-latest
 
-jobs:
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-  build-android:
-    name: Build Android
-    runs-on: ubuntu-latest
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: zulu
+        java-version: '17'
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.47.0'
+        channel: stable
+        cache: true
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: zulu
-          java-version: '17'
+    - name: Flutter Pub Get
+      run: flutter pub get
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.47.0'
-          channel: stable
-          cache: true
+    - name: Build Android
+      run: |
+        flutter build apk \
+          --release \
+          --target-platform android-arm,android-arm64 \
+          --split-per-abi
 
-      - name: Install Android dependencies
-        run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
-            "platform-tools" \
-            "cmake;3.28.3"
-
-      - name: Flutter Pub Get
-        run: flutter pub get
-
-      - name: Build Android
-        run: |
-          flutter build apk \
-            --release \
-            --target-platform android-arm,android-arm64 \
-            --split-per-abi
-
-      - name: Upload Android APKs
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apks
-          path: build/app/outputs/flutter-apk/*.apk
-
-
+    - name: Upload Android APKs
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apks
+        path: build/app/outputs/flutter-apk/*.apk
 # ─────────────────────────────────────────────
 # Linux
 # ─────────────────────────────────────────────
