@@ -11,16 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  dart_core_extensions: ^0.5.0
-  t_widgets:
-    path: /home/thancoder/projects/dart_plugins/t_widgets
-  mime: ^2.0.0
-  t_pdf_reader:
-    path: /home/thancoder/projects/dart_plugins/t_pdf_reader
-  t_server:
-    path: /home/thancoder/projects/dart_plugins/t_server
+
+  # material_ui: ^1.0.1
   cfb_store: ^0.7.0
+  mime: ^2.0.0
   crypto: ^3.0.7
   archive: ^4.0.9
   flutter_html: ^3.0.0
@@ -34,6 +28,24 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
 
+  dart_core_extensions:
+    git:  
+      url: https://github.com/ThanCoder/dart_core_extensions.git
+  t_widgets:
+    git:
+      url: https://github.com/ThanCoder/t_widgets.git
+  t_pdf_reader:
+    git:
+      url: https://github.com/ThanCoder/t_pdf_reader.git
+  t_server:
+    git: 
+      url: https://github.com/ThanCoder/t_server.git
+
+# Latest Git commit သေချာယူချင်ရင်—
+
+# flutter pub upgrade --unlock-transitive
+
+# flutter pub upgrade dart_core_extensions t_widgets t_pdf_reader t_server
 dev_dependencies:
   flutter_test:
     sdk: flutter

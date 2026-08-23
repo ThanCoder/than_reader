@@ -31,6 +31,7 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
     final color = theme.colorScheme;
 
     return Scaffold(
+      backgroundColor: col.surface,
       body: StreamBuilder(
         stream: hisCon.events.whereType<ReaderHistoryControllerValueChanged>(),
         builder: (context, asyncSnapshot) {
@@ -129,7 +130,7 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
             ),
           ),
           SliverPadding(
-            padding: .symmetric(horizontal: 4),
+            padding: .fromLTRB(16, 0, 16, 20),
             sliver: _recentListWidget(list),
           ),
 

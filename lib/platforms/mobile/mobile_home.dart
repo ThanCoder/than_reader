@@ -54,7 +54,7 @@ class _MobileHomeState extends State<MobileHome> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: col.surfaceContainerHighest,
+        backgroundColor: col.surfaceContainer,
         selectedItemColor: col.primary,
         unselectedItemColor: col.onSurfaceVariant,
         // showSelectedLabels: false,

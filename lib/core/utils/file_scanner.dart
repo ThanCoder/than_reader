@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
-import 'package:than_pkg_linux/core/utils/path_ext.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/file_config_id_generator.dart';
 import 'package:than_reader/core/utils/path_scanner.dart';

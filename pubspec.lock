@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: archive
-      sha256: a96e8b390886ee8abb49b7bd3ac8df6f451c621619f52a26e815fdcf568959ff
+      sha256: ace891da0862b0e4cabbb064ee3fd87b2728b898949fdb366d83fe98342c9f19
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.9"
+    version: "4.2.0"
   args:
     dependency: transitive
     description:
@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: code_assets
-      sha256: "83ccdaa064c980b5596c35dd64a8d3ecc68620174ab9b90b6343b753aa721687"
+      sha256: cfd4f5f575a49c5f10ca856e9846073f1e6c3ee94912377eea5f6cefc5272941
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "2.0.0"
   collection:
     dependency: transitive
     description:
@@ -121,21 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.9"
   dart_core_extensions:
     dependency: "direct main"
     description:
-      name: dart_core_extensions
-      sha256: d5af3d6eb91df2a5763aac76f724f09f7bdb173427b29e774e7cf24454c8e14b
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "47dfd3835130736204f7031997a8bc7d91e23f60"
+      url: "https://github.com/ThanCoder/dart_core_extensions.git"
+    source: git
     version: "0.5.0"
   desktop_drop:
     dependency: "direct main"
@@ -300,10 +293,10 @@ packages:
     dependency: transitive
     description:
       name: hooks
-      sha256: "025f060e86d2d4c3c47b56e33caf7f93bf9283340f26d23424ebcfccf34f621e"
+      sha256: eaac480a35ec0814146c2c48d96aaa829e0e44a7662c88ae84c9edf4bc35651f
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "2.2.0"
   html:
     dependency: "direct main"
     description:
@@ -332,10 +325,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "6300175e00616bbc832e2fc91bfa4d776af5402c81c7151bee6905bb08473c52"
+      sha256: "1976370a4df3091bb0f72409c187ad1f9132a818bc6b95ca59c0bae1c75c688e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.1"
+    version: "4.9.2"
   json_annotation:
     dependency: transitive
     description:
@@ -508,10 +501,10 @@ packages:
     dependency: transitive
     description:
       name: record_use
-      sha256: "2551bd8eecfe95d14ae75f6021ad0248be5c27f138c2ec12fcb52b500b3ba1ed"
+      sha256: "1cb8564af8d43b464294411db9217f5ec04891c6f22ee2c32d73ae05e88a6bd2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "1.1.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -560,23 +553,29 @@ packages:
   t_pdf_reader:
     dependency: "direct main"
     description:
-      path: "/home/thancoder/projects/dart_plugins/t_pdf_reader"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: a9503ced80867a901c4d3ea00ef19607b7488a13
+      url: "https://github.com/ThanCoder/t_pdf_reader.git"
+    source: git
     version: "1.0.0"
   t_server:
     dependency: "direct main"
     description:
-      path: "/home/thancoder/projects/dart_plugins/t_server"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "3c386351765c16831e872566dec778d5e7f1fbfa"
+      url: "https://github.com/ThanCoder/t_server.git"
+    source: git
     version: "3.1.0"
   t_widgets:
     dependency: "direct main"
     description:
-      path: "/home/thancoder/projects/dart_plugins/t_widgets"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: b639be0388b8f4ce880bfa0a798d800b8d8e1f46
+      url: "https://github.com/ThanCoder/t_widgets.git"
+    source: git
     version: "2.7.0"
   term_glyph:
     dependency: transitive
@@ -670,10 +669,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "0016aef94fc66495ac78af5859181e3f3bf2026bd8eecc72b9565601e19ab360"
+      sha256: "5f37239c4851efcef929cea7824e76df7f2f0970aef85d66bbc430afa40e72f0"
       url: "https://pub.dev"
     source: hosted
-    version: "15.2.0"
+    version: "15.3.0"
   web:
     dependency: transitive
     description:

@@ -7,7 +7,7 @@
   
 ## **Supported Formats** 
 + [x] PDF
-+ [x] Epub
+<!-- + [x] Epub -->
 
 ## Download App
 [Latest Releases](https://github.com/ThanCoder/than_reader/releases)
@@ -21,21 +21,10 @@
 
 <summary>Android</summary> -->
 
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/1.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/2.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/3.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/4.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/5.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/6.png?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/7.png?raw=true" width="300">
+<!-- <img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/new/1.png?raw=true" width="300"> -->
 
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-14-16-16-24-265_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-33-58-940_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-06-117_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-13-855_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-21-402_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-25-210_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-34-45-229_than.app.novl3.v5.jpg?raw=true" width="300">
-<img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-15-09-35-25-067_than.app.novl3.v5.jpg?raw=true" width="300">
+
+<!-- <img src="https://github.com/ThanCoder/than_reader/blob/main/screenshot/Screenshot_2026-07-14-16-16-24-265_than.app.novl3.v5.jpg?raw=true" width="300"> -->
+
 
 <!-- </details> -->

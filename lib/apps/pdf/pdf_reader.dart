@@ -228,12 +228,16 @@ class _PdfReaderState extends State<PdfReader> {
           data: currentTheme,
           child: Builder(
             builder: (context) {
-              final col = context.colorScheme;
+              final col = Theme.of(context).colorScheme;
               return Scaffold(
                 backgroundColor: col.surface,
                 appBar: config.isFullscreen
                     ? null
-                    : AppBar(title: Text('PDF Reader')),
+                    : AppBar(
+                        title: Text('PDF Reader'),
+                        backgroundColor: col.surface,
+                        foregroundColor: col.onSurface,
+                      ),
                 body: Stack(
                   children: [
                     Positioned.fill(

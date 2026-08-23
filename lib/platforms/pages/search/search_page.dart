@@ -92,6 +92,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: col.surface,
       appBar: AppBar(title: Text('Search Page')),
       body: _body(),
     );

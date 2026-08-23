@@ -29,7 +29,7 @@ class _DesktopListPageState extends State<DesktopListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final col = context.colorScheme;
+    final col = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: col.surface,
       appBar: AppBar(
@@ -88,7 +88,7 @@ class _DesktopListPageState extends State<DesktopListPage> {
         return CustomScrollView(
           slivers: [
             SliverPadding(
-              padding: .symmetric(vertical: 10),
+              padding: .symmetric(vertical: 10, horizontal: 10),
               sliver: SliverGrid.builder(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 220,

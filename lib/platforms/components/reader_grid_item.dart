@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
@@ -17,7 +16,7 @@ class ReaderGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final col = context.colorScheme;
+    final col = Theme.of(context).colorScheme;
     return Container(
       padding: .all(8),
       decoration: BoxDecoration(

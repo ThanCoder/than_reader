@@ -3,15 +3,15 @@ name: Flutter Auto Build & Release
 on:
   push:
     tags:
-      - 'v*' # v1.0.0, v1.1.2 စတဲ့ tag မျိုး push လုပ်ရင် build စတင်ပါမယ်
+      - 'v*'
 
 permissions:
-  contents: write # Release တင်ဖို့ ခွင့်ပြုချက် ပေးခြင်း
+  contents: write
 
 jobs:
-  # 1. Android build ဆွဲမည့် အပိုင်း
   build-android:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,19 +19,25 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: zulu
           java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.47.0'
+          channel: stable
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Android split APKs
-        run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi -v
+      - name: Build Android APKs
+        run: |
+          flutter build apk \
+            --release \
+            --target-platform android-arm,android-arm64 \
+            --split-per-abi
 
       - name: Upload Android APKs
         uses: actions/upload-artifact@v4
@@ -39,9 +45,10 @@ jobs:
           name: android-apks
           path: build/app/outputs/flutter-apk/*.apk
 
-  # 2. Linux build ဆွဲမည့် အပိုင်း
+
   build-linux:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,23 +56,31 @@ jobs:
       - name: Install Linux build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libgtk-3-dev \
+            liblzma-dev
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.47.0'
+          channel: stable
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Linux release
-        run: flutter build linux --release -v
+      - name: Build Linux
+        run: flutter build linux --release
 
       - name: Compress Linux Build
         run: |
-          cd build/linux/x64/release/bundle
-          tar -czf ../../../../../linux-release.tar.gz .
+          tar -czf linux-release.tar.gz \
+            -C build/linux/x64/release/bundle .
 
       - name: Upload Linux Build
         uses: actions/upload-artifact@v4
@@ -73,24 +88,28 @@ jobs:
           name: linux-release
           path: linux-release.tar.gz
 
-  # 3. Build ထွက်လာတာတွေကို GitHub Release စာမျက်နှာပေါ် တင်ပေးမည့် အပိုင်း
+
   create-release:
-    needs: [build-android, build-linux]
+    needs:
+      - build-android
+      - build-linux
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Download Android APKs
         uses: actions/download-artifact@v4
         with:
           name: android-apks
-          path: artifacts/
+          path: artifacts
 
       - name: Download Linux Release
         uses: actions/download-artifact@v4
         with:
           name: linux-release
-          path: artifacts/
+          path: artifacts
 
-      - name: Create Release on GitHub
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |

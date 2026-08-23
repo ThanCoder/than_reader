@@ -21,6 +21,7 @@ class _FavListPageState extends State<FavListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: col.surface,
       appBar: AppBar(title: Text('Favourite')),
       body: _body(),
     );

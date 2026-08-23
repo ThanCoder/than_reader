@@ -86,7 +86,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
           child: CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: .symmetric(horizontal: 10),
+                padding: .symmetric(horizontal: 10, vertical: 10),
                 sliver: SliverGrid.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,
