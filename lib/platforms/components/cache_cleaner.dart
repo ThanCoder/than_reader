@@ -125,7 +125,7 @@ class _CacheCleanerState extends State<CacheCleaner>
     return GestureDetector(
       onTap: isScanning ? null : scanCache,
       child: Container(
-        padding: .symmetric(vertical: 15, horizontal: 16),
+        padding: .symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
           color: col.surfaceContainer,
           borderRadius: .circular(15),

@@ -2,7 +2,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/util_ext.dart';
-import 'package:than_reader/platforms/components/fav/fav_label.dart';
+import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 
 class InfoMenu extends StatefulWidget {

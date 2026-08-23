@@ -12,6 +12,10 @@ class ReaderCoverFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ClipRRect(borderRadius: .circular(15), child: bodyWidget);
+  }
+
+  Widget get bodyWidget {
     final cacheFile = File(CacheManager.getReaderFileCachePath(file));
     if (cacheFile.existsSync()) {
       return image(cacheFile);

@@ -38,7 +38,7 @@ class _AppSeedsColorChooserState extends State<AppSeedsColorChooser> {
           seedColor = Color(seedInt);
         }
         return Container(
-          padding: .symmetric(vertical: 14, horizontal: 14),
+          padding: .symmetric(vertical: 10, horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: .circular(15),
             color: col.surfaceContainer,

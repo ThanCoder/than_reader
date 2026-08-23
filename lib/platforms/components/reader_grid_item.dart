@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/platforms/components/fav/fav_label.dart';
+import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 
-class DesktopGridItem extends StatelessWidget {
-  const DesktopGridItem({
+class ReaderGridItem extends StatelessWidget {
+  const ReaderGridItem({
     super.key,
     required this.file,
     required this.onClicked,

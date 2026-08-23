@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/core/utils/path_ext.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
@@ -21,6 +22,11 @@ class AppUtils {
   Directory get cacheDir => _cacheDir;
 
   Future<void> init() async {
+    final info = await PackageInfo.fromPlatform();
+    packageName = info.packageName;
+    versionName = info.version;
+
+    // linux
     if (Platform.isLinux) {
       final pkg = ThanPkgLinux.getInstance.pathHandler;
       final cd = await pkg.getApplicationTemporaryDirectory();
@@ -32,10 +38,12 @@ class AppUtils {
         _configDir = cfd;
       }
       // info
-      final info = await ThanPkgLinux.getInstance.info.getAppInfo();
-      packageName = info!.packageName;
-      versionName = info.version;
-    } else if (Platform.isAndroid) {
+      // final info = await ThanPkgLinux.getInstance.info.getAppInfo();
+      // packageName = info!.packageName;
+      // versionName = info.version;
+    } else
+    // android
+    if (Platform.isAndroid) {
       final pkg = ThanPkgAndroid.getInstance.pathHandler;
       final ca = await pkg.getCachePath();
       if (ca != null) {
@@ -46,9 +54,9 @@ class AppUtils {
         _configDir = Directory(cf);
       }
       // info
-      final info = await ThanPkgAndroid.getInstance.infoHandler.getAppInfo();
-      packageName = info!.packageName;
-      versionName = info.versionName;
+      // final info = await ThanPkgAndroid.getInstance.infoHandler.getAppInfo();
+      // packageName = info!.packageName;
+      // versionName = info.versionName;
 
       _androidEmulatedStorageConfigDir = Directory(
         pkg.getDeviceStoragePath().join('.${info.packageName}'),

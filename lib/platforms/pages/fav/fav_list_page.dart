@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:than_reader/core/controller/fav_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/platforms/components/desktop_grid_item.dart';
+import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/router.dart';
 
@@ -35,18 +35,21 @@ class _FavListPageState extends State<FavListPage> {
           padding: const EdgeInsets.all(4.0),
           child: CustomScrollView(
             slivers: [
-              SliverGrid.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 220,
-                  childAspectRatio: .68,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: files.length,
-                itemBuilder: (context, index) => DesktopGridItem(
-                  file: files[index],
-                  onClicked: onClicked,
-                  onRightClicked: onRightClicked,
+              SliverPadding(
+                padding: .symmetric(vertical: 10),
+                sliver: SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 220,
+                    childAspectRatio: .68,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                  ),
+                  itemCount: files.length,
+                  itemBuilder: (context, index) => ReaderGridItem(
+                    file: files[index],
+                    onClicked: onClicked,
+                    onRightClicked: onRightClicked,
+                  ),
                 ),
               ),
             ],

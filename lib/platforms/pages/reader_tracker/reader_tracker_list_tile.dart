@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/platforms/components/reader_tracker/reader_tracker_page.dart';
+import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 
 class ReaderTrackerListTile extends StatelessWidget {
   const ReaderTrackerListTile({super.key});
@@ -13,7 +13,7 @@ class ReaderTrackerListTile extends StatelessWidget {
       tileColor: col.surfaceContainer,
       shape: RoundedRectangleBorder(borderRadius: .circular(15)),
       leading: Container(
-        padding: .all(10),
+        padding: .all(8),
         decoration: BoxDecoration(
           color: col.tertiaryContainer,
           borderRadius: .circular(15),

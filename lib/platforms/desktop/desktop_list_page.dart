@@ -3,7 +3,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/platforms/components/desktop_grid_item.dart';
+import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/router.dart';
 
@@ -85,26 +85,26 @@ class _DesktopListPageState extends State<DesktopListPage> {
         if (isLoading) {
           return Center(child: TLoaderRandom());
         }
-        return Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverGrid.builder(
+        return CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: .symmetric(vertical: 10),
+              sliver: SliverGrid.builder(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 220,
                   childAspectRatio: .68,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 4,
+                  mainAxisSpacing: 4,
                 ),
                 itemCount: files.length,
-                itemBuilder: (context, index) => DesktopGridItem(
+                itemBuilder: (context, index) => ReaderGridItem(
                   file: files[index],
                   onClicked: onClicked,
                   onRightClicked: onRightClicked,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

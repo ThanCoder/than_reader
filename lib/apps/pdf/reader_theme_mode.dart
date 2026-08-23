@@ -1,7 +1,6 @@
 enum ReaderThemeMode {
   light,
   dark,
-  // followPlatfromTheme,
   followAppTheme;
 
   String get label {

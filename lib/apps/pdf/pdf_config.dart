@@ -1,4 +1,5 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:than_reader/apps/pdf/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
 
@@ -34,7 +35,7 @@ class PdfConfig {
       isFullscreen: false,
       isKeepScreen: false,
       scrollbarEnable: true,
-      readerThemeMode: .followAppTheme,
+      readerThemeMode: PdfReaderPreferThemeModeChooser.currentNotifier.value,
       orientation: .portrait,
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/platforms/components/fav/fav_list_page.dart';
-import 'package:than_reader/platforms/components/search/search_page.dart';
+import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
+import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
+import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
 import 'package:than_reader/platforms/pages/more_page.dart';
 
@@ -40,6 +41,10 @@ class _DesktopHomeState extends State<DesktopHome> {
         .new(icon: Icon(Icons.home), label: Text('Home')),
         .new(icon: Icon(Icons.favorite), label: Text('Favourite')),
         .new(icon: Icon(Icons.search), label: Text('Search')),
+        .new(
+          icon: Icon(Icons.track_changes_outlined),
+          label: Text('Reader Tracker'),
+        ),
         .new(icon: Icon(Icons.grid_view_rounded), label: Text('More')),
       ],
       selectedIndex: index,
@@ -51,9 +56,17 @@ class _DesktopHomeState extends State<DesktopHome> {
     );
   }
 
-  final pages = [DesktopListPage(), FavListPage(),SearchPage(), MorePage()];
   int index = 0;
   Widget _body() {
-    return IndexedStack(index: index, children: pages);
+    return IndexedStack(
+      index: index,
+      children: [
+        DesktopListPage(),
+        FavListPage(),
+        SearchPage(),
+        ReaderTrackerPage(),
+        MorePage(),
+      ],
+    );
   }
 }

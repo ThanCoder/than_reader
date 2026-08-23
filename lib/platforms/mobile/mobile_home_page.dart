@@ -4,7 +4,7 @@ import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';
-import 'package:than_reader/platforms/components/mobile_grid_item.dart';
+import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/router.dart';
 
 class MobileHomePage extends StatefulWidget {
@@ -81,28 +81,28 @@ class _MobileHomePageState extends State<MobileHomePage> {
         if (files.isEmpty) {
           return _refershCard();
         }
-        return Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: RefreshIndicator.adaptive(
-            onRefresh: () => init(useCache: false),
-            child: CustomScrollView(
-              slivers: [
-                SliverGrid.builder(
+        return RefreshIndicator.adaptive(
+          onRefresh: () => init(useCache: false),
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: .symmetric(horizontal: 10),
+                sliver: SliverGrid.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,
                     childAspectRatio: .68,
-                    crossAxisSpacing: 6,
-                    mainAxisSpacing: 6,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
                   ),
                   itemCount: files.length,
-                  itemBuilder: (context, index) => MobileGridItem(
+                  itemBuilder: (context, index) => ReaderGridItem(
                     file: files[index],
                     onClicked: onClicked,
                     onRightClicked: onRightClicked,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
