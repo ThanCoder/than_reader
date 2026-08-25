@@ -8,6 +8,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
+import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
@@ -229,36 +230,47 @@ class _PdfReaderState extends State<PdfReader> {
           child: Builder(
             builder: (context) {
               final col = Theme.of(context).colorScheme;
-              return Scaffold(
-                backgroundColor: col.surface,
-                appBar: config.isFullscreen
-                    ? null
-                    : AppBar(
-                        title: Text('PDF Reader'),
-                        backgroundColor: col.surface,
-                        foregroundColor: col.onSurface,
-                      ),
-                body: Stack(
-                  children: [
-                    Positioned.fill(
-                      top: config.isFullscreen ? 0 : 60,
-                      left: 0,
-                      right: 0,
-                      child: _pdfReader(),
-                    ),
-                    if (!config.isFullscreen)
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: _header(col),
-                      ),
-                  ],
-                ),
-              );
+              return _body(col);
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Scaffold _body(ColorScheme col) {
+    return Scaffold(
+      backgroundColor: col.surface,
+      appBar: config.isFullscreen
+          ? null
+          : AppBar(
+              title: Text('PDF Reader'),
+              backgroundColor: col.surface,
+              foregroundColor: col.onSurface,
+            ),
+      endDrawer: StreamBuilder(
+        stream: controller.stream.pageChanged,
+        builder: (context, asyncSnapshot) {
+          return PdfReaderBookmarkDrawer(
+            config: config,
+            currentPage: controller.state.page,
+            onClicked: (page) {
+              controller.action.jumpPage(page);
+            },
+          );
+        },
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            top: config.isFullscreen ? 0 : 60,
+            left: 0,
+            right: 0,
+            child: _pdfReader(),
+          ),
+          if (!config.isFullscreen)
+            Positioned(top: 0, left: 0, right: 0, child: _header(col)),
+        ],
       ),
     );
   }

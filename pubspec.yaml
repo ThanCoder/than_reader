@@ -3,7 +3,7 @@ description: "PDF Reader App Material UI."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 repository: https://github.com/ThanCoder/than_reader.git
 
-version: 2.0.0
+version: 2.1.0
 
 environment:
   sdk: ^3.12.0

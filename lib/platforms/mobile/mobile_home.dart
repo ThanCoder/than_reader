@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_pkg_android/than_pkg_android.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
@@ -16,25 +14,6 @@ class MobileHome extends StatefulWidget {
 }
 
 class _MobileHomeState extends State<MobileHome> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => init());
-    super.initState();
-  }
-
-  void init() async {
-    try {
-      final pkg = ThanPkgAndroid.getInstance.storagePermissionHandler;
-
-      if (!await pkg.isStoragePermissionGranted()) {
-        await pkg.requestStoragePermission();
-        return;
-      }
-    } catch (e) {
-      if (!mounted) return;
-      showErrorDialog(context, e.toString());
-    }
-  }
 
   int index = 0;
 

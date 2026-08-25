@@ -1,4 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+
+import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
@@ -14,6 +17,7 @@ class PdfConfig {
     required this.scrollbarEnable,
     required this.orientation,
     required this.readerThemeMode,
+    required this.bookmark,
   });
 
   final int page;
@@ -25,6 +29,7 @@ class PdfConfig {
   final bool scrollbarEnable;
   final ScreenOrientation orientation;
   final ReaderThemeMode readerThemeMode;
+  final List<PdfConfigBookmark> bookmark;
 
   factory PdfConfig.empty() {
     return .new(
@@ -37,30 +42,7 @@ class PdfConfig {
       scrollbarEnable: true,
       readerThemeMode: PdfReaderPreferThemeModeChooser.currentNotifier.value,
       orientation: .portrait,
-    );
-  }
-
-  PdfConfig copyWith({
-    int? page,
-    int? totalPage,
-    double? zoom,
-    double? offsetX,
-    bool? isFullscreen,
-    bool? isKeepScreen,
-    bool? scrollbarEnable,
-    ScreenOrientation? orientation,
-    ReaderThemeMode? readerThemeMode,
-  }) {
-    return PdfConfig(
-      page: page ?? this.page,
-      totalPage: totalPage ?? this.totalPage,
-      zoom: zoom ?? this.zoom,
-      offsetX: offsetX ?? this.offsetX,
-      isFullscreen: isFullscreen ?? this.isFullscreen,
-      isKeepScreen: isKeepScreen ?? this.isKeepScreen,
-      scrollbarEnable: scrollbarEnable ?? this.scrollbarEnable,
-      orientation: orientation ?? this.orientation,
-      readerThemeMode: readerThemeMode ?? this.readerThemeMode,
+      bookmark: [],
     );
   }
 
@@ -75,6 +57,7 @@ class PdfConfig {
       'scrollbarEnable': scrollbarEnable,
       'orientation': orientation.name,
       'readerThemeMode': readerThemeMode.name,
+      'bookmark': bookmark.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -91,11 +74,41 @@ class PdfConfig {
       readerThemeMode: ReaderThemeMode.fromValue(
         map.getString(['readerThemeMode']),
       ),
+      bookmark: map
+          .getMapList(['bookmark'])
+          .map((e) => PdfConfigBookmark.fromMap(e))
+          .toList(),
     );
   }
 
   @override
   String toString() {
     return 'PdfConfig(page: $page, totalPage: $totalPage, zoom: $zoom, offsetX: $offsetX, isFullscreen: $isFullscreen, isKeepScreen: $isKeepScreen, scrollbarEnable: $scrollbarEnable, orientation: $orientation, readerThemeMode: $readerThemeMode)';
+  }
+
+  PdfConfig copyWith({
+    int? page,
+    int? totalPage,
+    double? zoom,
+    double? offsetX,
+    bool? isFullscreen,
+    bool? isKeepScreen,
+    bool? scrollbarEnable,
+    ScreenOrientation? orientation,
+    ReaderThemeMode? readerThemeMode,
+    List<PdfConfigBookmark>? bookmark,
+  }) {
+    return PdfConfig(
+      page: page ?? this.page,
+      totalPage: totalPage ?? this.totalPage,
+      zoom: zoom ?? this.zoom,
+      offsetX: offsetX ?? this.offsetX,
+      isFullscreen: isFullscreen ?? this.isFullscreen,
+      isKeepScreen: isKeepScreen ?? this.isKeepScreen,
+      scrollbarEnable: scrollbarEnable ?? this.scrollbarEnable,
+      orientation: orientation ?? this.orientation,
+      readerThemeMode: readerThemeMode ?? this.readerThemeMode,
+      bookmark: bookmark ?? this.bookmark,
+    );
   }
 }

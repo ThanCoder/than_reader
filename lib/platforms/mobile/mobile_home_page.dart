@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/router.dart';
@@ -29,7 +31,18 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final allC = ControllerManager.read<AllFileController>();
 
   Future<void> init({bool useCache = true}) async {
-    await allC.loadAll(useCache: useCache);
+    try {
+      final pkg = ThanPkgAndroid.getInstance.storagePermissionHandler;
+
+      if (!await pkg.isStoragePermissionGranted()) {
+        await pkg.requestStoragePermission();
+        return;
+      }
+      await allC.loadAll(useCache: useCache);
+    } catch (e) {
+      if (!mounted) return;
+      showErrorDialog(context, e.toString());
+    }
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;

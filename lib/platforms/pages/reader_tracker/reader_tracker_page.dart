@@ -31,23 +31,13 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
 
     return Scaffold(
       backgroundColor: col.surface,
-      // appBar: AppBar(
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {
-      //         hisCon.clear();
-      //       },
-      //       icon: Icon(Icons.lock_reset),
-      //     ),
-      //   ],
-      // ),
       body: StreamBuilder(
         stream: hisCon.events.whereType<ReaderHistoryControllerValueChanged>(),
         builder: (context, asyncSnapshot) {
           final histories = hisCon.historyMap.values;
 
           if (histories.isEmpty) {
-            return _hostoryEmptyWidget(context);
+            return _emptyWidget(context);
           }
 
           final totalReadTime = histories.fold<Duration>(
@@ -149,7 +139,7 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
     );
   }
 
-  Center _hostoryEmptyWidget(BuildContext context) {
+  Widget _emptyWidget(BuildContext context) {
     return Center(
       child: Container(
         height: 150,
@@ -187,7 +177,7 @@ class _ReaderTrackerPageState extends State<ReaderTrackerPage> {
               onPressed: () {
                 hisCon.reload();
               },
-              icon: Icon(Icons.arrow_back_ios_new_outlined),
+              icon: Icon(Icons.refresh_outlined),
             ),
           ],
         ),

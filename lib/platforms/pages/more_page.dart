@@ -4,7 +4,6 @@ import 'package:than_reader/apps/pdf/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/platforms/components/app_seeds_color_chooser.dart';
 import 'package:than_reader/platforms/components/app_version_view.dart';
 import 'package:than_reader/platforms/components/cache_cleaner.dart';
-import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_list_tile.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -22,7 +21,7 @@ class MorePage extends StatelessWidget {
             AppVersionView(),
             AppSeedsColorChooser(),
             CacheCleaner(key: UniqueKey()),
-            ReaderTrackerListTile(),
+            // ReaderTrackerListTile(),
             PdfReaderPreferThemeModeChooser(),
           ],
         ),

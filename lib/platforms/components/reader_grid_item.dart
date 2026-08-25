@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/reader_type_icon.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 
@@ -39,6 +40,7 @@ class ReaderGridItem extends StatelessWidget {
               ],
             ),
             Positioned(left: 0, top: 0, child: FavLabel(file: file)),
+            Positioned(right: 0, top: 0, child: ReaderTypeIcon(file: file)),
           ],
         ),
       ),
