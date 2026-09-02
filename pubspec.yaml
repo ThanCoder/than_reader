@@ -29,17 +29,13 @@ dependencies:
   package_info_plus: ^10.2.1
 
   dart_core_extensions:
-    git:  
-      url: https://github.com/ThanCoder/dart_core_extensions.git
+    git: https://github.com/ThanCoder/dart_core_extensions.git
   t_widgets:
-    git:
-      url: https://github.com/ThanCoder/t_widgets.git
+    git: https://github.com/ThanCoder/t_widgets.git
   t_pdf_reader:
-    git:
-      url: https://github.com/ThanCoder/t_pdf_reader.git
+    git: https://github.com/ThanCoder/t_pdf_reader.git
   t_server:
-    git: 
-      url: https://github.com/ThanCoder/t_server.git
+    git: https://github.com/ThanCoder/t_server.git
 
 # Latest Git commit သေချာယူချင်ရင်—
 
@@ -65,25 +61,23 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
-    - assets/images/
-    - assets/svg/
-    - assets/fonts/
-
+  - assets/
+  - assets/images/
+  - assets/svg/
+  - assets/fonts/
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Winnwa
-      fonts:
-        - asset: assets/fonts/WINNWA.TTF
-        
-    - family: Zawgyi-One-V3.1
-      fonts:
-        - asset: assets/fonts/ZAWGYI-ONE_V3.1.TTF
+  - family: Winnwa
+    fonts:
+    - asset: assets/fonts/WINNWA.TTF
 
+  - family: Zawgyi-One-V3.1
+    fonts:
+    - asset: assets/fonts/ZAWGYI-ONE_V3.1.TTF
   # fonts:
   #   - family: Schyler
   #     fonts:

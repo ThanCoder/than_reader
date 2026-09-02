@@ -555,10 +555,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "3f65bf1f78da86797bc40b0e21c09b2c53c18030"
+      resolved-ref: d8e7a30a2709453fbfd76e7857ad844fe289996a
       url: "https://github.com/ThanCoder/t_pdf_reader.git"
     source: git
-    version: "1.0.0"
+    version: "1.1.0"
   t_server:
     dependency: "direct main"
     description:
