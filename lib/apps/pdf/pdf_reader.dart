@@ -8,7 +8,9 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
+import 'package:than_reader/apps/pdf/pdf_preload_page_count_view.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
+import 'package:than_reader/apps/pdf/pdf_render_image_type_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
@@ -358,6 +360,9 @@ class _PdfReaderState extends State<PdfReader> {
                   PdfScrollbarToggler(controller: controller),
                 if (PdfReader.isEnable(PdfReader.cacheLableEnableKey))
                   PdfCacheImageListener(controller: controller),
+
+                PdfRenderImageTypeView(controller: controller),
+                PdfPreloadPageCountView(controller: controller),
               ],
             ),
           ),
