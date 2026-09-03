@@ -23,7 +23,7 @@ class _AppVersionViewState extends State<AppVersionView> {
       leading: Container(
         padding: .all(8),
         decoration: BoxDecoration(
-          color: col.tertiaryContainer,
+          color: col.surfaceContainerHigh,
           borderRadius: .circular(15),
         ),
         child: Icon(Icons.info_outline, color: col.onSurface),

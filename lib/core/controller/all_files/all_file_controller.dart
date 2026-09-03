@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/all_files/all_file_state.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
@@ -23,6 +24,7 @@ class AllFileControllerError extends IControllerEvent {
 class AllFileControllerLoading extends IControllerEvent {}
 
 class AllFileControllerStateChanged extends IControllerEvent {}
+class AllFileControllerSortChanged extends IControllerEvent {}
 
 /// ***********Events******************
 
@@ -65,6 +67,7 @@ class AllFileController extends IController {
     }
   }
 
+  //*****************sort*******************************
   final sortList = <TSortItem>[.nameTSortItem, .dateTSortItem, .sizeTSortItem];
   TSortItem currentSort = .dateTSortItem;
   void setSort(TSortItem item) {
@@ -72,29 +75,6 @@ class AllFileController extends IController {
     onSort();
     addEvent(AllFileControllerStateChanged());
     cf.put(sortIdKey, item.id).put(sortIsTRueKey, item.isTrue).writeAll();
-  }
-
-  ReaderFile? getById(String configId) {
-    final index = list.indexWhere((e) => e.configId == configId);
-    if (index != -1) {
-      return list[index];
-    }
-    return null;
-  }
-
-  void deleteForever(ReaderFile file) async {
-    final index = list.indexWhere((e) => e.path == file.path);
-    if (index == -1) return;
-    list.removeAt(index);
-
-    // remove disk
-    final f = File(file.path);
-    if (f.existsSync()) {
-      await f.delete();
-    }
-
-    addEvent(AllFileControllerLoaded());
-    addEvent(AllFileControllerDeleted(file));
   }
 
   void onSort() {
@@ -120,5 +100,50 @@ class AllFileController extends IController {
       return TSortItem.sizeTSortItem.copyWith(isTrue: isTrue);
     }
     return null;
+  }
+
+  ReaderFile? getById(String configId) {
+    final index = list.indexWhere((e) => e.configId == configId);
+    if (index != -1) {
+      return list[index];
+    }
+    return null;
+  }
+
+  void deleteForever(ReaderFile file) async {
+    final index = list.indexWhere((e) => e.path == file.path);
+    if (index == -1) return;
+    list.removeAt(index);
+
+    // remove disk
+    final f = File(file.path);
+    if (f.existsSync()) {
+      await f.delete();
+    }
+
+    addEvent(AllFileControllerLoaded());
+    addEvent(AllFileControllerDeleted(file));
+  }
+
+  void rename(ReaderFile file, String renamedName) async {
+    final index = list.indexWhere((e) => e.path == file.path);
+    if (index == -1) return;
+    if (file.name == renamedName) return;
+
+    final newPath = file.parentPath.join('$renamedName.${file.type.extname}');
+
+    // print('old: ${file.path}');
+    // print('newPath: $newPath');
+
+    final f = File(file.path);
+    if (f.existsSync()) {
+      await f.rename(newPath);
+    }
+
+    final changedFile = file.copyWith(name: renamedName, path: newPath);
+    list[index] = changedFile;
+
+    addEvent(AllFileControllerLoaded());
+    addEvent(AllFileControllerDeleted(file));
   }
 }

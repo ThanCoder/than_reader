@@ -27,11 +27,8 @@ class _InfoMenuState extends State<InfoMenu> {
         ),
         child: Column(
           spacing: 8,
-          crossAxisAlignment: .start,
           children: [
             Row(
-              mainAxisAlignment: .end,
-              crossAxisAlignment: .start,
               children: [
                 Container(
                   width: 120,
@@ -58,19 +55,33 @@ class _InfoMenuState extends State<InfoMenu> {
               ],
             ),
 
-            _menuTile(widget.file.name, icon: Icons.title_outlined),
+            _menuTile("Name", widget.file.name, icon: Icons.title_outlined),
             _menuTile(
+              "Size",
               widget.file.size.fileSizeLabel(),
               icon: Icons.sd_card_outlined,
             ),
             _menuTile(
+              "Date",
               widget.file.date.formatFullDate(),
               icon: Icons.date_range_outlined,
             ),
-            _menuTile(widget.file.type.label, icon: Icons.category_outlined),
-            _menuTile(widget.file.configId, icon: Icons.key),
-            _menuTile(widget.file.parentPath, icon: Icons.folder_outlined),
-            _menuTile(widget.file.path, icon: Icons.folder_outlined),
+            _menuTile(
+              "Type",
+              widget.file.type.label,
+              icon: Icons.category_outlined,
+            ),
+            _menuTile(
+              "Key",
+              widget.file.configId,
+              icon: Icons.fingerprint_outlined,
+            ),
+            _menuTile(
+              "Directory",
+              widget.file.parentPath.onlyName,
+              icon: Icons.folder_outlined,
+            ),
+            _menuTile("Path", widget.file.path, icon: Icons.link),
 
             SizedBox(height: 30),
           ],
@@ -79,7 +90,7 @@ class _InfoMenuState extends State<InfoMenu> {
     );
   }
 
-  Widget _menuTile(String title, {required IconData icon}) {
+  Widget _menuTile(String title, String text, {required IconData icon}) {
     return Container(
       padding: .symmetric(vertical: 10, horizontal: 14),
       decoration: BoxDecoration(
@@ -87,10 +98,21 @@ class _InfoMenuState extends State<InfoMenu> {
         color: col.surfaceContainerHigh,
       ),
       child: Row(
-        spacing: 15,
         children: [
           Icon(icon),
-          Expanded(child: Text(title)),
+          SizedBox(width: 15),
+          Text(title),
+          Spacer(),
+          Expanded(
+            child: Align(
+              alignment: .centerRight,
+              child: SelectableText(
+                text,
+                textAlign: .right,
+                style: TextStyle(fontWeight: .w600, fontSize: 13),
+              ),
+            ),
+          ),
         ],
       ),
     );

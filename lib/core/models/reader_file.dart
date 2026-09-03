@@ -12,6 +12,11 @@ enum FileType {
     return 'Unknown';
   }
 
+  String get extname {
+    if (this == pdf) return 'pdf';
+    return '';
+  }
+
   static FileType fromValue(String val) {
     return values.firstWhere((e) => e.name == val, orElse: () => unknown);
   }

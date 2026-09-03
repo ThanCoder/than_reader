@@ -12,7 +12,7 @@ Future<bool> showPromptAlertDialog(
   Color? confirmForegroundColor,
   Color? closeColor,
   Color? closeForegroundColor,
-  final String? Function(String text)? onErrorCheck,
+  String? Function(String text)? onErrorCheck,
 }) async {
   final res = await showDialog<bool>(
     context: context,

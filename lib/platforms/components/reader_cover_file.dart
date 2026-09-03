@@ -7,12 +7,17 @@ import 'package:than_reader/core/managers/cache_manager.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class ReaderCoverFile extends StatelessWidget {
+  const ReaderCoverFile({
+    super.key,
+    required this.file,
+    this.borderRadius,
+  });
   final ReaderFile file;
-  const ReaderCoverFile({super.key, required this.file});
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(borderRadius: .circular(15), child: bodyWidget);
+    return ClipRRect(borderRadius:borderRadius ?? .circular(15), child: bodyWidget);
   }
 
   Widget get bodyWidget {

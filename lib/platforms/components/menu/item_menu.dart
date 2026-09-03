@@ -5,6 +5,7 @@ import 'package:than_reader/core/controller/fav_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/info_menu.dart';
 
 class ItemMenu extends StatefulWidget {
@@ -43,6 +44,7 @@ class _ItemMenuState extends State<ItemMenu> {
             Divider(),
             infoWidget,
             favWidget,
+            renameWidget,
 
             deleteWiget,
 
@@ -138,6 +140,39 @@ class _ItemMenuState extends State<ItemMenu> {
                 },
               ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget get renameWidget {
+    return ListTile(
+      tileColor: col.surfaceContainer,
+      shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+      leading: Icon(
+        Icons.drive_file_rename_outline_outlined,
+        color: col.onSurfaceVariant,
+      ),
+      title: Text('Rename'),
+      trailing: Icon(
+        Icons.arrow_forward_ios_outlined,
+        color: col.onSurfaceVariant.withValues(alpha: .45),
+      ),
+      onTap: () async {
+        context.pop();
+        final renamedName = await showDialog<String>(
+          context: context,
+          builder: (context) => PromptAlertDialog(
+            title: 'Rename',
+            promptText: widget.file.name,
+            confirmText: 'Rename',
+          ),
+        );
+        if (renamedName == null) return;
+
+        ControllerManager.read<AllFileController>().rename(
+          widget.file,
+          renamedName,
         );
       },
     );

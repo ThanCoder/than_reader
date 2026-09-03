@@ -14,7 +14,6 @@ class MobileHome extends StatefulWidget {
 }
 
 class _MobileHomeState extends State<MobileHome> {
-
   int index = 0;
 
   @override
@@ -32,30 +31,24 @@ class _MobileHomeState extends State<MobileHome> {
           MorePage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: NavigationBar(
         backgroundColor: col.surfaceContainer,
-        selectedItemColor: col.primary,
-        unselectedItemColor: col.onSurfaceVariant,
-        // showSelectedLabels: false,
-        // showUnselectedLabels: false,
-        currentIndex: index,
-        onTap: (value) {
+        selectedIndex: index,
+        onDestinationSelected: (value) {
           setState(() {
             index = value;
           });
         },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favourite',
-          ),
-          BottomNavigationBarItem(
+
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
+          NavigationDestination(icon: Icon(Icons.favorite), label: 'Favourite'),
+          NavigationDestination(
             icon: Icon(Icons.track_changes_outlined),
-            label: 'Reader Tracker',
+            label: 'Tracker',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.grid_view_outlined),
             label: 'More',
           ),

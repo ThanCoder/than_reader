@@ -3,17 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class ReaderTypeIcon extends StatelessWidget {
-  const ReaderTypeIcon({super.key, required this.file});
-
+  const ReaderTypeIcon({super.key, required this.file, this.size = 25});
   final ReaderFile file;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final col = Theme.of(context).colorScheme;
-
     return Container(
-      width: 25,
-      height: 25,
+      width: size,
+      height: size,
       padding: .all(3),
       decoration: BoxDecoration(
         color: col.surfaceContainer,

@@ -4,8 +4,10 @@ import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class FavLabel extends StatefulWidget {
-  const FavLabel({super.key, required this.file});
+  const FavLabel({super.key, required this.file, this.size = 25, this.padding});
   final ReaderFile file;
+  final double size;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<FavLabel> createState() => _FavLabelState();
@@ -24,7 +26,7 @@ class _FavLabelState extends State<FavLabel> {
           return SizedBox.shrink();
         }
         return Container(
-          padding: .all(4),
+          padding: widget.padding ?? .all(4),
           decoration: BoxDecoration(
             color: col.surfaceContainer.withValues(alpha: .45),
             borderRadius: .circular(15),
@@ -36,7 +38,11 @@ class _FavLabelState extends State<FavLabel> {
               ),
             ],
           ),
-          child: Icon(Icons.favorite_sharp, color: col.onSurfaceVariant),
+          child: Icon(
+            Icons.favorite_sharp,
+            color: col.onSurfaceVariant,
+            size: widget.size,
+          ),
         );
       },
     );

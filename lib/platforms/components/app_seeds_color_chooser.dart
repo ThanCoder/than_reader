@@ -50,14 +50,14 @@ class _AppSeedsColorChooserState extends State<AppSeedsColorChooser> {
                 decoration: BoxDecoration(
                   borderRadius: .circular(15),
                   color: !colorEnable
-                      ? col.tertiaryContainer.withValues(alpha: .45)
-                      : col.tertiaryContainer,
+                      ? col.surfaceContainerHigh.withValues(alpha: .45)
+                      : col.surfaceContainerHigh,
                 ),
                 child: Icon(
                   Icons.color_lens_outlined,
                   color: !colorEnable
-                      ? col.onTertiaryContainer.withValues(alpha: .45)
-                      : col.onTertiaryContainer,
+                      ? col.onSurface.withValues(alpha: .45)
+                      : col.onSurface,
                 ),
               ),
               SizedBox(width: 10),

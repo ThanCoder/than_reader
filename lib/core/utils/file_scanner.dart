@@ -52,7 +52,7 @@ class FileScanner extends PathScanner {
       final entries = await FileScanner(scanFolders: scanFolders).scan();
       for (var entry in entries) {
         final reader = ReaderFile(
-          name: entry.name,
+          name: entry.onlyName,
           path: entry.path,
           parentPath: entry.parent.path,
           date: entry.modifiedDate,

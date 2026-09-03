@@ -137,19 +137,16 @@ class _CacheCleanerState extends State<CacheCleaner>
               child: Container(
                 padding: .all(8),
                 decoration: BoxDecoration(
-                  color: col.tertiaryContainer,
+                  color: col.surfaceContainerHigh,
                   borderRadius: .circular(15),
                 ),
-                child: Icon(
-                  Icons.cached_outlined,
-                  color: col.onTertiaryContainer,
-                ),
+                child: Icon(Icons.cached_outlined, color: col.onSurface),
               ),
             ),
             SizedBox(width: 10),
             _infoText(),
             Spacer(),
-            Icon(Icons.touch_app, color: col.onSurface),
+            Icon(Icons.touch_app, color: col.onSurfaceVariant),
           ],
         ),
       ),
