@@ -8,9 +8,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
-import 'package:than_reader/apps/pdf/pdf_preload_page_count_view.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
-import 'package:than_reader/apps/pdf/pdf_render_image_type_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
@@ -137,6 +135,8 @@ class _PdfReaderState extends State<PdfReader> {
     if (config.page != 1) {
       controller.action.jumpPage(config.page);
     }
+    controller.action.setPreloadPageCount(config.preloadPageCount);
+    controller.action.setRenderImageType(config.renderImageType);
     setState(() {
       isReady = true;
     });
@@ -187,6 +187,8 @@ class _PdfReaderState extends State<PdfReader> {
       offsetX: state.currentOffsetX,
       scrollbarEnable: state.scrollbarEnable,
       zoom: state.zoom,
+      preloadPageCount: state.preloadPageCount,
+      renderImageType: state.renderImageType,
     );
     PdfReader.cf.writeAll();
     Navigator.pop<PdfConfig>(context, newCof);
@@ -362,7 +364,8 @@ class _PdfReaderState extends State<PdfReader> {
                   PdfCacheImageListener(controller: controller),
 
                 PdfRenderImageTypeView(controller: controller),
-                PdfPreloadPageCountView(controller: controller),
+                PdfPreloadPageView(controller: controller),
+                PdfVisiablePageView(controller: controller),
               ],
             ),
           ),

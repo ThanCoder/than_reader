@@ -1,3 +1,10 @@
+## 2.2.0
+
++ Added `Rename Option`
++ Fixed `Pdf Reader`
++ Fixed `Some Error Fixed.`
++ Added `Grid,List Style.`
+
 ## 2.1.0
 * Added `Pdf Reader` -> `bookmark`
 * Added `Reader List Type Icon`

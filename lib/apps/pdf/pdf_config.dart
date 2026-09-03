@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:t_pdf_reader/t_pdf_reader.dart';
 
 import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_prefer_theme_mode_chooser.dart';
@@ -18,6 +19,8 @@ class PdfConfig {
     required this.orientation,
     required this.readerThemeMode,
     required this.bookmark,
+    required this.preloadPageCount,
+    required this.renderImageType,
   });
 
   final int page;
@@ -30,6 +33,8 @@ class PdfConfig {
   final ScreenOrientation orientation;
   final ReaderThemeMode readerThemeMode;
   final List<PdfConfigBookmark> bookmark;
+  final int preloadPageCount;
+  final PageRenderImageType renderImageType;
 
   factory PdfConfig.empty() {
     return .new(
@@ -43,6 +48,8 @@ class PdfConfig {
       readerThemeMode: PdfReaderPreferThemeModeChooser.currentNotifier.value,
       orientation: .portrait,
       bookmark: [],
+      preloadPageCount: 1,
+      renderImageType: .jpg,
     );
   }
 
@@ -58,6 +65,8 @@ class PdfConfig {
       'orientation': orientation.name,
       'readerThemeMode': readerThemeMode.name,
       'bookmark': bookmark.map((e) => e.toMap()).toList(),
+      'preloadPageCount': preloadPageCount,
+      'renderImageType': renderImageType.name,
     };
   }
 
@@ -78,6 +87,8 @@ class PdfConfig {
           .getMapList(['bookmark'])
           .map((e) => PdfConfigBookmark.fromMap(e))
           .toList(),
+      preloadPageCount: map.getInt(['preloadPageCount'], def: 1),
+      renderImageType: .fromValue(map.getString(['renderImageType'])),
     );
   }
 
@@ -97,6 +108,8 @@ class PdfConfig {
     ScreenOrientation? orientation,
     ReaderThemeMode? readerThemeMode,
     List<PdfConfigBookmark>? bookmark,
+    int? preloadPageCount,
+    PageRenderImageType? renderImageType,
   }) {
     return PdfConfig(
       page: page ?? this.page,
@@ -109,6 +122,8 @@ class PdfConfig {
       orientation: orientation ?? this.orientation,
       readerThemeMode: readerThemeMode ?? this.readerThemeMode,
       bookmark: bookmark ?? this.bookmark,
+      preloadPageCount: preloadPageCount ?? this.preloadPageCount,
+      renderImageType: renderImageType ?? this.renderImageType,
     );
   }
 }
