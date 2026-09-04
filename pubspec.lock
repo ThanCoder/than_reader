@@ -126,10 +126,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "47dfd3835130736204f7031997a8bc7d91e23f60"
+      resolved-ref: bfebb5386a0b1ab5a50e30b2b86dfa4a33f763c5
       url: "https://github.com/ThanCoder/dart_core_extensions.git"
     source: git
-    version: "0.5.0"
+    version: "0.6.0"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -555,10 +555,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5fca3309be4f104496f2c910d4e66b171ee7abfc"
+      resolved-ref: b08f32deda854422d1dabbd904a68cf4eba55129
       url: "https://github.com/ThanCoder/t_pdf_reader.git"
     source: git
-    version: "1.1.0"
+    version: "1.2.0"
   t_server:
     dependency: "direct main"
     description:
