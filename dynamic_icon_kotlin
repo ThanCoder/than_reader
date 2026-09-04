@@ -1,0 +1,142 @@
+package com.example.myapp
+
+import android.content.ComponentName
+import android.content.pm.PackageManager
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+
+class MainActivity : FlutterActivity() {
+
+    companion object {
+        private const val CHANNEL = "dynamic_app_icon"
+    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL
+        ).setMethodCallHandler { call, result ->
+
+            when (call.method) {
+
+                "changeIcon" -> {
+                    val icon = call.argument<String>("icon")
+
+                    if (icon == null) {
+                        result.error(
+                            "INVALID_ICON",
+                            "Icon name is required",
+                            null
+                        )
+                        return@setMethodCallHandler
+                    }
+
+                    try {
+                        changeIcon(icon)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error(
+                            "ICON_CHANGE_ERROR",
+                            e.message,
+                            null
+                        )
+                    }
+                }
+
+                "getCurrentIcon" -> {
+                    result.success(getCurrentIcon())
+                }
+
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
+    }
+
+    private fun changeIcon(icon: String) {
+
+        val defaultAlias = ComponentName(
+            this,
+            "$packageName.LauncherDefault"
+        )
+
+        val blueAlias = ComponentName(
+            this,
+            "$packageName.LauncherBlue"
+        )
+
+        val purpleAlias = ComponentName(
+            this,
+            "$packageName.LauncherPurple"
+        )
+
+        val aliases = mapOf(
+            "default" to defaultAlias,
+            "blue" to blueAlias,
+            "purple" to purpleAlias
+        )
+
+        val selectedAlias = aliases[icon]
+            ?: throw IllegalArgumentException(
+                "Unknown icon: $icon"
+            )
+
+        val pm = packageManager
+
+        // Disable all aliases first
+        aliases.values.forEach { alias ->
+
+            pm.setComponentEnabledSetting(
+                alias,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+            )
+        }
+
+        // Enable selected alias
+        pm.setComponentEnabledSetting(
+            selectedAlias,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
+    }
+
+    private fun getCurrentIcon(): String {
+
+        val pm = packageManager
+
+        val icons = mapOf(
+            "default" to ComponentName(
+                this,
+                "$packageName.LauncherDefault"
+            ),
+
+            "blue" to ComponentName(
+                this,
+                "$packageName.LauncherBlue"
+            ),
+
+            "purple" to ComponentName(
+                this,
+                "$packageName.LauncherPurple"
+            )
+        )
+
+        for ((name, component) in icons) {
+
+            val state = pm.getComponentEnabledSetting(component)
+
+            if (
+                state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            ) {
+                return name
+            }
+        }
+
+        return "default"
+    }
+}

@@ -3,7 +3,7 @@ description: "PDF Reader App Material UI."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 repository: https://github.com/ThanCoder/than_reader.git
 
-version: 2.2.0
+version: 2.3.0
 
 environment:
   sdk: ^3.13.0
@@ -55,13 +55,14 @@ dev_dependencies:
 # dev lib
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/images/app-icon-3.png"
+  image_path: "assets/logo/app-icon-for-a-universal-document-reader-mobile-ap.png-1788497243451.png"
 
 flutter:
   uses-material-design: true
 
   assets:
   - assets/
+  - assets/logo/
   - assets/images/
   - assets/svg/
   - assets/fonts/
