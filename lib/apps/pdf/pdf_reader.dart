@@ -9,6 +9,7 @@ import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
+import 'package:than_reader/apps/pdf/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
@@ -364,7 +365,7 @@ class _PdfReaderState extends State<PdfReader> {
                   PdfCacheImageListener(controller: controller),
 
                 PdfRenderImageTypeView(controller: controller),
-                PdfPreloadPageView(controller: controller),
+                PreloadPageView(controller: controller),
                 PdfVisiablePageView(controller: controller),
               ],
             ),

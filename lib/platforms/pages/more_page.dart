@@ -14,16 +14,19 @@ class MorePage extends StatelessWidget {
       backgroundColor: context.colorScheme.surface,
       appBar: AppBar(title: Text('More')),
       body: SingleChildScrollView(
-        child: Column(
-          spacing: 5,
-          children: [
-            TMaterialThemeProviderChooser(),
-            AppVersionView(),
-            AppSeedsColorChooser(),
-            CacheCleaner(key: UniqueKey()),
-            // ReaderTrackerListTile(),
-            PdfReaderPreferThemeModeChooser(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            spacing: 5,
+            children: [
+              TMaterialThemeProviderChooser(),
+              AppVersionView(),
+              AppSeedsColorChooser(),
+              CacheCleaner(key: UniqueKey()),
+              // ReaderTrackerListTile(),
+              PdfReaderPreferThemeModeChooser(),
+            ],
+          ),
         ),
       ),
     );
