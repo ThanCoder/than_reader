@@ -1,6 +1,7 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/util_ext.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
@@ -55,7 +56,17 @@ class _InfoMenuState extends State<InfoMenu> {
               ],
             ),
 
-            _menuTile("Name", widget.file.name, icon: Icons.title_outlined),
+            InkWell(
+              mouseCursor: SystemMouseCursors.click,
+              onTap: () async {
+                await AppUtils.instance.copyText(widget.file.name);
+              },
+              child: _menuTile(
+                "Name",
+                widget.file.name,
+                icon: Icons.title_outlined,
+              ),
+            ),
             _menuTile(
               "Size",
               widget.file.size.fileSizeLabel(),
@@ -71,17 +82,48 @@ class _InfoMenuState extends State<InfoMenu> {
               widget.file.type.label,
               icon: Icons.category_outlined,
             ),
-            _menuTile(
-              "Key",
-              widget.file.configId,
-              icon: Icons.fingerprint_outlined,
+            InkWell(
+              mouseCursor: SystemMouseCursors.click,
+              onTap: () async {
+                await AppUtils.instance.copyText(widget.file.configId);
+              },
+              child: _menuTile(
+                "Key",
+                widget.file.configId,
+                icon: Icons.fingerprint_outlined,
+              ),
             ),
-            _menuTile(
-              "Directory",
-              widget.file.parentPath.onlyName,
-              icon: Icons.folder_outlined,
+            // _menuTile(
+            //   "Directory",
+            //   widget.file.parentPath.onlyName,
+            //   icon: Icons.folder_outlined,
+            // ),
+            // _menuTile("Path", widget.file.path, icon: Icons.link),
+            Container(
+              padding: .symmetric(vertical: 10, horizontal: 14),
+              decoration: BoxDecoration(
+                borderRadius: .circular(15),
+                color: col.surfaceContainerHigh,
+              ),
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Icon(Icons.link),
+                  Row(
+                    children: [
+                      Text('Path', style: TextStyle(fontWeight: .w700)),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Text(
+                          widget.file.path,
+                          style: TextStyle(fontWeight: .w400, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            _menuTile("Path", widget.file.path, icon: Icons.link),
 
             SizedBox(height: 30),
           ],
@@ -101,7 +143,7 @@ class _InfoMenuState extends State<InfoMenu> {
         children: [
           Icon(icon),
           SizedBox(width: 15),
-          Text(title),
+          Text(title, style: TextStyle(fontWeight: .w700)),
           Spacer(),
           Expanded(
             child: Align(
@@ -109,7 +151,7 @@ class _InfoMenuState extends State<InfoMenu> {
               child: SelectableText(
                 text,
                 textAlign: .right,
-                style: TextStyle(fontWeight: .w600, fontSize: 13),
+                style: TextStyle(fontWeight: .w400, fontSize: 13),
               ),
             ),
           ),

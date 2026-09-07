@@ -36,12 +36,13 @@ dependencies:
     git: https://github.com/ThanCoder/t_pdf_reader.git
   t_server:
     git: https://github.com/ThanCoder/t_server.git
+  # supabase_flutter: ^2.17.2
 
-# Latest Git commit သေချာယူချင်ရင်—
+  # Latest Git commit သေချာယူချင်ရင်—
 
-# flutter pub upgrade --unlock-transitive
+  # flutter pub upgrade --unlock-transitive
 
-# flutter pub upgrade dart_core_extensions t_widgets t_pdf_reader t_server
+  # flutter pub upgrade dart_core_extensions t_widgets t_pdf_reader t_server
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,7 +56,7 @@ dev_dependencies:
 # dev lib
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "assets/logo/app-icon-for-a-universal-document-reader-mobile-ap.png-1788497243451.png"
+  image_path: "assets/logo/app-icon-for-a-universal-document-reader-mobile-ap.png-1788497328588.png"
 
 flutter:
   uses-material-design: true

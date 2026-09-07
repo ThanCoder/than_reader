@@ -1,6 +1,8 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/util_ext.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
@@ -23,41 +25,71 @@ class ReaderListItem extends StatelessWidget {
     return InkWell(
       borderRadius: .circular(15),
       mouseCursor: SystemMouseCursors.click,
-      onTap: () => onClicked(file),
-      onSecondaryTap: () => onRightClicked?.call(file),
-      onLongPress: () => onRightClicked?.call(file),
-      child: Container(
-        padding: .all(6),
-        decoration: BoxDecoration(
-          color: col.surfaceContainer,
-          borderRadius: .circular(15),
+      onTap: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onClicked(file);
+      },
+      onSecondaryTap: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onRightClicked?.call(file);
+      },
+      onLongPress: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onRightClicked?.call(file);
+      },
+      child: StreamBuilder(
+        stream: AppUtils.instance.recentConfig.stream.put.where(
+          (e) => e.key == appListClickedReaderFileRecentIdKey,
         ),
-        child: Row(
-          spacing: 5,
-          children: [
-            SizedBox(
-              width: 80,
-              height: 90,
-              child: Stack(
-                fit: .expand,
-                children: [
-                  ReaderCoverFile(file: file, borderRadius: .circular(6)),
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    child: FavLabel(file: file, size: 20, padding: .all(2)),
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: ReaderTypeIcon(file: file, size: 20),
-                  ),
-                ],
-              ),
+        builder: (context, asyncSnapshot) {
+          final lastId = AppUtils.instance.recentConfig.getString(
+            appListClickedReaderFileRecentIdKey,
+          );
+          return Container(
+            padding: .all(6),
+            decoration: BoxDecoration(
+              color: lastId == file.configId
+                  ? col.primaryContainer
+                  : col.surfaceContainer,
+              borderRadius: .circular(15),
             ),
-            Expanded(child: _content(col)),
-          ],
-        ),
+            child: Row(
+              spacing: 5,
+              children: [
+                SizedBox(
+                  width: 80,
+                  height: 90,
+                  child: Stack(
+                    fit: .expand,
+                    children: [
+                      ReaderCoverFile(file: file, borderRadius: .circular(6)),
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        child: FavLabel(file: file, size: 20, padding: .all(2)),
+                      ),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: ReaderTypeIcon(file: file, size: 20),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(child: _content(col)),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

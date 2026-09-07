@@ -13,6 +13,12 @@ import 'package:than_reader/core/utils/app_utils.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // await Supabase.initialize(
+  //   url: 'https://qltcqezbcfpfsuzdqnma.supabase.co',
+  //   publishableKey: 'sb_publishable_a-zTMD5bSPP9j1J-9LP2OQ_ruOMZS_S',
+  //   debug: true,
+  // );
+
   await AppUtils.instance.init();
 
   // recent

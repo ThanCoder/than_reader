@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
@@ -11,6 +13,8 @@ class AppUtils {
   static AppUtils instance = AppUtils._();
   AppUtils._();
   factory AppUtils() => instance;
+
+  final recentConfig = CFBStore();
 
   late Directory _cacheDir;
   late Directory _configDir;
@@ -133,5 +137,9 @@ class AppUtils {
         return false;
       }
     });
+  }
+
+  Future<void> copyText(String text) async {
+    await Clipboard.setData(.new(text: text));
   }
 }

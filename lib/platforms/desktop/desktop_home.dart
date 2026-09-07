@@ -46,6 +46,7 @@ class _DesktopHomeState extends State<DesktopHome> {
           label: Text('Reader Tracker'),
         ),
         .new(icon: Icon(Icons.grid_view_rounded), label: Text('More')),
+        // .new(icon: Icon(Icons.api_outlined), label: Text('Api')),
       ],
       selectedIndex: index,
       onDestinationSelected: (value) {
@@ -66,6 +67,7 @@ class _DesktopHomeState extends State<DesktopHome> {
         SearchPage(),
         ReaderTrackerPage(),
         MorePage(),
+        // ReaderFileApiPage(),
       ],
     );
   }

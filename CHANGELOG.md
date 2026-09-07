@@ -1,3 +1,7 @@
+# 2.3.0
++ Added `Recent Item Color`
++ Changed Icon.
+
 ## 2.2.0
 
 + Added `Rename Option`

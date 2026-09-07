@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
@@ -18,31 +20,62 @@ class ReaderGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final col = Theme.of(context).colorScheme;
-    return Container(
-      padding: .all(8),
-      decoration: BoxDecoration(
-        borderRadius: .circular(15),
-        color: col.surfaceContainer,
-      ),
-      child: InkWell(
-        mouseCursor: SystemMouseCursors.click,
-        onTap: () => onClicked(file),
-        onSecondaryTap: () => onRightClicked?.call(file),
-        onLongPress: () => onRightClicked?.call(file),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: .center,
+    return InkWell(
+      mouseCursor: SystemMouseCursors.click,
+      borderRadius: .circular(15),
+      onTap: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onClicked(file);
+      },
+      onSecondaryTap: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onRightClicked?.call(file);
+      },
+      onLongPress: () {
+        AppUtils.instance.recentConfig.put(
+          appListClickedReaderFileRecentIdKey,
+          file.configId,
+        );
+        onRightClicked?.call(file);
+      },
+      child: StreamBuilder(
+        stream: AppUtils.instance.recentConfig.stream.put.where(
+          (e) => e.key == appListClickedReaderFileRecentIdKey,
+        ),
+        builder: (context, asyncSnapshot) {
+          final lastId = AppUtils.instance.recentConfig.getString(
+            appListClickedReaderFileRecentIdKey,
+          );
+          return Container(
+            padding: .all(8),
+            decoration: BoxDecoration(
+              borderRadius: .circular(15),
+              color: lastId == file.configId
+                  ? col.primaryContainer
+                  : col.surfaceContainer,
+            ),
+            child: Stack(
               children: [
-                Expanded(child: ReaderCoverFile(file: file)),
-                SizedBox(height: 10),
-                _content(col),
+                Column(
+                  crossAxisAlignment: .center,
+                  children: [
+                    Expanded(child: ReaderCoverFile(file: file)),
+                    SizedBox(height: 10),
+                    _content(col),
+                  ],
+                ),
+                Positioned(left: 0, top: 0, child: FavLabel(file: file)),
+                Positioned(right: 0, top: 0, child: ReaderTypeIcon(file: file)),
               ],
             ),
-            Positioned(left: 0, top: 0, child: FavLabel(file: file)),
-            Positioned(right: 0, top: 0, child: ReaderTypeIcon(file: file)),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
