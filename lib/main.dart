@@ -9,20 +9,21 @@ import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
 import 'package:than_reader/platforms/platform_app.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // await Supabase.initialize(
-  //   url: 'https://qltcqezbcfpfsuzdqnma.supabase.co',
-  //   publishableKey: 'sb_publishable_a-zTMD5bSPP9j1J-9LP2OQ_ruOMZS_S',
-  //   debug: true,
-  // );
 
   await AppUtils.instance.init();
 
   // recent
   await CFBStore.instance.open(AppUtils.instance.getConfigPath('app.cf.json'));
+
+  await ReaderInfoStore.instance.init(
+    AppUtils.instance.getPlatfromExternalConfigPath(
+      'reader-file-info-store.du',
+    ),
+  );
 
   await CFBStore.getInstance.open(
     AppUtils.instance.getConfigPath('app.config.cfb'),

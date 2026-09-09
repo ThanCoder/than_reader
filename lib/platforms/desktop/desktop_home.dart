@@ -5,6 +5,7 @@ import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.d
 import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
 import 'package:than_reader/platforms/pages/more_page.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store_page.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({super.key});
@@ -46,7 +47,7 @@ class _DesktopHomeState extends State<DesktopHome> {
           label: Text('Reader Tracker'),
         ),
         .new(icon: Icon(Icons.grid_view_rounded), label: Text('More')),
-        // .new(icon: Icon(Icons.api_outlined), label: Text('Api')),
+        .new(icon: Icon(Icons.storage_outlined), label: Text('Info Store')),
       ],
       selectedIndex: index,
       onDestinationSelected: (value) {
@@ -67,7 +68,7 @@ class _DesktopHomeState extends State<DesktopHome> {
         SearchPage(),
         ReaderTrackerPage(),
         MorePage(),
-        // ReaderFileApiPage(),
+        ReaderInfoStorePage(),
       ],
     );
   }

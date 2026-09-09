@@ -23,7 +23,6 @@ dependencies:
   html: ^0.15.6
   than_pkg_linux: ^0.2.0
   than_pkg_android: ^0.6.1
-  linux_sys_ffi: ^0.1.0
   t_client: ^0.3.0
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
@@ -36,13 +35,13 @@ dependencies:
     git: https://github.com/ThanCoder/t_pdf_reader.git
   t_server:
     git: https://github.com/ThanCoder/t_server.git
-  # supabase_flutter: ^2.17.2
-
+  dual_store:
+    git: https://github.com/ThanCoder/dual_store.git
   # Latest Git commit သေချာယူချင်ရင်—
 
   # flutter pub upgrade --unlock-transitive
 
-  # flutter pub upgrade dart_core_extensions t_widgets t_pdf_reader t_server
+  # flutter pub upgrade dart_core_extensions t_widgets t_pdf_reader t_server dual_store
 dev_dependencies:
   flutter_test:
     sdk: flutter

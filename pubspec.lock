@@ -138,6 +138,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.1"
+  dual_store:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: ac244a174fb5aa1b688cb9c6f8c37d7b0bf9d524
+      url: "https://github.com/ThanCoder/dual_store.git"
+    source: git
+    version: "0.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -369,14 +378,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
-  linux_sys_ffi:
-    dependency: "direct main"
-    description:
-      name: linux_sys_ffi
-      sha256: "735f3e7900fceb44e97033105643499bf365f22d0bec98f13e2563117ad9eb28"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   list_counter:
     dependency: transitive
     description:
