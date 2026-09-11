@@ -9,9 +9,13 @@ class PlatformAppSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return MobileHome();
-    }
-    return DesktopHome();
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 400) {
+          return MobileHome();
+        }
+        return DesktopHome();
+      },
+    );
   }
 }

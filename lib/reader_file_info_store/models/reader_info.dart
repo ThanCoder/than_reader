@@ -4,7 +4,7 @@ import 'package:dual_store/dual_store.dart';
 
 import 'package:than_reader/core/models/reader_file.dart';
 
-class ReaderInfoAdapter extends IDuBinaryMetaAdapter<ReaderInfo> {
+class ReaderInfoAdapter extends IDuJsonMetaAdapter<ReaderInfo> {
   @override
   int get adapterId => 1;
 

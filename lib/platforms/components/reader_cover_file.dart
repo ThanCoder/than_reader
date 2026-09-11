@@ -21,7 +21,7 @@ class ReaderCoverFile extends StatelessWidget {
   }
 
   Widget get bodyWidget {
-    final cacheFile = File(CacheManager.getReaderFileCachePath(file));
+    final cacheFile = File(CacheManager.getBookThumbnailCachePath(file));
     if (cacheFile.existsSync()) {
       return image(cacheFile);
     }

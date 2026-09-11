@@ -1,7 +1,6 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/reader_file_info_store/reader_info_store_form_page.dart';
 
@@ -36,18 +35,16 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
                     ReaderInfoStoreFormPage(info: .empty(), des: ''),
               );
           if (res == null) return;
-          await infoBox.add(res.info, contentWriter: NoneContentWriter());
+          await infoBox.add(
+            res.info,
+            contentWriter: TextCompressContentWriter(res.desc),
+          );
         },
       ),
     );
   }
 
   Widget _body() {
-    print(
-      AppUtils.instance.getPlatfromExternalConfigPath(
-        'reader-file-info-store.du',
-      ),
-    );
     return StreamBuilder(
       stream: store.events.addId,
       builder: (context, asyncSnapshot) {
@@ -59,18 +56,8 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
                 child: Center(child: CircularProgressIndicator.adaptive()),
               );
             }
-            final res = snapshot.data!;
-            if (res.isErr) {
-              return SliverFillRemaining(
-                child: Center(
-                  child: Text(
-                    'Error: ${res.unwrapError()}',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              );
-            }
-            final list = res.unwrap();
+            final list = snapshot.data ?? [];
+
             return SliverList.builder(
               itemCount: list.length,
               itemBuilder: (context, index) {

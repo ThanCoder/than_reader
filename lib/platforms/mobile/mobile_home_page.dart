@@ -1,17 +1,25 @@
 import 'dart:io';
 
+import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
+import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/platforms/components/group_list/book_group_grid_item.dart';
+import 'package:than_reader/platforms/components/group_list/book_group_list_item.dart';
+import 'package:than_reader/platforms/components/group_list/group_list_style_chooser.dart';
+import 'package:than_reader/platforms/components/list_style/group_list_style_provider.dart';
+import 'package:than_reader/platforms/components/list_style/group_list_type.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_chooser.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_provider.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';
 import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
+import 'package:than_reader/platforms/pages/book_group_result_page.dart';
 import 'package:than_reader/router.dart';
 
 class MobileHomePage extends StatefulWidget {
@@ -94,6 +102,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
         },
       ),
       SizedBox(width: 10),
+      GroupListStyleChooser(),
+      SizedBox(width: 10),
     ];
   }
 
@@ -116,12 +126,74 @@ class _MobileHomePageState extends State<MobileHomePage> {
             slivers: [
               SliverPadding(
                 padding: .symmetric(horizontal: 10, vertical: 10),
-                sliver: _listbuilder(files),
+                sliver: _listProvider(files),
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _listProvider(List<ReaderFile> files) {
+    return StreamBuilder(
+      stream: CFBStore.instance.stream.put.where(
+        (e) => e.key == appGropListStyleKey,
+      ),
+      builder: (context, asyncSnapshot) {
+        final type = GroupListType.fromVal(
+          CFBStore.instance.getString(appGropListStyleKey),
+        );
+        if (type == .folderGroup) {
+          return _groupBuiler(files);
+        }
+        return _listbuilder(files);
+      },
+    );
+  }
+
+  Widget _groupBuiler(List<ReaderFile> files) {
+    return GroupListStyleProvider(
+      list: files,
+      gridBuilder: (context, groups) => SliverGrid.builder(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 100,
+          mainAxisExtent: 120,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+        ),
+        itemCount: groups.length,
+        itemBuilder: (context, index) {
+          final g = groups.entries.elementAt(index);
+          return BookGroupGridItem(
+            title: g.key,
+            files: g.value,
+            onClicked: () {
+              context.pushMaterialPageRoute(
+                builder: (mainCtx) =>
+                    BookGroupResultPage(title: g.key, files: g.value),
+              );
+            },
+          );
+        },
+      ),
+      listBuilder: (context, groups) => SliverList.separated(
+        itemCount: groups.length,
+        separatorBuilder: (context, index) => SizedBox(height: 8),
+        itemBuilder: (context, index) {
+          final g = groups.entries.elementAt(index);
+          return BookGroupListItem(
+            title: g.key,
+            files: g.value,
+            onClicked: () {
+              context.pushMaterialPageRoute(
+                builder: (mainCtx) =>
+                    BookGroupResultPage(title: g.key, files: g.value),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
