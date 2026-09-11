@@ -34,6 +34,8 @@ class BookGroupListItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
+                    maxLines: 2,
+                    overflow: .ellipsis,
                     style: TextStyle(color: col.onSurface, fontWeight: .w600),
                   ),
                   Container(
@@ -43,7 +45,7 @@ class BookGroupListItem extends StatelessWidget {
                       borderRadius: .circular(15),
                     ),
                     child: Text(
-                      '${files.length}',
+                      files.length.toString().padLeft(2, '0'),
                       style: TextStyle(color: col.onPrimary, fontWeight: .w600),
                     ),
                   ),
