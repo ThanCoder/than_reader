@@ -1,7 +1,7 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/const_keys.dart';
-import 'package:than_reader/platforms/components/list_style/group_list_type.dart';
+import 'package:than_reader/platforms/components/group_list/group_list_type.dart';
 
 class GroupListStyleMenu extends StatefulWidget {
   const GroupListStyleMenu({super.key});

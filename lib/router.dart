@@ -1,3 +1,4 @@
+import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
@@ -8,6 +9,10 @@ import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/core/models/reader_history.dart';
 import 'package:than_reader/core/utils/reader_file_util.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store_desc_page.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store_form_page.dart';
 
 Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
   final configRes = await ReaderFileUtil.getPdfConfig(file);
@@ -52,3 +57,38 @@ Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
 //       params: .new(file, AppUtils.instance.getCachePath(file.configId)),
 //     );
 // ReaderFileRecentController.instance.addList(file.path);
+
+Future<void> goInfoDescPage(BuildContext context, ReaderFile file) async {
+  final box = ReaderInfoStore.instance.infoBox;
+  final infoRes = await box.getOne(
+    (val) => val.configIds.contains(file.configId),
+  );
+  if (infoRes.isErr) return;
+  if (!context.mounted) return;
+  context.pushMaterialPageRoute(
+    builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes.unwrap()),
+  );
+}
+
+Future<void> goInfoFormPage(BuildContext context, ReaderFile file) async {
+  final box = ReaderInfoStore.instance.infoBox;
+  final infoRes = await box.getOne(
+    (val) => val.configIds.contains(file.configId),
+  );
+  if (!context.mounted) return;
+  ReaderInfo info = .empty(title: file.name, configIds: [file.configId]);
+  String desc = '';
+  if (infoRes.isOk) {
+    info = infoRes.unwrap();
+    final con = await info.getContent<String>();
+    if (con.isOk) {
+      desc = con.unwrap();
+    }
+  }
+  if (!context.mounted) return;
+  final res = await context.pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
+    builder: (mainCtx) => ReaderInfoStoreFormPage(info: info, desc: desc),
+  );
+  if (res == null) return;
+  await box.add(res.info, contentWriter: TextCompressContentWriter(res.desc));
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 
-Future<bool> showPromptAlertDialog(
+Future<String?> showPromptAlertDialog(
   BuildContext context,
   String promptText, {
   bool barrierDismissible = true,
@@ -14,7 +14,7 @@ Future<bool> showPromptAlertDialog(
   Color? closeForegroundColor,
   String? Function(String text)? onErrorCheck,
 }) async {
-  final res = await showDialog<bool>(
+  return await showDialog<String>(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (context) => PromptAlertDialog(
@@ -29,7 +29,6 @@ Future<bool> showPromptAlertDialog(
       onErrorCheck: onErrorCheck,
     ),
   );
-  return res ?? false;
 }
 
 class PromptAlertDialog extends StatefulWidget {

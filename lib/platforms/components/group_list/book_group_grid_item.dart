@@ -28,7 +28,7 @@ class BookGroupGridItem extends StatelessWidget {
             Column(
               crossAxisAlignment: .center,
               children: [
-                Icon(Icons.folder, size: 80),
+                Icon(Icons.folder, size: 80, color: col.onSurfaceVariant),
                 Text(
                   title,
                   maxLines: 2,

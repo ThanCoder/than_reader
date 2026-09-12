@@ -12,8 +12,8 @@ import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart'
 import 'package:than_reader/platforms/components/group_list/book_group_grid_item.dart';
 import 'package:than_reader/platforms/components/group_list/book_group_list_item.dart';
 import 'package:than_reader/platforms/components/group_list/group_list_style_chooser.dart';
-import 'package:than_reader/platforms/components/list_style/group_list_style_provider.dart';
-import 'package:than_reader/platforms/components/list_style/group_list_type.dart';
+import 'package:than_reader/platforms/components/group_list/group_list_style_provider.dart';
+import 'package:than_reader/platforms/components/group_list/group_list_type.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_chooser.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_provider.dart';
 import 'package:than_reader/platforms/components/menu/item_menu.dart';

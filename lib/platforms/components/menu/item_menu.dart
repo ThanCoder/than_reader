@@ -7,6 +7,8 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/info_menu.dart';
+import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/router.dart';
 
 class ItemMenu extends StatefulWidget {
   const ItemMenu({super.key, required this.file});
@@ -44,6 +46,7 @@ class _ItemMenuState extends State<ItemMenu> {
             Divider(),
             infoWidget,
             favWidget,
+            infoFormWidget,
             renameWidget,
 
             deleteWiget,
@@ -173,6 +176,49 @@ class _ItemMenuState extends State<ItemMenu> {
         ControllerManager.read<AllFileController>().rename(
           widget.file,
           renamedName,
+        );
+      },
+    );
+  }
+
+  Widget get infoFormWidget {
+    return FutureBuilder(
+      future: ReaderInfoStore.instance.infoExistsByid(widget.file.configId),
+      builder: (context, snapshot) {
+        final existsInfo = snapshot.data ?? false;
+        return Column(
+          spacing: 8,
+          children: [
+            if (existsInfo)
+              ListTile(
+                tileColor: col.surfaceContainer,
+                shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+                leading: Icon(Icons.info_outline, color: col.onSurfaceVariant),
+                title: Text('Info Store'),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  color: col.onSurfaceVariant.withValues(alpha: .45),
+                ),
+                onTap: () {
+                  context.pop();
+                  goInfoDescPage(context, widget.file);
+                },
+              ),
+            ListTile(
+              tileColor: col.surfaceContainer,
+              shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+              leading: Icon(Icons.info_outline, color: col.onSurfaceVariant),
+              title: Text('Info Store Form'),
+              trailing: Icon(
+                Icons.arrow_forward_ios_outlined,
+                color: col.onSurfaceVariant.withValues(alpha: .45),
+              ),
+              onTap: () {
+                context.pop();
+                goInfoFormPage(context, widget.file);
+              },
+            ),
+          ],
         );
       },
     );

@@ -12,6 +12,13 @@ class ReaderInfoStore {
 
   DuBox<ReaderInfo> get infoBox => store.getBox<ReaderInfo>();
 
+  Future<bool> infoExistsByid(String configId) async {
+    final infoRes = await infoBox.getOne(
+      (val) => val.configIds.contains(configId),
+    );
+    return infoRes.isOk;
+  }
+
   Future<void> init(String dbPath) async {
     store.events.error.duError.listen((e) {
       print(ReaderInfoStore.instance.store.path);

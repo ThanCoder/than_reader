@@ -26,31 +26,39 @@ class ReaderInfo extends IDuModel {
   final String coverUrl;
   final List<String> configIds;
   final List<String> urls;
-  final List<String> geners;
+  final List<String> genres;
   final List<String> tags;
   final FileType type;
+  final DateTime date;
   ReaderInfo({
     required this.title,
     required this.author,
     required this.translator,
     required this.configIds,
     required this.urls,
-    required this.geners,
+    required this.genres,
     required this.tags,
     required this.coverUrl,
     required this.type,
+    required this.date,
   });
-  factory ReaderInfo.empty() {
+  factory ReaderInfo.empty({
+    String title = 'Untitled',
+    String author = 'Unknown',
+    String translator = 'Unknown',
+    List<String>? configIds,
+  }) {
     return .new(
-      title: 'Untitled',
-      author: 'Unknown',
-      translator: 'Unknown',
-      configIds: [],
+      title: title,
+      author: author,
+      translator: translator,
+      configIds: configIds ?? [],
       urls: [],
-      geners: [],
+      genres: [],
       tags: [],
       coverUrl: '',
       type: .pdf,
+      date: .now(),
     );
   }
 
@@ -61,10 +69,11 @@ class ReaderInfo extends IDuModel {
       'translator': translator,
       'configIds': configIds,
       'urls': urls,
-      'geners': geners,
+      'genres': genres,
       'tags': tags,
       'coverUrl': coverUrl,
       'type': type.name,
+      'date': date.millisecondsSinceEpoch,
     };
   }
 
@@ -75,10 +84,11 @@ class ReaderInfo extends IDuModel {
       translator: map.getString(['translator']),
       configIds: map.getStringList(['configIds']),
       urls: map.getStringList(['urls']),
-      geners: map.getStringList(['geners']),
+      genres: map.getStringList(['genres']),
       tags: map.getStringList(['tags']),
       coverUrl: map.getString(['coverUrl']),
       type: .fromValue(map.getString(['type'])),
+      date: .fromMillisecondsSinceEpoch(map.getInt(['date'])),
     );
   }
 
@@ -86,23 +96,25 @@ class ReaderInfo extends IDuModel {
     String? title,
     String? author,
     String? translator,
+    String? coverUrl,
     List<String>? configIds,
     List<String>? urls,
-    List<String>? geners,
+    List<String>? genres,
     List<String>? tags,
-    String? coverUrl,
     FileType? type,
+    DateTime? date,
   }) {
     return ReaderInfo(
       title: title ?? this.title,
       author: author ?? this.author,
       translator: translator ?? this.translator,
+      coverUrl: coverUrl ?? this.coverUrl,
       configIds: configIds ?? this.configIds,
       urls: urls ?? this.urls,
-      geners: geners ?? this.geners,
+      genres: genres ?? this.genres,
       tags: tags ?? this.tags,
-      coverUrl: coverUrl ?? this.coverUrl,
       type: type ?? this.type,
+      date: date ?? this.date,
     );
   }
 }
