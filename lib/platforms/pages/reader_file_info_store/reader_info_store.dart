@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:dual_store/dual_store.dart';
-import 'package:than_reader/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 
 class ReaderInfoStore {
   static final ReaderInfoStore instance = ReaderInfoStore._();

@@ -5,15 +5,15 @@ class MenuItem extends StatelessWidget {
   const MenuItem({
     super.key,
     required this.title,
-    required this.subTitle,
+    this.subTitle,
     required this.leadingIcon,
-    required this.trailingWidget,
+    this.trailingWidget,
   });
 
   final String title;
-  final String subTitle;
+  final String? subTitle;
   final IconData leadingIcon;
-  final Widget trailingWidget;
+  final Widget? trailingWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -24,34 +24,40 @@ class MenuItem extends StatelessWidget {
         borderRadius: .circular(15),
         color: col.surfaceContainer,
       ),
-      child: InkWell(
-        onTap: () {},
-        child: Row(
-          children: [
-            Container(
-              padding: .all(5),
-              decoration: BoxDecoration(
-                borderRadius: .circular(15),
-                color: col.tertiaryContainer,
-              ),
-              child: Icon(leadingIcon, color: col.onTertiaryContainer),
+      child: Row(
+        children: [
+          Container(
+            padding: .all(5),
+            decoration: BoxDecoration(
+              borderRadius: .circular(15),
+              color: col.tertiaryContainer,
             ),
-            SizedBox(width: 10),
-            Column(
+            child: Icon(leadingIcon, color: col.onTertiaryContainer),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
               spacing: 4,
               crossAxisAlignment: .start,
               children: [
-                Text(title, style: TextStyle(fontSize: 16, fontWeight: .w600)),
                 Text(
-                  subTitle,
-                  style: TextStyle(fontSize: 14, fontWeight: .w400),
+                  title,
+                  overflow: .ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(fontSize: 16, fontWeight: .w600),
                 ),
+                if (subTitle != null)
+                  Text(
+                    subTitle!,
+                    overflow: .ellipsis,
+                    style: TextStyle(fontSize: 14, fontWeight: .w400),
+                  ),
               ],
             ),
-            Spacer(),
-            trailingWidget,
-          ],
-        ),
+          ),
+          if (trailingWidget != null) Spacer(),
+          ?trailingWidget,
+        ],
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:than_reader/platforms/components/app_seeds_color_chooser.dart';
 import 'package:than_reader/platforms/components/app_version_view.dart';
 import 'package:than_reader/platforms/components/cache_cleaner.dart';
 import 'package:than_reader/platforms/pages/share_server/share_page.dart';
-import 'package:than_reader/reader_file_info_store/reader_info_store_page.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});

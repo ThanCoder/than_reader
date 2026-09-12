@@ -546,10 +546,11 @@ packages:
   t_client:
     dependency: "direct main"
     description:
-      name: t_client
-      sha256: "770fee2a804ab355109c9f978e658e4199240ae6ac5e06a032b071918a8f4d93"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: bd45db18cb9bc2b18d69a02594186a84227a3159
+      url: "https://github.com/ThanCoder/t_client"
+    source: git
     version: "0.3.0"
   t_pdf_reader:
     dependency: "direct main"

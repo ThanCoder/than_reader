@@ -1,7 +1,6 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 
 class ReaderInfoStoreDescPage extends StatefulWidget {
   const new({super.key, required this.info});
@@ -43,7 +42,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
             desc = res.unwrap();
           }
         }
-        return Text(desc, style: TextStyle(fontSize: 18));
+        return SelectableText(desc, style: TextStyle(fontSize: 18));
       },
     );
   }
@@ -57,37 +56,46 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           widget.info.title,
           maxLines: 1,
           overflow: .ellipsis,
-          style: TextStyle(fontWeight: .w600, color: col.onSurface),
-        ),
-        Text(
-          'author: ${widget.info.author}',
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: .w400,
-            color: col.onSurfaceVariant,
+            fontWeight: .w600,
+            color: col.onSurface,
+            fontSize: 20,
           ),
         ),
-        Text(
-          'translator: ${widget.info.translator}',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: .w400,
-            color: col.onSurfaceVariant,
-          ),
+        Wrap(
+          spacing: 5,
+          runSpacing: 5,
+          children: [
+            _wrapItem('author: ${widget.info.author}'),
+            _wrapItem('translator: ${widget.info.translator}'),
+            _wrapItem('Type: ${widget.info.type.label}'),
+            _wrapItem('Date: ${widget.info.date.formatTimeAgo()}'),
+          ],
         ),
-        Text(
-          'Type: ${widget.info.type.label}',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: .w400,
-            color: col.onSurfaceVariant,
-          ),
-        ),
+
         _wrapperWidget('Config Id', list: widget.info.configIds),
         _wrapperWidget('Genres', list: widget.info.genres),
         _wrapperWidget('Tags', list: widget.info.tags),
         _wrapperWidget('Urls', list: widget.info.urls),
       ],
+    );
+  }
+
+  Widget _wrapItem(String text) {
+    return Container(
+      padding: .symmetric(vertical: 5, horizontal: 8),
+      decoration: BoxDecoration(
+        color: col.secondary,
+        borderRadius: .circular(15),
+      ),
+      child: SelectableText(
+        text,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: .w400,
+          color: col.onSecondary,
+        ),
+      ),
     );
   }
 
@@ -105,13 +113,18 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
         crossAxisAlignment: .start,
         spacing: 8,
         children: [
-          Text(title),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 19,
+              fontWeight: .w600,
+              color: col.onSurface,
+            ),
+          ),
           Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: list
-                .map((e) => TChip(title: Text(e.capitalize)))
-                .toList(),
+            children: list.map((e) => _wrapItem(e)).toList(),
           ),
         ],
       ),

@@ -7,7 +7,7 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/info_menu.dart';
-import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/router.dart';
 
 class ItemMenu extends StatefulWidget {

@@ -14,6 +14,7 @@ class ShareController {
   final server = TServer();
   final _router = THttpRouter();
   AllFileController get _allCon => ControllerManager.read<AllFileController>();
+  int port = 4445;
 
   Future<void> init() async {
     _router.clearRoutes();
@@ -22,7 +23,7 @@ class ShareController {
         'message': 'Than Reader Api Server',
         '/api': 'book file list',
         '/api/thumbnail/:id': 'cover data',
-        '/api/book/:id': 'book data',
+        '/api/book/:id': 'book data && download data',
       });
     });
     _router.get('/api', (ctx) async {
@@ -71,6 +72,6 @@ class ShareController {
   }
 
   Future<void> start() async {
-    await server.start(address: '0.0.0.0', port: 4445);
+    await server.start(address: '0.0.0.0', port: port);
   }
 }

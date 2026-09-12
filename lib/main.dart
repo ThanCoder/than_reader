@@ -9,7 +9,7 @@ import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
 import 'package:than_reader/platforms/platform_app.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
-import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

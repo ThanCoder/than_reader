@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
+import 'package:than_reader/core/utils/platform_util.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/share_server/share_controller.dart';
 
@@ -62,12 +63,19 @@ class _SharePageState extends State<SharePage> {
         child: Text('Start Server'),
       );
     }
+    final url =
+        'http://${shareCon.server.getAddress?.host}:${shareCon.server.port}';
     return Column(
       mainAxisAlignment: .center,
       children: [
-        Text(
-          'Server Running on http://${shareCon.server.getAddress?.host}:${shareCon.server.port}',
-          style: TextStyle(color: Colors.green),
+        InkWell(
+          onTap: () {
+            PlatformUtil.launchUrl(url);
+          },
+          child: Text(
+            'Server Running on $url',
+            style: TextStyle(color: Colors.green),
+          ),
         ),
       ],
     );

@@ -43,15 +43,15 @@ class ReaderInfo extends IDuModel {
     required this.date,
   });
   factory ReaderInfo.empty({
-    String title = 'Untitled',
-    String author = 'Unknown',
-    String translator = 'Unknown',
+    String? title,
+    String? author,
+    String? translator,
     List<String>? configIds,
   }) {
     return .new(
-      title: title,
-      author: author,
-      translator: translator,
+      title: title ?? 'Untitled',
+      author: author ?? 'Unknown',
+      translator: translator ?? 'Unknown',
       configIds: configIds ?? [],
       urls: [],
       genres: [],

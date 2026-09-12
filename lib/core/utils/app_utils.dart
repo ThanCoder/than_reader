@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
-import 'package:than_reader/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 
 class AppUtils {
   static AppUtils instance = AppUtils._();

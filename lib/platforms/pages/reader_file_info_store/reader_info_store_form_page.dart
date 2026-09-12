@@ -5,7 +5,7 @@ import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dar
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 
 import 'package:than_reader/platforms/components/forms/input_text.dart';
-import 'package:than_reader/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 
 class ReaderInfoStoreFormPageData {
   final ReaderInfo info;
@@ -57,7 +57,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
     descCon.text = widget.desc;
   }
 
-  void saveAndClose() async {
+  void saveConfirm() async {
     final conf = await showConfirmDialog(
       context,
       barrierDismissible: false,
@@ -70,6 +70,10 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
       context.pop();
       return;
     }
+    saveAndClose();
+  }
+
+  void saveAndClose() async {
     context.pop<ReaderInfoStoreFormPageData>(
       .new(
         info: info.copyWith(
@@ -91,7 +95,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        saveAndClose();
+        saveConfirm();
       },
       child: Scaffold(
         appBar: AppBar(
