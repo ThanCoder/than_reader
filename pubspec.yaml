@@ -38,6 +38,7 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
+  url_launcher: ^6.3.2
   # Latest Git commit သေချာယူချင်ရင်—
 
   # flutter pub upgrade --unlock-transitive

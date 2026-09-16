@@ -25,8 +25,6 @@ void main() async {
     ),
   );
 
- 
-
   ControllerManager.register(AllFileController());
   ControllerManager.register(FavController());
   ControllerManager.register(ReaderHistoryController());
