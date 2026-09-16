@@ -5,6 +5,7 @@ import 'package:t_server/t_server.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/managers/cache_manager.dart';
+import 'package:than_reader/core/utils/platform_util.dart';
 
 class ShareController {
   static final ShareController instance = ShareController._();
@@ -46,6 +47,13 @@ class ShareController {
         return;
       }
       final coverFile = File(CacheManager.getBookThumbnailCachePath(book));
+      if (!coverFile.existsSync()) {
+        await PlatformUtil.genThumbnail(
+          book.path,
+          outPath: coverFile.path,
+          type: book.type,
+        );
+      }
 
       await ctx.response.download(coverFile);
     });

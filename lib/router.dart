@@ -1,18 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
+import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/core/models/reader_history.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/reader_file_util.dart';
+import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
 
 Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
+  final infoDialogEnable = AppUtils.instance.config.getBool(
+    appReaderInfoDialogKey,
+  );
+  if (infoDialogEnable) {
+    final box = ReaderInfoStore.instance.infoBox;
+    final infoRes = await box.getOne(
+      (val) => val.configIds.contains(file.configId),
+    );
+    if (infoRes.isOk) {
+      if (!context.mounted) return;
+      final conf = await showConfirmDialog(
+        context,
+        'Want To Read Info',
+        confirmText: 'Read Info',
+        closeText: 'Read Reader',
+      );
+      if (conf) {
+        if (!context.mounted) return;
+        context.pushMaterialPageRoute(
+          builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes.unwrap()),
+        );
+        return;
+      }
+    }
+  }
+
   final configRes = await ReaderFileUtil.getPdfConfig(file);
   if (!context.mounted) return;
 

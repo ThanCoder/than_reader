@@ -16,6 +16,7 @@ class AppUtils {
   factory AppUtils() => instance;
 
   final recentConfig = CFBStore();
+  final config = CFBStore.instance;
 
   final readerFileInfoStore = ReaderInfoStore.instance;
 
@@ -70,6 +71,7 @@ class AppUtils {
     } else {
       throw UnsupportedError('Unsupported Platform path Provider');
     }
+    await config.open(AppUtils.instance.getConfigPath('app.config.cfb'));
   }
 
   String getCachePath([String? name]) {

@@ -25,9 +25,7 @@ void main() async {
     ),
   );
 
-  await CFBStore.getInstance.open(
-    AppUtils.instance.getConfigPath('app.config.cfb'),
-  );
+ 
 
   ControllerManager.register(AllFileController());
   ControllerManager.register(FavController());
