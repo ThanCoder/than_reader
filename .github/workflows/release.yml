@@ -12,7 +12,6 @@ permissions:
   contents: write
 
 jobs:
-
   # ─────────────────────────────────────
   # Android
   # ─────────────────────────────────────
@@ -22,58 +21,55 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: "zulu"
+        java-version: "17"
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.x"
-          channel: "stable"
-          cache: true
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: "3.x"
+        channel: "stable"
+        cache: true
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
         packages: ''
 
-      - name: Accept Android Licenses
-        run: |
-          yes | sdkmanager --licenses || true
+    - name: Accept Android Licenses
+      run: |
+        yes | sdkmanager --licenses || true
 
-      - name: Install Android dependencies
-        run: |
-          sdkmanager \
-            "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0"
+    - name: Install Android dependencies
+      run: |
+        sdkmanager \
+          "platform-tools" \
+          "platforms;android-35" \
+          "build-tools;35.0.0"
 
-      - name: Install CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build
 
-      - name: Install dependencies
-        run: flutter pub get
+    - name: Install dependencies
+      run: flutter pub get
 
-      - name: Build Android APK
-        run: |
-          flutter build apk \
-            --release \
-            --split-per-abi
+    - name: Build Android APK
+      run: |
+        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi -v
 
-      - name: Upload Android APKs
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apks
-          path: build/app/outputs/flutter-apk/*.apk
-
+    - name: Upload Android APKs
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apks
+        path: build/app/outputs/flutter-apk/*.apk
 
   # ─────────────────────────────────────
   # Linux
@@ -84,44 +80,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.x"
-          channel: "stable"
-          cache: true
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: "3.x"
+        channel: "stable"
+        cache: true
 
-      - name: Install Linux dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            clang \
-            cmake \
-            ninja-build \
-            pkg-config \
-            libgtk-3-dev \
-            liblzma-dev
+    - name: Install Linux dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          clang \
+          cmake \
+          ninja-build \
+          pkg-config \
+          libgtk-3-dev \
+          liblzma-dev
 
-      - name: Install dependencies
-        run: flutter pub get
+    - name: Install dependencies
+      run: flutter pub get
 
-      - name: Build Linux Desktop
-        run: flutter build linux --release
+    - name: Build Linux Desktop
+      run: flutter build linux --release
 
-      - name: Compress Linux Build
-        run: |
-          cd build/linux/x64/release/bundle
-          zip -r ../../../../../linux-x64-release.zip *
+    - name: Compress Linux Build
+      run: |
+        cd build/linux/x64/release/bundle
+        zip -r ../../../../../linux-x64-release.zip *
 
-      - name: Upload Linux Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-release
-          path: linux-x64-release.zip
-
+    - name: Upload Linux Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-release
+        path: linux-x64-release.zip
 
   # ─────────────────────────────────────
   # GitHub Release
@@ -131,33 +126,32 @@ jobs:
     name: Create GitHub Release
 
     needs:
-      - build-android
-      - build-linux
+    - build-android
+    - build-linux
 
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download Android APKs
+      uses: actions/download-artifact@v4
+      with:
+        name: android-apks
+        path: artifacts/android
 
-      - name: Download Android APKs
-        uses: actions/download-artifact@v4
-        with:
-          name: android-apks
-          path: artifacts/android
+    - name: Download Linux Build
+      uses: actions/download-artifact@v4
+      with:
+        name: linux-release
+        path: artifacts/linux
 
-      - name: Download Linux Build
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-release
-          path: artifacts/linux
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ inputs.tag }}
-          target_commitish: ${{ github.sha }}
-          generate_release_notes: true
-          files: |
-            artifacts/android/*.apk
-            artifacts/linux/linux-x64-release.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ inputs.tag }}
+        target_commitish: ${{ github.sha }}
+        generate_release_notes: true
+        files: |
+          artifacts/android/*.apk
+          artifacts/linux/linux-x64-release.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
