@@ -31,6 +31,8 @@ class _ReceivePageState extends State<ReceivePage> {
   @override
   void dispose() {
     client.close();
+    controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -38,6 +40,7 @@ class _ReceivePageState extends State<ReceivePage> {
   bool isLoading = false;
 
   List<ReaderFile> files = [];
+  List<ReaderFile> result = [];
 
   Future<void> init() async {
     try {
@@ -91,6 +94,22 @@ class _ReceivePageState extends State<ReceivePage> {
     }
   }
 
+  bool isSearch = false;
+  final controller = TextEditingController();
+  final focusNode = FocusNode();
+
+  void onSearch(String val) {
+    if (val.isEmpty) {
+      if (!isSearch) return;
+      isSearch = false;
+      setState(() {});
+      return;
+    }
+    result = files.where((e) => e.name.upper.contains(val.upper)).toList();
+    isSearch = true;
+    setState(() {});
+  }
+
   ColorScheme get col => Theme.of(context).colorScheme;
   @override
   Widget build(BuildContext context) {
@@ -107,51 +126,12 @@ class _ReceivePageState extends State<ReceivePage> {
         child: isLoading
             ? Center(child: TLoaderRandom())
             : CustomScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  if (_connectAddress != null)
-                    SliverToBoxAdapter(
-                      child: Center(
-                        child: Text(
-                          'Connected: $_connectAddress',
-                          style: TextStyle(fontSize: 20, fontWeight: .w700),
-                        ),
-                      ),
-                    )
-                  else
-                    SliverFillRemaining(
-                      child: Center(
-                        child: Container(
-                          padding: .symmetric(vertical: 10, horizontal: 15),
-                          decoration: BoxDecoration(
-                            color: col.surfaceContainer,
-                            borderRadius: .circular(15),
-                            border: .all(color: col.outlineVariant),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: .center,
-                            mainAxisSize: .min,
-                            children: [
-                              Text(
-                                'Rescan',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: .w700,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              IconButton(
-                                style: IconButton.styleFrom(
-                                  backgroundColor: col.primary,
-                                  foregroundColor: col.onPrimary,
-                                ),
-                                onPressed: init,
-                                icon: Icon(Icons.repeat),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  if (_connectAddress == null)
+                    SliverFillRemaining(child: _adressNullWidget()),
+                  // search
+                  SliverToBoxAdapter(child: _search()),
                   SliverPadding(
                     padding: .symmetric(vertical: 10, horizontal: 15),
                     sliver: _connectAddress == null ? null : _body,
@@ -162,17 +142,76 @@ class _ReceivePageState extends State<ReceivePage> {
     );
   }
 
+  Padding _search() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SearchBar(
+        controller: controller,
+        focusNode: focusNode,
+        hintText: 'Search....',
+        onChanged: onSearch,
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: .circular(15)),
+        ),
+        trailing: [
+          IconButton(
+            onPressed: () {
+              controller.text = '';
+              focusNode.unfocus();
+              isSearch = false;
+              setState(() {});
+            },
+            icon: Icon(Icons.clear_all_outlined),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Center _adressNullWidget() {
+    return Center(
+      child: Container(
+        padding: .symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: col.surfaceContainer,
+          borderRadius: .circular(15),
+          border: .all(color: col.outlineVariant),
+        ),
+        child: Column(
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
+          children: [
+            Text('Rescan', style: TextStyle(fontSize: 20, fontWeight: .w700)),
+            SizedBox(height: 10),
+            IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: col.primary,
+                foregroundColor: col.onPrimary,
+              ),
+              onPressed: init,
+              icon: Icon(Icons.repeat),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget get _body {
+    var list = files;
+    if (isSearch) {
+      list = result;
+    }
     return SliverGrid.builder(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 220,
         childAspectRatio: .68,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
       ),
-      itemCount: files.length,
+      itemCount: list.length,
       itemBuilder: (context, index) {
-        final file = files[index];
+        final file = list[index];
         return ShareGridItem(
           file: file,
           host: _connectAddress!,

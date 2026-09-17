@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -123,6 +124,14 @@ class _DevHomePageState extends State<DevHomePage> {
         }
         final list = snapshot.data ?? [];
         // print(jsonEncode(list.map((e) => e.toMap()).toList()));
+        if (list.isEmpty) {
+          return RefreshButton(
+            text: Text('Refresh'),
+            onClicked: () {
+              setState(() {});
+            },
+          );
+        }
         return Column(
           children: list
               .map(

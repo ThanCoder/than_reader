@@ -156,24 +156,30 @@ class _SearchPageState extends State<SearchPage> {
 
   SliverToBoxAdapter _searchWidget() {
     return SliverToBoxAdapter(
-      child: SearchBar(
-        hintText: 'Search...',
-        focusNode: focusNode,
-        controller: searchController,
-        onChanged: onChanged,
-        trailing: [
-          IconButton(
-            onPressed: () {
-              focusNode.unfocus();
-              searchController.text = '';
-              result.clear();
-              setState(() {
-                searching = false;
-              });
-            },
-            icon: Icon(Icons.clear_all_outlined),
+      child: Padding(
+        padding: .symmetric(vertical: 10, horizontal: 15),
+        child: SearchBar(
+          hintText: 'Search...',
+          focusNode: focusNode,
+          controller: searchController,
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: .circular(15)),
           ),
-        ],
+          onChanged: onChanged,
+          trailing: [
+            IconButton(
+              onPressed: () {
+                focusNode.unfocus();
+                searchController.text = '';
+                result.clear();
+                setState(() {
+                  searching = false;
+                });
+              },
+              icon: Icon(Icons.clear_all_outlined),
+            ),
+          ],
+        ),
       ),
     );
   }

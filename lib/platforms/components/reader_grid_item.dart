@@ -62,16 +62,10 @@ class ReaderGridItem extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                Column(
-                  crossAxisAlignment: .center,
-                  children: [
-                    Expanded(child: ReaderCoverFile(file: file)),
-                    SizedBox(height: 10),
-                    _content(col),
-                  ],
-                ),
+                Positioned.fill(child: ReaderCoverFile(file: file)),
                 Positioned(left: 0, top: 0, child: FavLabel(file: file)),
                 Positioned(right: 0, top: 0, child: ReaderTypeIcon(file: file)),
+                Positioned(left: 0, right: 0, bottom: 0, child: _content(col)),
               ],
             ),
           );
@@ -81,16 +75,18 @@ class ReaderGridItem extends StatelessWidget {
   }
 
   Widget _content(ColorScheme col) {
-    return Column(
-      crossAxisAlignment: .center,
-      children: [
-        Text(
-          file.name,
-          maxLines: 2,
-          overflow: .ellipsis,
-          style: TextStyle(color: col.onSurface),
-        ),
-      ],
+    return Container(
+      padding: .symmetric(vertical: 5, horizontal: 8),
+      decoration: BoxDecoration(
+        color: col.surfaceContainer.withValues(alpha: .65),
+      ),
+      child: Text(
+        file.name,
+        maxLines: 2,
+        overflow: .ellipsis,
+        textAlign: .center,
+        style: TextStyle(color: col.onSurface, fontSize: 14, fontWeight: .w600),
+      ),
     );
   }
 }
