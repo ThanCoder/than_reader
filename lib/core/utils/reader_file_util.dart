@@ -10,10 +10,10 @@ class ReaderFileUtil {
   static Result<String, String> getConfigPath(ReaderFile file) {
     final cfName = '${file.configId}-config.cbf';
     if (Platform.isAndroid) {
-      return Ok(AppUtils.instance.getAndroidExternalConfigPath(cfName));
+      return Ok(AppUtil.instance.getAndroidExternalConfigPath(cfName));
     }
     if (Platform.isLinux) {
-      return Ok(AppUtils.instance.getCachePath(cfName));
+      return Ok(AppUtil.instance.getCachePath(cfName));
     }
     return Err('Platform only -> `linux,android`');
   }

@@ -16,7 +16,7 @@ import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_s
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
 
 Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
-  final infoDialogEnable = AppUtils.instance.config.getBool(
+  final infoDialogEnable = AppUtil.instance.config.getBool(
     appReaderInfoDialogKey,
   );
   if (infoDialogEnable) {
@@ -81,7 +81,7 @@ Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
 //     .go<AppFileReadManagerParams, AppFileReadManagerResponse>(
 //       context,
 //       appId: 'app.file.read.manager',
-//       params: .new(file, AppUtils.instance.getCachePath(file.configId)),
+//       params: .new(file, AppUtil.instance.getCachePath(file.configId)),
 //     );
 // ReaderFileRecentController.instance.addList(file.path);
 

@@ -31,10 +31,9 @@ class _GroupListStyleChooserState extends State<GroupListStyleChooser> {
           // onPressed: showStyle,
           onPressed: () {
             final next = (current.index + 1) % GroupListType.values.length;
-            CFBStore.instance.put(
-              appGropListStyleKey,
-              GroupListType.values[next].name,
-            );
+            CFBStore.instance
+                .put(appGropListStyleKey, GroupListType.values[next].name)
+                .writeAll();
           },
         );
       },

@@ -20,11 +20,11 @@ class PdfReaderSettingPage extends StatelessWidget {
             children: [
               PdfReaderPreferThemeModeChooser(),
               StreamBuilder(
-                stream: AppUtils.instance.config.stream.put.where(
+                stream: AppUtil.instance.config.stream.put.where(
                   (e) => e.key == appReaderInfoDialogKey,
                 ),
                 builder: (context, asyncSnapshot) {
-                  final enable = AppUtils.instance.config.getBool(
+                  final enable = AppUtil.instance.config.getBool(
                     appReaderInfoDialogKey,
                   );
                   return SwitchListTile.adaptive(
@@ -34,7 +34,7 @@ class PdfReaderSettingPage extends StatelessWidget {
                     subtitle: Text('Info ရှိနေရင် Dialog နဲ့ပြပေးမယ်'),
                     value: enable,
                     onChanged: (value) {
-                      AppUtils.instance.config.putAndWriteAll(
+                      AppUtil.instance.config.putAndWriteAll(
                         appReaderInfoDialogKey,
                         value,
                       );

@@ -10,10 +10,10 @@ import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 
-class AppUtils {
-  static AppUtils instance = AppUtils._();
-  AppUtils._();
-  factory AppUtils() => instance;
+class AppUtil {
+  static AppUtil instance = AppUtil._();
+  AppUtil._();
+  factory AppUtil() => instance;
 
   final recentConfig = CFBStore();
   final config = CFBStore.instance;
@@ -24,14 +24,16 @@ class AppUtils {
   late Directory _configDir;
   late Directory _androidEmulatedStorageConfigDir;
   late String packageName;
-  late String versionName;
+  late String version;
+  late String appName;
 
   Directory get cacheDir => _cacheDir;
 
   Future<void> init() async {
     final info = await PackageInfo.fromPlatform();
     packageName = info.packageName;
-    versionName = info.version;
+    version = info.version;
+    appName = info.appName.split('_').join(' ').capitalize;
 
     // linux
     if (Platform.isLinux) {
@@ -71,7 +73,7 @@ class AppUtils {
     } else {
       throw UnsupportedError('Unsupported Platform path Provider');
     }
-    await config.open(AppUtils.instance.getConfigPath('app.config.cfb'));
+    await config.open(AppUtil.instance.getConfigPath('app.config.cfb'));
   }
 
   String getCachePath([String? name]) {
@@ -123,7 +125,7 @@ class AppUtils {
         }
         return (count, size);
       } catch (e) {
-        debugPrint('[AppUtils:deleteDir]: $e');
+        debugPrint('[AppUtil:deleteDir]: $e');
         return (0, 0);
       }
     });
@@ -138,7 +140,7 @@ class AppUtils {
         }
         return true;
       } catch (e) {
-        debugPrint('[AppUtils:deleteDir]: $e');
+        debugPrint('[AppUtil:deleteDir]: $e');
         return false;
       }
     });

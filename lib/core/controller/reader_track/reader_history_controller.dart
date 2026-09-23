@@ -17,7 +17,7 @@ class ReaderHistoryController extends IController {
   @override
   Future<void> init() async {
     await _cf.open(
-      AppUtils.instance.getPlatfromExternalConfigPath(
+      AppUtil.instance.getPlatfromExternalConfigPath(
         'reader.history.config.cfb',
       ),
     );

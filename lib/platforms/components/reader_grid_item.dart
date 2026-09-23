@@ -24,32 +24,32 @@ class ReaderGridItem extends StatelessWidget {
       mouseCursor: SystemMouseCursors.click,
       borderRadius: .circular(15),
       onTap: () {
-        AppUtils.instance.recentConfig.put(
+        AppUtil.instance.recentConfig.put(
           appListClickedReaderFileRecentIdKey,
           file.configId,
         );
         onClicked(file);
       },
       onSecondaryTap: () {
-        AppUtils.instance.recentConfig.put(
+        AppUtil.instance.recentConfig.put(
           appListClickedReaderFileRecentIdKey,
           file.configId,
         );
         onRightClicked?.call(file);
       },
       onLongPress: () {
-        AppUtils.instance.recentConfig.put(
+        AppUtil.instance.recentConfig.put(
           appListClickedReaderFileRecentIdKey,
           file.configId,
         );
         onRightClicked?.call(file);
       },
       child: StreamBuilder(
-        stream: AppUtils.instance.recentConfig.stream.put.where(
+        stream: AppUtil.instance.recentConfig.stream.put.where(
           (e) => e.key == appListClickedReaderFileRecentIdKey,
         ),
         builder: (context, asyncSnapshot) {
-          final lastId = AppUtils.instance.recentConfig.getString(
+          final lastId = AppUtil.instance.recentConfig.getString(
             appListClickedReaderFileRecentIdKey,
           );
           return Container(

@@ -29,7 +29,7 @@ class _AppVersionViewState extends State<AppVersionView> {
         child: Icon(Icons.info_outline, color: col.onSurface),
       ),
       title: Text(
-        'Version: ${AppUtils.instance.versionName}',
+        'Version: ${AppUtil.instance.version}',
         style: TextStyle(color: col.onSurface),
       ),
       subtitle: Text('Check for updates and view release notes'),

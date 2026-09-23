@@ -59,7 +59,7 @@ class _InfoMenuState extends State<InfoMenu> {
             InkWell(
               mouseCursor: SystemMouseCursors.click,
               onTap: () async {
-                await AppUtils.instance.copyText(widget.file.name);
+                await AppUtil.instance.copyText(widget.file.name);
               },
               child: _menuTile(
                 "Name",
@@ -85,7 +85,7 @@ class _InfoMenuState extends State<InfoMenu> {
             InkWell(
               mouseCursor: SystemMouseCursors.click,
               onTap: () async {
-                await AppUtils.instance.copyText(widget.file.configId);
+                await AppUtil.instance.copyText(widget.file.configId);
               },
               child: _menuTile(
                 "Key",

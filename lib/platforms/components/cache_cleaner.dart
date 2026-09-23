@@ -49,7 +49,7 @@ class _CacheCleanerState extends State<CacheCleaner>
       setState(() {
         isScanning = true;
       });
-      final cacheDir = AppUtils.instance.cacheDir;
+      final cacheDir = AppUtil.instance.cacheDir;
 
       await for (var file in cacheDir.list()) {
         count++;
@@ -87,9 +87,9 @@ class _CacheCleanerState extends State<CacheCleaner>
       setState(() {
         isCleaning = true;
       });
-      await AppUtils.instance.deleteFolder(AppUtils.instance.cacheDir);
-      if (!AppUtils.instance.cacheDir.existsSync()) {
-        await AppUtils.instance.cacheDir.create(recursive: true);
+      await AppUtil.instance.deleteFolder(AppUtil.instance.cacheDir);
+      if (!AppUtil.instance.cacheDir.existsSync()) {
+        await AppUtil.instance.cacheDir.create(recursive: true);
       }
 
       await Future.delayed(Duration(seconds: 1));

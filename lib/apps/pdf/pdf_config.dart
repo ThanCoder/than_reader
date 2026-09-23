@@ -48,7 +48,7 @@ class PdfConfig {
       readerThemeMode: PdfReaderPreferThemeModeChooser.currentNotifier.value,
       orientation: .portrait,
       bookmark: [],
-      preloadPageCount: 1,
+      preloadPageCount: 2,
       renderImageType: .jpg,
     );
   }

@@ -4,6 +4,7 @@ import 'package:than_reader/apps/pdf/pdf_reader_setting_page.dart';
 import 'package:than_reader/platforms/components/app_seeds_color_chooser.dart';
 import 'package:than_reader/platforms/components/app_version_view.dart';
 import 'package:than_reader/platforms/components/cache_cleaner.dart';
+import 'package:than_reader/platforms/pages/app_about_dialog.dart';
 import 'package:than_reader/platforms/pages/dev_pages/dev_route_tile.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
@@ -68,6 +69,9 @@ class MorePage extends StatelessWidget {
                 },
               ),
               DevRouteTile(),
+              AppAboutDialogListTile(
+                appDesc: 'Document Reader App.\nSupported `Pdf`.',
+              ),
               SizedBox(height: 50),
             ],
           ),

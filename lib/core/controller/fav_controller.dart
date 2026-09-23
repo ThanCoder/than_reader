@@ -15,7 +15,7 @@ class FavController extends IController {
   @override
   Future<void> init() async {
     await cf.open(
-      AppUtils.instance.getPlatfromExternalConfigPath('fav.config.cfb'),
+      AppUtil.instance.getPlatfromExternalConfigPath('fav.config.cfb'),
     );
     _allC.events.whereType<AllFileControllerLoaded>().listen((event) async {
       await cf.reload();

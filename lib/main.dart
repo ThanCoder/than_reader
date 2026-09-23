@@ -14,15 +14,13 @@ import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_s
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await AppUtils.instance.init();
+  await AppUtil.instance.init();
 
   // recent
-  await CFBStore.instance.open(AppUtils.instance.getConfigPath('app.cf.json'));
+  await CFBStore.instance.open(AppUtil.instance.getConfigPath('app.cf.json'));
 
   await ReaderInfoStore.instance.init(
-    AppUtils.instance.getPlatfromExternalConfigPath(
-      'reader-file-info-store.du',
-    ),
+    AppUtil.instance.getPlatfromExternalConfigPath('reader-file-info-store.du'),
   );
 
   ControllerManager.register(AllFileController());
@@ -32,7 +30,7 @@ void main() async {
   await ControllerManager.initAll();
   // reader
   await PdfReader.cf.open(
-    AppUtils.instance.getConfigPath('pdf.reader.config.cfb'),
+    AppUtil.instance.getConfigPath('pdf.reader.config.cfb'),
   );
   PdfReaderPreferThemeModeChooser.init();
 
