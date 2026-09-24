@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
@@ -13,6 +14,8 @@ import 'package:than_reader/apps/pdf/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
+
+import 'pdf_scrollbar_toggler_btn.dart';
 
 class PdfReader extends StatefulWidget {
   const PdfReader({super.key, required this.file, required this.config});
@@ -31,6 +34,8 @@ class PdfReader extends StatefulWidget {
   static const String zoomLableEnableKey = 'zoomLableEnableKey';
   static const String scrollbarEnableKey = 'scrollbarEnableKey';
   static const String cacheLableEnableKey = 'cacheLableEnableKey';
+  static const String maxCountKey = 'maxCountKey';
+  static const String maxSizeBytesKey = 'maxSizeBytesKey';
 
   static bool isEnable(String key) {
     return cf.getBool(key, true);
@@ -44,6 +49,10 @@ class PdfReader extends StatefulWidget {
 class _PdfReaderState extends State<PdfReader> {
   late final TPdfController controller;
   late PdfConfig config;
+  StreamSubscription? readerAttachSub;
+  StreamSubscription? pdfStreamSub;
+  StreamSubscription? configStreamSub;
+  final cf = PdfReader.cf;
 
   @override
   void initState() {
@@ -87,26 +96,33 @@ class _PdfReaderState extends State<PdfReader> {
       ),
     );
     super.initState();
-    controller.attached.listen((_) {
-      controller.stream.ready.listen((_) {
+    readerAttachSub = controller.attached.listen((_) {
+      changedConfig();
+
+      pdfStreamSub = controller.stream.ready.listen((_) {
         init();
-        changedConfig();
       });
+    });
+    configStreamSub = cf.stream.put.listen((event) {
+      if (event.key == PdfReader.maxCountKey) {
+        final maxCount = cf.getInt(PdfReader.maxCountKey, 200);
+        controller.action.setPageImageCache(maxCount: maxCount);
+      }
+      if (event.key == PdfReader.maxSizeBytesKey) {
+        final maxSizeBytes = cf.getInt(
+          PdfReader.maxSizeBytesKey,
+          10 * 1024 * 1024,
+        );
+        controller.action.setPageImageCache(maxSizeBytes: maxSizeBytes);
+      }
     });
   }
 
   @override
   void dispose() {
-    if (Platform.isAndroid) {
-      ThanPkgAndroid.getInstance.orientationHandler.setOrientation(
-        .SCREEN_ORIENTATION_PORTRAIT,
-      );
-      ThanPkgAndroid.getInstance.osHandler.keepScreenOn(false);
-      ThanPkgAndroid.getInstance.flutterUtils.toggleFullscreen(false);
-    }
-    if (Platform.isLinux) {
-      ThanPkgLinux.getInstance.window.setFullscreen(false);
-    }
+    readerAttachSub?.cancel();
+    pdfStreamSub?.cancel();
+    configStreamSub?.cancel();
     super.dispose();
   }
 
@@ -128,6 +144,7 @@ class _PdfReaderState extends State<PdfReader> {
 
   bool isReady = false;
   void init() {
+    // controller.action.setPageImageCache();
     if (config.zoom != 1) {
       controller.action.setZoom(config.zoom);
     } else {
@@ -180,7 +197,7 @@ class _PdfReaderState extends State<PdfReader> {
     return currentTheme == .dark() ? true : false;
   }
 
-  void saveConfig() {
+  void saveConfig() async {
     final state = controller.state;
     final newCof = config.copyWith(
       page: state.page,
@@ -191,7 +208,19 @@ class _PdfReaderState extends State<PdfReader> {
       preloadPageCount: state.preloadPageCount,
       renderImageType: state.renderImageType,
     );
-    PdfReader.cf.writeAll();
+    await PdfReader.cf.writeAll();
+
+    if (Platform.isAndroid) {
+      ThanPkgAndroid.getInstance.orientationHandler.setOrientation(
+        .SCREEN_ORIENTATION_PORTRAIT,
+      );
+      ThanPkgAndroid.getInstance.osHandler.keepScreenOn(false);
+      ThanPkgAndroid.getInstance.flutterUtils.toggleFullscreen(false);
+    }
+    if (Platform.isLinux) {
+      ThanPkgLinux.getInstance.window.setFullscreen(false);
+    }
+    if (!mounted) return;
     Navigator.pop<PdfConfig>(context, newCof);
   }
 
@@ -295,7 +324,7 @@ class _PdfReaderState extends State<PdfReader> {
 
   Widget _header(ColorScheme col) {
     return StreamBuilder(
-      stream: PdfReader.cf.stream.put,
+      stream: cf.stream.put,
       builder: (context, asyncSnapshot) {
         return SingleChildScrollView(
           scrollDirection: .horizontal,
@@ -360,7 +389,14 @@ class _PdfReaderState extends State<PdfReader> {
                 if (PdfReader.isEnable(PdfReader.zoomLableEnableKey))
                   PdfZoomListener(controller: controller),
                 if (PdfReader.isEnable(PdfReader.scrollbarEnableKey))
-                  PdfScrollbarToggler(controller: controller),
+                  PdfScrollbarTogglerBtn(
+                    controller: controller,
+                    onClicked: () {
+                      config = config.copyWith(
+                        scrollbarEnable: !config.scrollbarEnable,
+                      );
+                    },
+                  ),
                 if (PdfReader.isEnable(PdfReader.cacheLableEnableKey))
                   PdfCacheImageListener(controller: controller),
 

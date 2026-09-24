@@ -1,5 +1,6 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:flutter/material.dart';
+import 'package:than_reader/apps/pdf/config_widget/pdf_image_cache_config_widget.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
@@ -22,6 +23,10 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
     config = widget.config;
     super.initState();
   }
+
+  final readerModes = ReaderThemeMode.values
+      .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+      .toList();
 
   ColorScheme get col => Theme.of(context).colorScheme;
 
@@ -46,10 +51,34 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
             // android only
             _androidOnly(),
 
-            Divider(),
+            readerParamsConfig,
+
             _allReaderConfig(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget get readerParamsConfig {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          PdfImageCacheConfigWidget(
+            maxCount: cf.getInt(PdfReader.maxCountKey, 200),
+            maxSizeBytes: cf.getInt(
+              PdfReader.maxSizeBytesKey,
+              10 * 1024 * 1024,
+            ),
+            onMaxCountChanged: (val) {
+              cf.putAndWriteAll(PdfReader.maxCountKey, val);
+            },
+            onMaxSizeBytesChanged: (val) {
+              cf.putAndWriteAll(PdfReader.maxSizeBytesKey, val);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -116,10 +145,6 @@ class _PdfConfigMenuState extends State<PdfConfigMenu> {
       ),
     );
   }
-
-  final readerModes = ReaderThemeMode.values
-      .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
-      .toList();
 
   ListTile _readerThemeMode() => ListTile(
     tileColor: col.surfaceContainer,
