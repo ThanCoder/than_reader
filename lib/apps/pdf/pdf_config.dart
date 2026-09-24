@@ -3,9 +3,11 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
 
 import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
-import 'package:than_reader/apps/pdf/pdf_reader_prefer_theme_mode_chooser.dart';
+import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
+import 'package:than_reader/const_keys.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
 
 class PdfConfig {
   const PdfConfig({
@@ -44,7 +46,10 @@ class PdfConfig {
       offsetX: 0,
       isFullscreen: false,
       isKeepScreen: false,
-      scrollbarEnable: true,
+      scrollbarEnable: AppUtil.instance.config.getBool(
+        pdfReaderPreferScrollbarEnableKey,
+        true,
+      ),
       readerThemeMode: PdfReaderPreferThemeModeChooser.currentNotifier.value,
       orientation: .portrait,
       bookmark: [],
@@ -77,8 +82,14 @@ class PdfConfig {
       zoom: map['zoom'] as double,
       offsetX: map['offsetX'] as double,
       isFullscreen: map['isFullscreen'] as bool,
-      isKeepScreen: map['isKeepScreen'] as bool,
-      scrollbarEnable: map['scrollbarEnable'] as bool,
+      isKeepScreen: map.getBool(['isKeepScreen']),
+      scrollbarEnable: map.getBool(
+        ['scrollbarEnable'],
+        def: AppUtil.instance.config.getBool(
+          pdfReaderPreferScrollbarEnableKey,
+          true,
+        ),
+      ),
       orientation: ScreenOrientation.fromValue(map.getString(['orientation'])),
       readerThemeMode: ReaderThemeMode.fromValue(
         map.getString(['readerThemeMode']),

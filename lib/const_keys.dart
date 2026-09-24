@@ -6,3 +6,4 @@ const String appGropListStyleKey = 'appGropListStyleKey';
 const String appListClickedReaderFileRecentIdKey =
     'appListClickedReaderFileRecentIdKey';
 const String appReaderInfoDialogKey = 'appReaderInfoDialogKey';
+const String pdfReaderPreferScrollbarEnableKey = 'pdfReaderPreferScrollbarEnableKey';

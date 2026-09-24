@@ -8,14 +8,14 @@ import 'package:t_pdf_reader/t_pdf_reader.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
-import 'package:than_reader/apps/pdf/pdf_config_menu.dart';
+import 'package:than_reader/apps/pdf/config_widget/pdf_config_menu.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
-import 'package:than_reader/apps/pdf/preload_page_view.dart';
+import 'package:than_reader/apps/pdf/config_widget/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 
-import 'pdf_scrollbar_toggler_btn.dart';
+import 'config_widget/pdf_scrollbar_toggler_btn.dart';
 
 class PdfReader extends StatefulWidget {
   const PdfReader({super.key, required this.file, required this.config});
