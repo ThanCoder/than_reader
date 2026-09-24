@@ -45,10 +45,10 @@ class _ShareDownloaderDialogState extends State<ShareDownloaderDialog> {
     final res = await client.downloadProgress(
       url,
       widget.outPath,
-      onProgress: (progress) {
+      onProgress: (total, loaded) {
         if (!mounted) return;
         setState(() {
-          this.progress = progress;
+          progress = (loaded / total);
         });
       },
     );

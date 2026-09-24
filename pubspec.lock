@@ -124,11 +124,10 @@ packages:
   dart_core_extensions:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: bfebb5386a0b1ab5a50e30b2b86dfa4a33f763c5
-      url: "https://github.com/ThanCoder/dart_core_extensions.git"
-    source: git
+      name: dart_core_extensions
+      sha256: b3dabdb748bfa9facb90d503df72e9e35ce318d8dff91c3ae355c704180b524d
+      url: "https://pub.dev"
+    source: hosted
     version: "0.6.0"
   desktop_drop:
     dependency: "direct main"
@@ -548,19 +547,17 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bd45db18cb9bc2b18d69a02594186a84227a3159
+      resolved-ref: "6c144036a8abc514520e16f3c7caafe51a5b5ba3"
       url: "https://github.com/ThanCoder/t_client"
     source: git
     version: "0.3.0"
   t_pdf_reader:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b08f32deda854422d1dabbd904a68cf4eba55129
-      url: "https://github.com/ThanCoder/t_pdf_reader.git"
-    source: git
-    version: "1.2.0"
+      path: "/home/thancoder/projects/dart_plugins/t_pdf_reader"
+      relative: false
+    source: path
+    version: "1.4.0"
   t_server:
     dependency: "direct main"
     description:

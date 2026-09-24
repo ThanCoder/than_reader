@@ -7,3 +7,4 @@ const String appListClickedReaderFileRecentIdKey =
     'appListClickedReaderFileRecentIdKey';
 const String appReaderInfoDialogKey = 'appReaderInfoDialogKey';
 const String pdfReaderPreferScrollbarEnableKey = 'pdfReaderPreferScrollbarEnableKey';
+const String pdfReaderPreferPageImageRenderThreadTypeKey = 'pdfReaderPreferPageImageRenderThreadTypeKey';

@@ -9,6 +9,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_config_menu.dart';
+import 'package:than_reader/apps/pdf/config_widget/pdf_reader_perfer_render_thread.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
 import 'package:than_reader/apps/pdf/config_widget/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
@@ -58,6 +59,7 @@ class _PdfReaderState extends State<PdfReader> {
   void initState() {
     config = widget.config;
     controller = TPdfController(
+      pageImageWorkerType: PdfReaderPerferRenderThread.currentThread,
       widgetBuilder: TPdfWidgetBuilder(
         footerBuilder: (context, pageOffset) => Container(
           width: pageOffset.width,
@@ -123,6 +125,7 @@ class _PdfReaderState extends State<PdfReader> {
     readerAttachSub?.cancel();
     pdfStreamSub?.cancel();
     configStreamSub?.cancel();
+    controller.dispose();
     super.dispose();
   }
 
@@ -403,6 +406,7 @@ class _PdfReaderState extends State<PdfReader> {
                 PdfRenderImageTypeView(controller: controller),
                 PreloadPageView(controller: controller),
                 PdfVisiableCachedPageView(controller: controller),
+                PdfThreadLabelView(controller: controller),
               ],
             ),
           ),

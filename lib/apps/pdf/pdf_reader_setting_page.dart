@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:than_reader/apps/pdf/config_widget/pdf_reader_perfer_render_thread.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
@@ -25,6 +26,7 @@ class _PdfReaderSettingPageState extends State<PdfReaderSettingPage> {
               PdfReaderPreferThemeModeChooser(),
               _infoDialogMenu,
               _preferReaderScrollbarEnable,
+              PdfReaderPerferRenderThread(),
             ],
           ),
         ),

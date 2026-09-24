@@ -8,6 +8,17 @@ class PlatformAppSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (TPlatform.isDesktop) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 500;
+          if (isMobile) {
+            return MobileHome();
+          }
+          return DesktopHome();
+        },
+      );
+    }
     // final isMobile = constraints.maxWidth < 600;
     final isMobile = TPlatform.isMobile;
     if (isMobile) {
