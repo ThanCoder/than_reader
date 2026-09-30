@@ -13,7 +13,7 @@ class ReaderInfoStore {
   DuBox<ReaderInfo> get infoBox => store.getBox<ReaderInfo>();
 
   Future<bool> infoExistsByid(String configId) async {
-    final infoRes = await infoBox.getOne(
+    final infoRes = await infoBox.findOne(
       (val) => val.configIds.contains(configId),
     );
     return infoRes.isOk;

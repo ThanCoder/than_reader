@@ -44,8 +44,8 @@ class _PdfReaderSettingPageState extends State<PdfReaderSettingPage> {
         return SwitchListTile.adaptive(
           tileColor: col.surfaceContainer,
           shape: RoundedRectangleBorder(borderRadius: .circular(15)),
-          title: Text('Show Info in Dialog'),
-          subtitle: Text('Show info in a dialog when available.'),
+          title: Text('Show Info in Page'),
+          subtitle: Text('Show info in a Page when available.'),
           value: enable,
           onChanged: (value) {
             AppUtil.instance.config.putAndWriteAll(

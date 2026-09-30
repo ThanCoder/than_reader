@@ -125,7 +125,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
       crossAxisAlignment: .start,
       children: [
         SizedBox(height: 10),
-        _bookIdWidget,
+
         InputText(controller: titleCon, maxLines: 1, label: Text('Title')),
         InputText(controller: authorCon, maxLines: 1, label: Text('Author')),
         InputText(
@@ -138,11 +138,11 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
           maxLines: 1,
           label: Text('Cover Url'),
         ),
-        InputText(controller: descCon, label: Text('Description')),
-
+        _bookIdWidget,
         _urlWidget,
         _genresWidget,
         _tagsWidget,
+        InputText(controller: descCon, label: Text('Description')),
         SizedBox(height: 50),
       ],
     );

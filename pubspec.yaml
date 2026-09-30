@@ -25,6 +25,7 @@ dependencies:
   than_pkg_android: ^0.6.1
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
+  dart_core_extensions: ^0.7.0
 
   t_widgets:
     git: https://github.com/ThanCoder/t_widgets.git
@@ -38,7 +39,6 @@ dependencies:
   t_client:
     git: https://github.com/ThanCoder/t_client
   url_launcher: ^6.3.2
-  dart_core_extensions: ^0.6.0
   # Latest Git commit သေချာယူချင်ရင်—
 
   # flutter pub upgrade --unlock-transitive

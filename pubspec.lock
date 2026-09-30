@@ -125,10 +125,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_core_extensions
-      sha256: b3dabdb748bfa9facb90d503df72e9e35ce318d8dff91c3ae355c704180b524d
+      sha256: d27e9be6d91fa69e67ab423a68c17805f7639bf3ec7d760a04e7144ba6b3a87d
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -142,7 +142,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "4033c957d2e5be49bc86707cbaab6d77e73fa0ec"
+      resolved-ref: eb933c991f265831f0d3a0f9fa7be0502d00fcc0
       url: "https://github.com/ThanCoder/dual_store.git"
     source: git
     version: "0.1.0"

@@ -9,30 +9,26 @@ import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/core/models/reader_history.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/reader_file_util.dart';
-import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
 
-Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
-  final infoDialogEnable = AppUtil.instance.config.getBool(
-    appReaderInfoDialogKey,
-  );
-  if (infoDialogEnable) {
-    final box = ReaderInfoStore.instance.infoBox;
-    final infoRes = await box.getOne(
-      (val) => val.configIds.contains(file.configId),
+Future<void> goReaderModuleApp(
+  BuildContext context,
+  ReaderFile file, {
+  bool canGoInfoPage = true,
+}) async {
+  if (canGoInfoPage) {
+    final infoDialogEnable = AppUtil.instance.config.getBool(
+      appReaderInfoDialogKey,
     );
-    if (infoRes.isOk) {
-      if (!context.mounted) return;
-      final conf = await showConfirmDialog(
-        context,
-        'Want To Read Info',
-        confirmText: 'Read Info',
-        closeText: 'Read Reader',
+    if (infoDialogEnable) {
+      final box = ReaderInfoStore.instance.infoBox;
+      final infoRes = await box.findOne(
+        (val) => val.configIds.contains(file.configId),
       );
-      if (conf) {
+      if (infoRes.isOk) {
         if (!context.mounted) return;
         context.pushMaterialPageRoute(
           builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes.unwrap()),
@@ -41,7 +37,6 @@ Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
       }
     }
   }
-
   final configRes = await ReaderFileUtil.getPdfConfig(file);
   if (!context.mounted) return;
 
@@ -77,17 +72,9 @@ Future<void> goReaderModuleApp(BuildContext context, ReaderFile file) async {
   // print('Dev: read time: ${stopWatch.elapsed}');
 }
 
-// await ModuleApps.instance
-//     .go<AppFileReadManagerParams, AppFileReadManagerResponse>(
-//       context,
-//       appId: 'app.file.read.manager',
-//       params: .new(file, AppUtil.instance.getCachePath(file.configId)),
-//     );
-// ReaderFileRecentController.instance.addList(file.path);
-
 Future<void> goInfoDescPage(BuildContext context, ReaderFile file) async {
   final box = ReaderInfoStore.instance.infoBox;
-  final infoRes = await box.getOne(
+  final infoRes = await box.findOne(
     (val) => val.configIds.contains(file.configId),
   );
   if (infoRes.isErr) return;

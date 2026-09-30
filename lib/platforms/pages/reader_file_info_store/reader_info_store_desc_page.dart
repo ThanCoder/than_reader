@@ -1,6 +1,11 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
+import 'package:than_reader/core/controller/i_controller.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/router.dart';
 
 class ReaderInfoStoreDescPage extends StatefulWidget {
   const new({super.key, required this.info});
@@ -12,20 +17,52 @@ class ReaderInfoStoreDescPage extends StatefulWidget {
 }
 
 class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
+  List<ReaderFile> list = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    final ids = widget.info.configIds;
+    if (ids.isNotEmpty) {
+      final books = <String, ReaderFile>{};
+      for (var f in allCon.list) {
+        books[f.configId] = f;
+      }
+      for (var id in ids) {
+        final f = books[id];
+        if (f == null) continue;
+        list.add(f);
+      }
+      if (!mounted) return;
+      setState(() {});
+    }
+  }
+
+  final allCon = ControllerManager.read<AllFileController>();
   ColorScheme get col => Theme.of(context).colorScheme;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.info.title)),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [infoWidget, Divider(), descWidget],
+      appBar: AppBar(title: Text('Info')),
+      body: CustomScrollView(
+        slivers: [
+          SliverList.list(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [infoWidget, Divider(), descWidget],
+                ),
+              ),
+            ],
           ),
-        ),
+          // book list
+          _bookListWidget,
+          SliverToBoxAdapter(child: SizedBox(height: 50)),
+        ],
       ),
     );
   }
@@ -73,7 +110,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           ],
         ),
 
-        _wrapperWidget('Config Id', list: widget.info.configIds),
+        // _wrapperWidget('Config Id', list: widget.info.configIds),
         _wrapperWidget('Genres', list: widget.info.genres),
         _wrapperWidget('Tags', list: widget.info.tags),
         _wrapperWidget('Urls', list: widget.info.urls),
@@ -127,6 +164,24 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
             children: list.map((e) => _wrapItem(e)).toList(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget get _bookListWidget {
+    return SliverPadding(
+      padding: .symmetric(vertical: 10, horizontal: 15),
+      sliver: SliverList.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          final item = list[index];
+          return ReaderListItem(
+            file: item,
+            onClicked: (file) {
+              goReaderModuleApp(context, file, canGoInfoPage: false);
+            },
+          );
+        },
       ),
     );
   }

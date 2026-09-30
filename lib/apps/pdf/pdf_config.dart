@@ -98,7 +98,9 @@ class PdfConfig {
           .getMapList(['bookmark'])
           .map((e) => PdfConfigBookmark.fromMap(e))
           .toList(),
-      preloadPageCount: map.getInt(['preloadPageCount'], def: 1),
+      preloadPageCount: map.getInt([
+        'preloadPageCount',
+      ], def: pdfReaderPreloadPageCount),
       renderImageType: .fromValue(map.getString(['renderImageType'])),
     );
   }
