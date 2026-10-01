@@ -22,6 +22,7 @@ class ReaderInfoAdapter extends IDuJsonMetaAdapter<ReaderInfo> {
 class ReaderInfo extends IDuModel {
   final String title;
   final String author;
+  final String mc;
   final String translator;
   final String coverUrl;
   final List<String> configIds;
@@ -41,17 +42,20 @@ class ReaderInfo extends IDuModel {
     required this.coverUrl,
     required this.type,
     required this.date,
+    required this.mc,
   });
   factory ReaderInfo.empty({
     String? title,
     String? author,
     String? translator,
+    String? mc,
     List<String>? configIds,
   }) {
     return .new(
       title: title ?? 'Untitled',
       author: author ?? 'Unknown',
       translator: translator ?? 'Unknown',
+      mc: mc ?? 'Unknown',
       configIds: configIds ?? [],
       urls: [],
       genres: [],
@@ -74,6 +78,7 @@ class ReaderInfo extends IDuModel {
       'coverUrl': coverUrl,
       'type': type.name,
       'date': date.millisecondsSinceEpoch,
+      'mc': mc,
     };
   }
 
@@ -89,12 +94,14 @@ class ReaderInfo extends IDuModel {
       coverUrl: map.getString(['coverUrl']),
       type: .fromValue(map.getString(['type'])),
       date: .fromMillisecondsSinceEpoch(map.getInt(['date'])),
+      mc: map.getString(['mc']),
     );
   }
 
   ReaderInfo copyWith({
     String? title,
     String? author,
+    String? mc,
     String? translator,
     String? coverUrl,
     List<String>? configIds,
@@ -107,6 +114,7 @@ class ReaderInfo extends IDuModel {
     return ReaderInfo(
       title: title ?? this.title,
       author: author ?? this.author,
+      mc: mc ?? this.mc,
       translator: translator ?? this.translator,
       coverUrl: coverUrl ?? this.coverUrl,
       configIds: configIds ?? this.configIds,

@@ -141,7 +141,7 @@ class _PromptAlertDialogState extends State<PromptAlertDialog> {
       },
       onSubmitted: (value) {
         if (errorText != null) return;
-        Navigator.pop<String>(context, con.text);
+        Navigator.pop<String>(context, con.text.trim());
       },
     );
   }

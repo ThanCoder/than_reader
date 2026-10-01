@@ -11,7 +11,7 @@ import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_s
 class ReaderInfoStorePage extends StatefulWidget {
   const new({super.key, this.bookTitle, this.bookConfigIds});
   final String? bookTitle;
-  final List<String>? bookConfigIds;
+  final String? bookConfigIds;
 
   @override
   State<ReaderInfoStorePage> createState() => _ReaderInfoStorePageState();
@@ -28,7 +28,7 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
           builder: (mainCtx) => ReaderInfoStoreFormPage(
             info: .empty(
               title: widget.bookTitle,
-              configIds: widget.bookConfigIds,
+              configIds: [?widget.bookConfigIds],
             ),
             desc: '',
           ),
@@ -59,17 +59,13 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
       desc = descRes.unwrap();
     }
     if (!mounted) return;
-    final bookConfigIds = widget.bookConfigIds;
-    if (bookConfigIds != null && bookConfigIds.isNotEmpty) {
-      for (var id in bookConfigIds) {
-        if (info.configIds.any((e) => e != id)) {
-          info.configIds.add(id);
-        }
-      }
-    }
     final res = await context
         .pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
-          builder: (mainCtx) => ReaderInfoStoreFormPage(info: info, desc: desc),
+          builder: (mainCtx) => ReaderInfoStoreFormPage(
+            info: info,
+            desc: desc,
+            newConfigId: widget.bookConfigIds,
+          ),
         );
     if (res == null) return;
 
@@ -90,6 +86,7 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
             padding: .symmetric(vertical: 10, horizontal: 12),
             sliver: _body(),
           ),
+          SliverToBoxAdapter(child: SizedBox(height: 70)),
         ],
       ),
       floatingActionButton: FloatingActionButton(

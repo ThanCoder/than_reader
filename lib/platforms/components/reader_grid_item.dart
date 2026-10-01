@@ -5,6 +5,7 @@ import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_book_id_view.dart';
 
 class ReaderGridItem extends StatelessWidget {
   const ReaderGridItem({
@@ -65,6 +66,11 @@ class ReaderGridItem extends StatelessWidget {
                 Positioned.fill(child: ReaderCoverFile(file: file)),
                 Positioned(left: 0, top: 0, child: FavLabel(file: file)),
                 Positioned(right: 0, top: 0, child: ReaderTypeIcon(file: file)),
+                Positioned(
+                  right: 30,
+                  top: 0,
+                  child: ReaderInfoStoreBookIdView(book: file),
+                ),
                 Positioned(left: 0, right: 0, bottom: 0, child: _content(col)),
               ],
             ),

@@ -6,6 +6,7 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 import 'package:than_reader/router.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ReaderInfoStoreDescPage extends StatefulWidget {
   const new({super.key, required this.info});
@@ -113,30 +114,40 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
         // _wrapperWidget('Config Id', list: widget.info.configIds),
         _wrapperWidget('Genres', list: widget.info.genres),
         _wrapperWidget('Tags', list: widget.info.tags),
-        _wrapperWidget('Urls', list: widget.info.urls),
+        _wrapperWidget(
+          'Urls',
+          list: widget.info.urls,
+          onTap: (item) {
+            launchUrlString(item);
+          },
+        ),
       ],
     );
   }
 
-  Widget _wrapItem(String text) {
+  Widget _wrapItem(String text, {bool isSelectable = true}) {
+    final sty = TextStyle(
+      fontSize: 14,
+      fontWeight: .w400,
+      color: col.onSecondary,
+    );
     return Container(
       padding: .symmetric(vertical: 5, horizontal: 8),
       decoration: BoxDecoration(
         color: col.secondary,
         borderRadius: .circular(15),
       ),
-      child: SelectableText(
-        text,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: .w400,
-          color: col.onSecondary,
-        ),
-      ),
+      child: isSelectable
+          ? SelectableText(text, style: sty)
+          : Text(text, style: sty),
     );
   }
 
-  Widget _wrapperWidget(String title, {required List<String> list}) {
+  Widget _wrapperWidget(
+    String title, {
+    required List<String> list,
+    void Function(String item)? onTap,
+  }) {
     if (list.isEmpty) {
       return SizedBox.shrink();
     }
@@ -161,7 +172,14 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: list.map((e) => _wrapItem(e)).toList(),
+            children: list
+                .map(
+                  (e) => GestureDetector(
+                    onTap: () => onTap?.call(e),
+                    child: _wrapItem(e, isSelectable: false),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),

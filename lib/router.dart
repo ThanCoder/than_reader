@@ -87,10 +87,8 @@ Future<void> goInfoDescPage(BuildContext context, ReaderFile file) async {
 Future<void> goInfoFormPage(BuildContext context, ReaderFile file) async {
   // if (!context.mounted) return;
   await context.pushMaterialPageRoute(
-    builder: (mainCtx) => ReaderInfoStorePage(
-      bookTitle: file.name,
-      bookConfigIds: [file.configId],
-    ),
+    builder: (mainCtx) =>
+        ReaderInfoStorePage(bookTitle: file.name, bookConfigIds: file.configId),
   );
   // final res = await context.pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
   //   builder: (mainCtx) => ReaderInfoStoreFormPage(info: info, desc: desc),

@@ -14,9 +14,15 @@ class ReaderInfoStoreFormPageData {
 }
 
 class ReaderInfoStoreFormPage extends StatefulWidget {
-  const new({super.key, required this.info, required this.desc});
+  const new({
+    super.key,
+    required this.info,
+    required this.desc,
+    this.newConfigId,
+  });
   final ReaderInfo info;
   final String desc;
+  final String? newConfigId;
 
   @override
   State<ReaderInfoStoreFormPage> createState() =>
@@ -28,7 +34,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
   void initState() {
     info = widget.info;
     super.initState();
-    init();
+    WidgetsBinding.instance.addPostFrameCallback((_) => init());
   }
 
   late ReaderInfo info;
@@ -38,6 +44,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
   final translatorCon = TextEditingController();
   final coverUrlCon = TextEditingController();
   final descCon = TextEditingController();
+  final mcCon = TextEditingController();
 
   @override
   void dispose() {
@@ -46,15 +53,33 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
     translatorCon.dispose();
     coverUrlCon.dispose();
     descCon.dispose();
+    mcCon.dispose();
     super.dispose();
   }
 
-  void init() {
-    titleCon.text = widget.info.title;
-    authorCon.text = widget.info.author;
-    translatorCon.text = widget.info.translator;
-    coverUrlCon.text = widget.info.coverUrl;
+  void init() async {
+    titleCon.text = info.title;
+    authorCon.text = info.author;
+    translatorCon.text = info.translator;
+    coverUrlCon.text = info.coverUrl;
     descCon.text = widget.desc;
+    mcCon.text = info.mc;
+
+    final newConfigId = widget.newConfigId;
+    if (newConfigId != null) {
+      if (!info.configIds.contains(newConfigId)) {
+        final conf = await showConfirmDialog(
+          context,
+          'book id အသစ်သွင်းချင်ပါသလား?',
+          confirmText: 'Yes',
+          closeText: 'No',
+        );
+        if (!mounted) return;
+        if (!conf) return;
+        info.configIds.add(newConfigId);
+        setState(() {});
+      }
+    }
   }
 
   void saveConfirm() async {
@@ -128,6 +153,11 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
 
         InputText(controller: titleCon, maxLines: 1, label: Text('Title')),
         InputText(controller: authorCon, maxLines: 1, label: Text('Author')),
+        InputText(
+          controller: mcCon,
+          maxLines: 1,
+          label: Text('Main Charactor'),
+        ),
         InputText(
           controller: translatorCon,
           maxLines: 1,
