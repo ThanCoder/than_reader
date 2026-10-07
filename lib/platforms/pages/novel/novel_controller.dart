@@ -12,12 +12,17 @@ class NovelController extends IController {
   Future<void> init() async {}
 
   Future<void> fetchList() async {
-    isLoading = true;
-    addEvent(NovelControllerStateChanged());
+    try {
+      isLoading = true;
+      addEvent(NovelControllerStateChanged());
 
-    list = await NovelFileScanner.scanAll();
+      list = await NovelFileScanner.scanAll();
 
-    isLoading = false;
-    addEvent(NovelControllerStateChanged());
+      isLoading = false;
+      addEvent(NovelControllerStateChanged());
+    } catch (e) {
+      isLoading = false;
+      addEvent(NovelControllerStateChanged());
+    }
   }
 }
