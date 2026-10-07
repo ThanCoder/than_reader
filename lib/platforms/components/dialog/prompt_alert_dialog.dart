@@ -68,6 +68,9 @@ class _PromptAlertDialogState extends State<PromptAlertDialog> {
     con.text = widget.promptText;
     focusNode.requestFocus();
     super.initState();
+    if (widget.onErrorCheck != null) {
+      onChanged(con.text);
+    }
   }
 
   @override
@@ -75,6 +78,20 @@ class _PromptAlertDialogState extends State<PromptAlertDialog> {
     con.dispose();
     focusNode.dispose();
     super.dispose();
+  }
+
+  void onChanged(String val) {
+    final res = widget.onErrorCheck?.call(val);
+    if (res != null) {
+      errorText = res;
+      setState(() {});
+      return;
+    }
+    if (errorText != null) {
+      setState(() {
+        errorText = null;
+      });
+    }
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
@@ -126,19 +143,7 @@ class _PromptAlertDialogState extends State<PromptAlertDialog> {
         border: OutlineInputBorder(),
         errorText: errorText,
       ),
-      onChanged: (value) {
-        final res = widget.onErrorCheck?.call(value);
-        if (res != null) {
-          errorText = res;
-          setState(() {});
-          return;
-        }
-        if (errorText != null) {
-          setState(() {
-            errorText = null;
-          });
-        }
-      },
+      onChanged: onChanged,
       onSubmitted: (value) {
         if (errorText != null) return;
         Navigator.pop<String>(context, con.text.trim());

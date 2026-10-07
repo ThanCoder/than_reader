@@ -16,7 +16,7 @@ class ReaderInfoStore {
     final infoRes = await infoBox.findOne(
       (val) => val.configIds.contains(configId),
     );
-    return infoRes.isOk;
+    return infoRes != null;
   }
 
   Future<void> init(String dbPath) async {

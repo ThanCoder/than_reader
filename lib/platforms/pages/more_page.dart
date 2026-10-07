@@ -6,6 +6,7 @@ import 'package:than_reader/platforms/components/app_version_view.dart';
 import 'package:than_reader/platforms/components/cache_cleaner.dart';
 import 'package:than_reader/platforms/pages/app_about_dialog.dart';
 import 'package:than_reader/platforms/pages/dev_pages/dev_route_tile.dart';
+import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
 
@@ -65,6 +66,18 @@ class MorePage extends StatelessWidget {
                 onTap: () {
                   context.pushMaterialPageRoute(
                     builder: (mainCtx) => ReaderInfoStorePage(),
+                  );
+                },
+              ),
+              ListTile(
+                tileColor: col.surfaceContainer,
+                shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+                leading: Icon(Icons.web_outlined),
+                trailing: Icon(Icons.arrow_forward_ios),
+                title: Text('Web Novel'),
+                onTap: () {
+                  context.pushMaterialPageRoute(
+                    builder: (mainCtx) => NovelHomePage(),
                   );
                 },
               ),

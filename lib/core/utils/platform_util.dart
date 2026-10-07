@@ -50,4 +50,25 @@ class PlatformUtil {
       }
     }
   }
+
+  static List<String> getPlatformScanFolders() {
+    final scanFolders = <String>[];
+    if (Platform.isLinux) {
+      final home = Platform.environment['HOME'];
+      if (home != null) {
+        scanFolders.add(home.join('Desktop'));
+        scanFolders.add(home.join('Documents'));
+        scanFolders.add(home.join('Downloads'));
+        scanFolders.add(home.join('Music'));
+        scanFolders.add(home.join('Pictures'));
+        scanFolders.add(home.join('Videos'));
+      }
+    }
+    if (Platform.isAndroid) {
+      scanFolders.add(
+        ThanPkgAndroid.getInstance.pathHandler.getDeviceStoragePath(),
+      );
+    }
+    return scanFolders;
+  }
 }

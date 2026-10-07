@@ -7,6 +7,7 @@ import 'package:than_reader/core/controller/fav_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
 import 'package:than_reader/platforms/platform_app.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
@@ -26,6 +27,7 @@ void main() async {
   ControllerManager.register(AllFileController());
   ControllerManager.register(FavController());
   ControllerManager.register(ReaderHistoryController());
+  ControllerManager.register(NovelController());
 
   await ControllerManager.initAll();
   // reader

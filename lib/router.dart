@@ -28,10 +28,10 @@ Future<void> goReaderModuleApp(
       final infoRes = await box.findOne(
         (val) => val.configIds.contains(file.configId),
       );
-      if (infoRes.isOk) {
+      if (infoRes != null) {
         if (!context.mounted) return;
         context.pushMaterialPageRoute(
-          builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes.unwrap()),
+          builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes),
         );
         return;
       }
@@ -74,13 +74,13 @@ Future<void> goReaderModuleApp(
 
 Future<void> goInfoDescPage(BuildContext context, ReaderFile file) async {
   final box = ReaderInfoStore.instance.infoBox;
-  final infoRes = await box.findOne(
+  final info = await box.findOne(
     (val) => val.configIds.contains(file.configId),
   );
-  if (infoRes.isErr) return;
+  if (info == null) return;
   if (!context.mounted) return;
   context.pushMaterialPageRoute(
-    builder: (mainCtx) => ReaderInfoStoreDescPage(info: infoRes.unwrap()),
+    builder: (mainCtx) => ReaderInfoStoreDescPage(info: info),
   );
 }
 

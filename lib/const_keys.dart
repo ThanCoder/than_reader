@@ -13,3 +13,5 @@ const String pdfReaderPreferPageImageRenderThreadTypeKey =
 
 // pdf
 const int pdfReaderPreloadPageCount = 2;
+
+const String novelExtName = 'dustore';

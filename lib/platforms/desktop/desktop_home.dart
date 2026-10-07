@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
+import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
@@ -49,7 +50,8 @@ class _DesktopHomeState extends State<DesktopHome> {
         ),
         .new(icon: Icon(Icons.grid_view_rounded), label: Text('More')),
         .new(icon: Icon(Icons.storage_outlined), label: Text('Info Store')),
-        .new(icon: Icon(Icons.share), label: Text('Share Server')),
+        .new(icon: Icon(Icons.web_outlined), label: Text('Novel')),
+        .new(icon: Icon(Icons.share_outlined), label: Text('Share Server')),
       ],
       selectedIndex: index,
       onDestinationSelected: (value) {
@@ -71,6 +73,7 @@ class _DesktopHomeState extends State<DesktopHome> {
         ReaderTrackerPage(),
         MorePage(),
         ReaderInfoStorePage(),
+        NovelHomePage(),
         ServerHomePage(),
       ],
     );

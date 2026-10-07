@@ -110,6 +110,34 @@ class AppUtil {
     return getConfigPath(name);
   }
 
+  String getPlatfromExternalDownloadPath([String? name]) {
+    if (Platform.isAndroid) {
+      final pkg = ThanPkgAndroid.getInstance.pathHandler;
+      final p = pkg.getDeviceStoragePath().join('Download').join(appName);
+      final dir = Directory(p);
+      if (!dir.existsSync()) {
+        dir.createSync(recursive: true);
+      }
+      if (name == null) {
+        return dir.path;
+      }
+      return dir.join(name);
+    }
+    if (Platform.isLinux) {
+      final home = Platform.environment['HOME']!;
+      final p = home.join('Downloads').join(appName);
+      final dir = Directory(p);
+      if (!dir.existsSync()) {
+        dir.createSync(recursive: true);
+      }
+      if (name == null) {
+        return dir.path;
+      }
+      return dir.join(name);
+    }
+    throw UnsupportedError('Only Supported: `linux`,`android`');
+  }
+
   /// ### Return -> [(count,size)]
   Future<(int, int)> getFolderInfo(Directory dir) async {
     if (!dir.existsSync()) return (0, 0);
