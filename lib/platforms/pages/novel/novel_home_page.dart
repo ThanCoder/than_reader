@@ -138,7 +138,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
         tileColor: col.surfaceContainer,
         leading: Icon(Icons.storage_outlined),
         trailing: Icon(Icons.arrow_forward_ios_outlined),
-        title: Text(file.name),
+        title: Text(file.name, style: TextStyle(fontWeight: .w700)),
         subtitle: Text('Novel Database File'),
         onTap: () {
           context.pushMaterialPageRoute(

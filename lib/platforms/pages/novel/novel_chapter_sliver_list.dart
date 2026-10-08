@@ -4,6 +4,8 @@ import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_edit_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/novel_chapter_content_reader.dart';
 
@@ -13,13 +15,14 @@ class NovelChapterSliverList extends StatefulWidget {
 
   @override
   State<NovelChapterSliverList> createState() => _NovelChapterSliverListState();
+  static ChapterLaguage lang = .myanmar;
 }
 
 class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   StreamSubscription? _sub;
   @override
   void initState() {
-    _sub = box.events.add.listen((event) {
+    _sub = box.events.all.listen((event) {
       init();
     });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => init());
@@ -35,14 +38,14 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
   Map<ChapterLaguage, List<NovelChapter>> groups = {};
-  ChapterLaguage lang = .myanmar;
 
   Future<void> init() async {
+    groups.clear();
     final list = await box.getAll();
+    list.sortChapter();
     for (var val in list) {
       groups.putIfAbsent(val.lang, () => []).add(val);
     }
-    list.sortChapter();
     if (!mounted) return;
     setState(() {});
   }
@@ -50,12 +53,36 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   NovelChapter? _lastClickedItem;
   void goReader(NovelChapter item) async {
     await context.pushMaterialPageRoute(
-      builder: (mainCtx) =>
-          NovelChapterContentReader(box: box, item: item, lang: lang),
+      builder: (mainCtx) => NovelChapterContentReader(
+        box: box,
+        item: item,
+        lang: NovelChapterSliverList.lang,
+      ),
     );
     _lastClickedItem = item;
     if (!mounted) return;
     setState(() {});
+  }
+
+  void editChapter(NovelChapter item) async {
+    final res = await context
+        .pushMaterialPageRoute<NovelChapterEditFormPageRes>(
+          builder: (mainCtx) =>
+              NovelChapterEditFormPage(chapter: item, box: box),
+        );
+    if (res == null) return;
+    final upRes = await box.update(
+      item.generatedId,
+      value: res.chapter,
+      contentWriter: TextCompressContentWriter(res.contentText),
+    );
+    if (!mounted) return;
+
+    if (upRes.isErr) {
+      showErrorDialog(context, upRes.unwrapError());
+      return;
+    }
+    init();
   }
 
   void showItemMenu(NovelChapter item) async {
@@ -68,6 +95,18 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           spacing: 10,
           children: [
             ListTile(
+              tileColor: col.secondaryContainer,
+              shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+              leading: Icon(Icons.edit_document),
+              title: Text('Edit'),
+              onTap: () async {
+                context.pop();
+                editChapter(item);
+              },
+            ),
+            ListTile(
+              tileColor: col.errorContainer,
+              shape: RoundedRectangleBorder(borderRadius: .circular(14)),
               leading: Icon(Icons.delete_forever_outlined),
               title: Text('Delete'),
               onTap: () async {
@@ -133,11 +172,11 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   );
 
   Widget _langItem(ChapterLaguage e) {
-    final selected = e == lang;
+    final selected = e == NovelChapterSliverList.lang;
     return GestureDetector(
       onTap: () {
         setState(() {
-          lang = e;
+          NovelChapterSliverList.lang = e;
         });
       },
       child: Container(
@@ -159,7 +198,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   SliverList _listWidget() {
-    final list = groups[lang] ?? [];
+    final list = groups[NovelChapterSliverList.lang] ?? [];
     return SliverList.separated(
       separatorBuilder: (context, index) => SizedBox(height: 10),
       itemCount: list.length,

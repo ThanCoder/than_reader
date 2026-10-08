@@ -3,11 +3,13 @@ import 'dart:typed_data';
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/const_keys.dart';
+import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
-import 'package:than_reader/platforms/pages/novel/novel_chapter_form_page.dart';
+import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/novel_chapter_sliver_list.dart';
-import 'package:than_reader/platforms/pages/novel/novel_edit_form.dart';
+import 'package:than_reader/platforms/pages/novel/forms/novel_edit_form.dart';
 import 'package:than_reader/platforms/pages/novel/novel_file.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -64,8 +66,11 @@ class NovelPageState extends State<NovelPage> {
 
   void editDesc() async {
     final formRes = await context.pushMaterialPageRoute<NovelEditFormResp>(
-      builder: (mainCtx) =>
-          NovelEditForm(desc: desc ?? .empty(), imgData: imgData),
+      builder: (mainCtx) => NovelEditForm(
+        desc: desc ?? .empty(),
+        imgData: imgData,
+        allTags: novelAllTags,
+      ),
     );
     if (!mounted) return;
     if (formRes == null) return;
@@ -118,8 +123,13 @@ class NovelPageState extends State<NovelPage> {
 
   void newChapter() async {
     await context.pushMaterialPageRoute(
-      builder: (mainCtx) => NovelChapterFormPage(store: db),
+      builder: (mainCtx) =>
+          NovelChapterFormPage(store: db, lang: NovelChapterSliverList.lang),
     );
+  }
+
+  void datebaseCompact() async {
+    await DBCompactMenu.show(context, db);
   }
 
   void showMenu() async {
@@ -137,6 +147,7 @@ class NovelPageState extends State<NovelPage> {
                 tileColor: col.surfaceContainer,
                 shape: RoundedRectangleBorder(borderRadius: .circular(14)),
                 title: Text('Edit Description'),
+                leading: Icon(Icons.edit_document),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   context.pop();
@@ -147,12 +158,26 @@ class NovelPageState extends State<NovelPage> {
                 tileColor: col.surfaceContainer,
                 shape: RoundedRectangleBorder(borderRadius: .circular(14)),
                 title: Text('Add Chapter'),
+                leading: Icon(Icons.new_label),
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
                 onTap: () {
                   context.pop();
                   newChapter();
                 },
               ),
+              if (db.state.deletedCount > 0)
+                ListTile(
+                  tileColor: col.surfaceContainer,
+                  shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+                  title: Text('Databse Compact'),
+                  subtitle: Text('Databse Cleanup'),
+                  leading: Icon(Icons.clean_hands_outlined),
+                  trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  onTap: () {
+                    context.pop();
+                    datebaseCompact();
+                  },
+                ),
               SizedBox(height: 50),
             ],
           ),
@@ -260,10 +285,12 @@ class NovelPageState extends State<NovelPage> {
           // const SizedBox(height: 8),
           if (data.desc.isNotEmpty)
             ExpansionTile(
+              shape: RoundedRectangleBorder(borderRadius: .circular(14)),
               title: const Text(
                 'Description',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              subtitle: Text('Novel Review'),
               children: [
                 Text(
                   data.desc,

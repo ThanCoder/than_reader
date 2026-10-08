@@ -7,6 +7,7 @@ import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/components/forms/input_text.dart';
+import 'package:than_reader/platforms/components/forms/tag_input_field.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 
 enum NovelEditFormRespCoverType { none, update, delete }
@@ -20,9 +21,15 @@ class NovelEditFormResp {
 }
 
 class NovelEditForm extends StatefulWidget {
-  const new({super.key, required this.desc, this.imgData});
+  const new({
+    super.key,
+    required this.desc,
+    this.imgData,
+    required this.allTags,
+  });
   final NovelDesc desc;
   final Uint8List? imgData;
+  final List<String> allTags;
 
   @override
   State<NovelEditForm> createState() => _NovelEditFormState();
@@ -195,46 +202,12 @@ class _NovelEditFormState extends State<NovelEditForm> {
   }
 
   Widget get tagWidget {
-    return Column(
-      crossAxisAlignment: .start,
-      spacing: 10,
-      children: [
-        Text('Tags', style: TextStyle(fontSize: 18, fontWeight: .w700)),
-        Wrap(
-          spacing: 5,
-          runSpacing: 5,
-          children: [
-            for (var tag in desc.tags)
-              wrapItem(
-                tag,
-                onDelete: (text) {
-                  desc.tags.remove(text);
-                  desc = desc.copyWith(tags: desc.tags);
-                  setState(() {});
-                },
-              ),
-            IconButton(
-              onPressed: () async {
-                final name = await showPromptAlertDialog(
-                  context,
-                  '',
-                  title: 'New Tag',
-                  confirmText: 'New',
-                  onErrorCheck: (text) {
-                    if (text.isEmpty) return 'text required!';
-                    return null;
-                  },
-                );
-                if (name == null || name.isEmpty) return;
-                if (!mounted) return;
-                desc = desc.copyWith(tags: [...desc.tags, name]);
-                setState(() {});
-              },
-              icon: Icon(Icons.add_circle_outline),
-            ),
-          ],
-        ),
-      ],
+    return TagInputField(
+      allTags: widget.allTags,
+      selectedTags: desc.tags,
+      onChanged: (value) {
+        desc = desc.copyWith(tags: value);
+      },
     );
   }
 
@@ -312,5 +285,3 @@ class _NovelEditFormState extends State<NovelEditForm> {
     );
   }
 }
-
-//Original COMPLETED Portal Fantasy / Isekai Action Adventure Fantasy

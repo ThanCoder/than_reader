@@ -1,26 +1,47 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:than_reader/platforms/components/dialog/snack_alert.dart';
+import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 
-class NovelChapterFormPage extends StatefulWidget {
-  const new({super.key, required this.store});
+class NovelChapterEditFormPageRes {
+  final NovelChapter chapter;
+  final String contentText;
 
-  final DualStore store;
-
-  @override
-  State<NovelChapterFormPage> createState() => _NovelChapterFormPageState();
+  const NovelChapterEditFormPageRes({
+    required this.chapter,
+    required this.contentText,
+  });
 }
 
-class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
+class NovelChapterEditFormPage extends StatefulWidget {
+  const new({super.key, required this.chapter, required this.box});
+
+  final NovelChapter chapter;
+  final DuBox<NovelChapter> box;
+
+  @override
+  State<NovelChapterEditFormPage> createState() =>
+      _NovelChapterEditFormPageState();
+}
+
+class _NovelChapterEditFormPageState extends State<NovelChapterEditFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
   final _chapterController = TextEditingController();
   final contentCon = TextEditingController();
 
-  ChapterLaguage _language = .myanmar;
+  late ChapterLaguage _language;
+
+  @override
+  void initState() {
+    _titleController.text = widget.chapter.title;
+    _chapterController.text = widget.chapter.chapter.toString();
+    _language = widget.chapter.lang;
+    super.initState();
+    init();
+  }
 
   @override
   void dispose() {
@@ -30,31 +51,27 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     super.dispose();
   }
 
-  DuBox<NovelChapter> get chapterBox => widget.store.getBox();
+  void init() async {
+    final res = await widget.chapter.getContentOrNull<String>();
+    contentCon.text = res ?? '';
+  }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final chapter = NovelChapter(
-      title: _titleController.text.trim(),
-      lang: _language,
-      chapter: double.parse(_chapterController.text.trim()),
-      date: .now(),
+    context.pop(
+      NovelChapterEditFormPageRes(
+        chapter: widget.chapter.copyWith(
+          title: _titleController.text.trim(),
+          lang: _language,
+          chapter: double.parse(_chapterController.text.trim()),
+          date: .now(),
+        ),
+        contentText: contentCon.text,
+      ),
     );
-
-    await chapterBox.add(
-      chapter,
-      contentWriter: TextCompressContentWriter(contentCon.text),
-    );
-    if (!mounted) return;
-
-    _titleController.text = '';
-    // _chapterController.text = '';
-    contentCon.text = '';
-
-    showSnackbar(context, 'Added');
   }
 
   String _languageName(ChapterLaguage language) {
@@ -77,7 +94,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Chapter'),
+        title: const Text('Edit Chapter'),
         actions: [
           IconButton(
             onPressed: _save,
@@ -181,7 +198,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
               decoration: const InputDecoration(
                 labelText: 'Chapter Content',
                 hintText: 'Enter chapter Content',
-                prefixIcon: Icon(Icons.content_cut_outlined),
+                // prefixIcon: Icon(Icons.content_cut_outlined),
                 border: OutlineInputBorder(),
               ),
               maxLines: null,
@@ -201,7 +218,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
               child: FilledButton.icon(
                 onPressed: _save,
                 icon: const Icon(Icons.save),
-                label: const Text('Save Chapter'),
+                label: const Text('Update Chapter'),
               ),
             ),
           ],
