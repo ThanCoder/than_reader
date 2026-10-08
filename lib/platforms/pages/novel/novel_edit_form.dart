@@ -2,10 +2,22 @@ import 'dart:typed_data';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/components/forms/input_text.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
+
+enum NovelEditFormRespCoverType { none, update, delete }
+
+class NovelEditFormResp {
+  final NovelDesc desc;
+  final Uint8List? cover;
+  final NovelEditFormRespCoverType type;
+
+  const NovelEditFormResp({required this.desc, this.cover, required this.type});
+}
 
 class NovelEditForm extends StatefulWidget {
   const new({super.key, required this.desc, this.imgData});
@@ -47,19 +59,49 @@ class _NovelEditFormState extends State<NovelEditForm> {
   final translatorCon = TextEditingController();
   final mcCon = TextEditingController();
   final descCon = TextEditingController();
+  NovelEditFormRespCoverType coverType = .none;
+
+  void chooseCoverImage() async {
+    final picker = ImagePicker();
+    // Pick an image.
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+
+    imgData = await image.readAsBytes();
+    coverType = .update;
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  void showCoverImageDelConf() async {
+    final conf = await showConfirmDialog(
+      context,
+      'Want To Delete Cover Image?',
+      confirmText: 'Delete',
+      closeText: 'No',
+      confirmColor: col.error,
+      confirmForegroundColor: col.onError,
+    );
+    if (!conf) return;
+    imgData = null;
+    coverType = .delete;
+    if (!mounted) return;
+    setState(() {});
+  }
 
   void save() async {
-    final arg = (
-      desc.copyWith(
+    final arg = NovelEditFormResp(
+      desc: desc.copyWith(
         title: titleCon.text,
         author: authorCon.text,
         translator: translatorCon.text,
         desc: descCon.text,
         mc: mcCon.text,
       ),
-      imgData,
+      type: coverType,
+      cover: imgData,
     );
-    context.pop<(NovelDesc, Uint8List?)>(arg);
+    context.pop<NovelEditFormResp>(arg);
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
@@ -81,6 +123,7 @@ class _NovelEditFormState extends State<NovelEditForm> {
               spacing: 15,
               crossAxisAlignment: .start,
               children: [
+                _coverImage(),
                 InputText(
                   controller: titleCon,
                   maxLines: 1,
@@ -118,6 +161,35 @@ class _NovelEditFormState extends State<NovelEditForm> {
           onPressed: save,
           child: Icon(Icons.save_as_outlined),
         ),
+      ),
+    );
+  }
+
+  Widget _coverImage() {
+    return GestureDetector(
+      onTap: () {
+        if (imgData != null) {
+          showCoverImageDelConf();
+          return;
+        }
+        chooseCoverImage();
+      },
+      child: _coverImageRect(),
+    );
+  }
+
+  ClipRRect _coverImageRect({double width = 120, double height = 175}) {
+    Widget img = Icon(Icons.menu_book_outlined, size: 40);
+    if (imgData != null) {
+      img = Image.memory(imgData!);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: width,
+        height: height,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Center(child: img),
       ),
     );
   }

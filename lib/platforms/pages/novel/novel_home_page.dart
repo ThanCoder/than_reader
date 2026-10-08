@@ -108,10 +108,18 @@ class _NovelHomePageState extends State<NovelHomePage> {
                 SliverFillRemaining(
                   child: Center(child: CircularProgressIndicator.adaptive()),
                 ),
-              if (con.list.isEmpty)
+              if (con.error != null)
+                SliverFillRemaining(
+                  child: Center(
+                    child: Text(con.error!, style: TextStyle(color: col.error)),
+                  ),
+                ),
+
+              if (con.error == null && con.list.isEmpty)
                 SliverFillRemaining(child: Center(child: Text('Not Found!'))),
 
-              SliverList.builder(
+              SliverList.separated(
+                separatorBuilder: (context, index) => SizedBox(height: 10),
                 itemCount: con.list.length,
                 itemBuilder: (context, index) => listItem(con.list[index]),
               ),

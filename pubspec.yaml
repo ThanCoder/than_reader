@@ -26,6 +26,8 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
   dart_core_extensions: ^0.7.0
+  image_picker: ^1.2.4
+  url_launcher: ^6.3.2
 
   t_widgets:
     git: https://github.com/ThanCoder/t_widgets.git
@@ -38,8 +40,7 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
-  url_launcher: ^6.3.2
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -34,21 +34,28 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
-  List<NovelChapter> list = [];
+  Map<ChapterLaguage, List<NovelChapter>> groups = {};
   ChapterLaguage lang = .myanmar;
 
   Future<void> init() async {
-    list = await box.getAll();
-    // list = list.where((e) => e.lang == lang).toList();
+    final list = await box.getAll();
+    for (var val in list) {
+      groups.putIfAbsent(val.lang, () => []).add(val);
+    }
     list.sortChapter();
     if (!mounted) return;
     setState(() {});
   }
 
-  void goReader(NovelChapter item) {
-    context.pushMaterialPageRoute(
-      builder: (mainCtx) => NovelChapterContentReader(box: box, item: item),
+  NovelChapter? _lastClickedItem;
+  void goReader(NovelChapter item) async {
+    await context.pushMaterialPageRoute(
+      builder: (mainCtx) =>
+          NovelChapterContentReader(box: box, item: item, lang: lang),
     );
+    _lastClickedItem = item;
+    if (!mounted) return;
+    setState(() {});
   }
 
   void showItemMenu(NovelChapter item) async {
@@ -88,12 +95,71 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
 
   @override
   Widget build(BuildContext context) {
-    if (list.isEmpty) {
-      return SliverToBoxAdapter(
-        child: RefreshButton(text: Text('List Empty'), onClicked: init),
-      );
-    }
-    // print(list);
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: .symmetric(vertical: 10, horizontal: 15),
+          sliver: SliverList.list(
+            children: [
+              Text(
+                'Chapters',
+                style: TextStyle(
+                  fontWeight: .w700,
+                  fontSize: 18,
+                  color: col.onSurface,
+                ),
+              ),
+              SizedBox(height: 16),
+              if (groups.isEmpty)
+                RefreshButton(text: Text('List Empty'), onClicked: init),
+
+              _langsWidget(),
+            ],
+          ),
+        ),
+
+        _listWidget(),
+      ],
+    );
+  }
+
+  Widget _langsWidget() => Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Wrap(
+      spacing: 5,
+      runSpacing: 5,
+      children: groups.keys.map((e) => _langItem(e)).toList(),
+    ),
+  );
+
+  Widget _langItem(ChapterLaguage e) {
+    final selected = e == lang;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          lang = e;
+        });
+      },
+      child: Container(
+        padding: .symmetric(vertical: 2, horizontal: 4),
+        decoration: BoxDecoration(
+          color: selected ? col.primary : col.surfaceContainer,
+          borderRadius: .circular(14),
+        ),
+        child: Text(
+          e.label,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: .w700,
+            color: selected ? col.onPrimary : col.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverList _listWidget() {
+    final list = groups[lang] ?? [];
     return SliverList.separated(
       separatorBuilder: (context, index) => SizedBox(height: 10),
       itemCount: list.length,
@@ -105,10 +171,11 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   Widget listItem(NovelChapter item) {
+    final isLast = _lastClickedItem?.generatedId == item.generatedId;
     return GestureDetector(
       onSecondaryTap: () => showItemMenu(item),
       child: ListTile(
-        tileColor: col.surfaceContainer,
+        tileColor: isLast ? col.primaryContainer : col.surfaceContainer,
         shape: RoundedRectangleBorder(borderRadius: .circular(14)),
         title: Row(
           children: [

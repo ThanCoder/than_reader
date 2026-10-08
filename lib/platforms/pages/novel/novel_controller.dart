@@ -7,6 +7,7 @@ class NovelControllerStateChanged extends IControllerEvent {}
 class NovelController extends IController {
   List<NovelFile> list = [];
   bool isLoading = false;
+  String? error;
 
   @override
   Future<void> init() async {}
@@ -14,6 +15,7 @@ class NovelController extends IController {
   Future<void> fetchList() async {
     try {
       isLoading = true;
+      error = null;
       addEvent(NovelControllerStateChanged());
 
       list = await NovelFileScanner.scanAll();
@@ -21,6 +23,7 @@ class NovelController extends IController {
       isLoading = false;
       addEvent(NovelControllerStateChanged());
     } catch (e) {
+      error = e.toString();
       isLoading = false;
       addEvent(NovelControllerStateChanged());
     }

@@ -11,7 +11,14 @@ class NovelFileScanner extends PathScanner {
   new({required super.scanFolders});
 
   @override
+  PathScannerTest onFolderTest(FileSystemEntity file, String name) {
+    if (name == 'Android' || name.startsWith('.')) return .skip;
+    return .add;
+  }
+
+  @override
   PathScannerTest onFileTest(FileSystemEntity file, String name) {
+    if (name == 'Android' || name.startsWith('.')) return .skip;
     if (name.endsWith('.$novelExtName')) return .add;
     return .skip;
   }

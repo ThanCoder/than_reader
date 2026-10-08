@@ -9,6 +9,7 @@ import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/novel_edit_form.dart';
 import 'package:than_reader/platforms/pages/novel/novel_file.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class NovelPage extends StatefulWidget {
   const new({super.key, required this.file});
@@ -49,12 +50,12 @@ class NovelPageState extends State<NovelPage> {
       desc = descList.first;
       descId = descList.first.generatedId;
     }
-    final imgs = await imageBox.getAll();
-    if (imgs.isNotEmpty) {
-      final res = await imgs.first.imageData;
-      if (res.isOk) {
-        imgData = res.unwrap();
-        imgDataId = imgs.first.generatedId;
+    final img = await imageBox.getOne();
+    if (img != null) {
+      final bytes = await img.imageData;
+      if (bytes != null) {
+        imgData = bytes;
+        imgDataId = img.generatedId;
       }
     }
     if (!mounted) return;
@@ -62,14 +63,14 @@ class NovelPageState extends State<NovelPage> {
   }
 
   void editDesc() async {
-    final formRes = await context
-        .pushMaterialPageRoute<(NovelDesc, Uint8List?)>(
-          builder: (mainCtx) => NovelEditForm(desc: desc ?? .empty()),
-        );
+    final formRes = await context.pushMaterialPageRoute<NovelEditFormResp>(
+      builder: (mainCtx) =>
+          NovelEditForm(desc: desc ?? .empty(), imgData: imgData),
+    );
     if (!mounted) return;
     if (formRes == null) return;
-    desc = formRes.$1;
-    imgData = formRes.$2;
+    desc = formRes.desc;
+    imgData = formRes.cover;
 
     // new
     if (descId == -1) {
@@ -81,28 +82,38 @@ class NovelPageState extends State<NovelPage> {
       // update
       await descBox.update(descId, value: desc!);
     }
-    if (imgData != null) {
-      // img
-      if (imgDataId == -1) {
-        final res = await imageBox.add(
-          .fromBytes(imgData!, name: 'cover', ext: 'png', lastModified: .now()),
-        );
-        if (res.isOk) {
-          imgDataId = res.unwrap();
-        }
-      } else {
-        // restart
-        await imageBox.deleteById(imgDataId);
-        final res = await imageBox.add(
-          .fromBytes(imgData!, name: 'cover', ext: 'png', lastModified: .now()),
-        );
-        if (res.isOk) {
-          imgDataId = res.unwrap();
-        }
-      }
+    setState(() {});
+    // image
+    final resImgType = formRes.type;
+    if (resImgType == .none) return;
+    if (resImgType == .delete) {
+      await imageBox.deleteById(imgDataId);
+      if (!mounted) return;
+      setState(() {});
+      return;
     }
 
-    setState(() {});
+    if (resImgType == .update) {
+      if (imgDataId == -1) {
+        await imageBox.add(
+          .fromBytes(imgData!, name: 'cover', ext: 'png', lastModified: .now()),
+        );
+      } else {
+        await imageBox.updateById(
+          imgDataId,
+          file: .fromBytes(
+            imgData!,
+            name: 'cover',
+            ext: 'png',
+            lastModified: .now(),
+          ),
+        );
+      }
+
+      if (!mounted) return;
+      setState(() {});
+      return;
+    }
   }
 
   void newChapter() async {
@@ -117,35 +128,49 @@ class NovelPageState extends State<NovelPage> {
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) => SingleChildScrollView(
-        child: Column(
-          spacing: 10,
-          children: [
-            ListTile(
-              title: Text('Edit Description'),
-              onTap: () {
-                context.pop();
-                editDesc();
-              },
-            ),
-            ListTile(
-              title: Text('Add Chapter'),
-              onTap: () {
-                context.pop();
-                newChapter();
-              },
-            ),
-            SizedBox(height: 50),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            spacing: 10,
+            children: [
+              ListTile(
+                tileColor: col.surfaceContainer,
+                shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+                title: Text('Edit Description'),
+                trailing: Icon(Icons.arrow_forward_ios_outlined),
+                onTap: () {
+                  context.pop();
+                  editDesc();
+                },
+              ),
+              ListTile(
+                tileColor: col.surfaceContainer,
+                shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+                title: Text('Add Chapter'),
+                trailing: Icon(Icons.arrow_forward_ios_outlined),
+                onTap: () {
+                  context.pop();
+                  newChapter();
+                },
+              ),
+              SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  ColorScheme get col => Theme.of(context).colorScheme;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(desc != null ? desc!.title : widget.file.name),
+        title: Text(
+          desc != null ? desc!.title : widget.file.name,
+          style: TextStyle(fontSize: 18),
+        ),
         actions: [
           IconButton(onPressed: showMenu, icon: Icon(Icons.more_vert_outlined)),
         ],
@@ -166,16 +191,6 @@ class NovelPageState extends State<NovelPage> {
             SliverPadding(
               padding: .symmetric(vertical: 10, horizontal: 5),
               sliver: _descWidget,
-            ),
-
-            SliverPadding(
-              padding: .symmetric(vertical: 10, horizontal: 15),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  'Chapters',
-                  style: TextStyle(fontSize: 20, fontWeight: .w700),
-                ),
-              ),
             ),
 
             SliverPadding(
@@ -207,80 +222,55 @@ class NovelPageState extends State<NovelPage> {
       padding: const EdgeInsets.all(16),
       sliver: SliverList.list(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image placeholder
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 120,
-                  height: 175,
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: const Center(
-                    child: Icon(Icons.menu_book_outlined, size: 40),
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              // Novel information
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth <= 500;
+              if (isMobile) {
+                return Wrap(
+                  crossAxisAlignment: .center,
+                  alignment: .center,
                   children: [
-                    Text(
-                      data.title,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                        height: 1.25,
-                      ),
-                    ),
+                    // Image placeholder
+                    _coverImage(width: 200, height: 220),
 
-                    const SizedBox(height: 18),
+                    const SizedBox(width: 16),
 
-                    _infoItem(
-                      icon: Icons.person_outline,
-                      label: 'Author',
-                      value: data.author,
-                    ),
-
-                    _infoItem(
-                      icon: Icons.translate,
-                      label: 'Translator',
-                      value: data.translator,
-                    ),
-
-                    _infoItem(
-                      icon: Icons.face_outlined,
-                      label: 'Main Character',
-                      value: data.mc,
-                    ),
+                    // Novel information
+                    _coverContent(data),
                   ],
-                ),
-              ),
-            ],
+                );
+              }
+              return Row(
+                crossAxisAlignment: .start,
+                children: [
+                  // Image placeholder
+                  _coverImage(),
+
+                  const SizedBox(width: 16),
+
+                  // Novel information
+                  Expanded(child: _coverContent(data)),
+                ],
+              );
+            },
           ),
 
-          const SizedBox(height: 24),
+          if (data.desc.isNotEmpty) const SizedBox(height: 24),
 
           // const SizedBox(height: 8),
-          ExpansionTile(
-            title: const Text(
-              'Description',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            children: [
-              Text(
-                data.desc,
-                style: const TextStyle(fontSize: 15, height: 1.6),
+          if (data.desc.isNotEmpty)
+            ExpansionTile(
+              title: const Text(
+                'Description',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ],
-          ),
+              children: [
+                Text(
+                  data.desc,
+                  style: const TextStyle(fontSize: 15, height: 1.6),
+                ),
+              ],
+            ),
 
           if (data.tags.isNotEmpty) ...[
             const SizedBox(height: 24),
@@ -315,12 +305,66 @@ class NovelPageState extends State<NovelPage> {
                 leading: const Icon(Icons.link),
                 title: Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
                 onTap: () {
-                  // Open URL
+                  launchUrlString(url);
                 },
               ),
           ],
         ],
       ),
+    );
+  }
+
+  ClipRRect _coverImage({double width = 120, double height = 175}) {
+    Widget img = Icon(Icons.menu_book_outlined, size: 40);
+    if (imgData != null) {
+      img = Image.memory(imgData!);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: width,
+        height: height,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Center(child: img),
+      ),
+    );
+  }
+
+  Column _coverContent(NovelDesc data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          data.title,
+          maxLines: 4,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontSize: 21,
+            fontWeight: FontWeight.bold,
+            height: 1.25,
+          ),
+        ),
+
+        const SizedBox(height: 18),
+
+        _infoItem(
+          icon: Icons.person_outline,
+          label: 'Author',
+          value: data.author,
+        ),
+
+        _infoItem(
+          icon: Icons.translate,
+          label: 'Translator',
+          value: data.translator,
+        ),
+
+        _infoItem(
+          icon: Icons.face_outlined,
+          label: 'Main Character',
+          value: data.mc,
+        ),
+      ],
     );
   }
 
