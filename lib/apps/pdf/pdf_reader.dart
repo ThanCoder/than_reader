@@ -15,6 +15,7 @@ import 'package:than_reader/apps/pdf/config_widget/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
+import 'package:than_reader/platforms/components/dialog/snack_alert.dart';
 
 import 'config_widget/pdf_scrollbar_toggler_btn.dart';
 
@@ -57,6 +58,9 @@ class _PdfReaderState extends State<PdfReader> {
 
   @override
   void initState() {
+    final st = Stopwatch();
+    st.start();
+
     config = widget.config;
     controller = TPdfController(
       pageImageWorkerType: PdfReaderPerferRenderThread.currentThread,
@@ -102,6 +106,10 @@ class _PdfReaderState extends State<PdfReader> {
       changedConfig();
 
       pdfStreamSub = controller.stream.ready.listen((_) {
+        st.stop();
+        if (mounted) {
+          showSnackbar(context, 'Loaded: ${st.elapsedMilliseconds} ms');
+        }
         init();
       });
     });
