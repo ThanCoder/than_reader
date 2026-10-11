@@ -102,6 +102,7 @@ class _PdfReaderState extends State<PdfReader> {
       ),
     );
     super.initState();
+
     readerAttachSub = controller.attached.listen((_) {
       changedConfig();
 

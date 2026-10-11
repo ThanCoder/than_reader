@@ -19,6 +19,7 @@ class PdfReaderPerferRenderThread extends StatefulWidget {
       IPageImageWorkerTypeX.fromValue(
         AppUtil.instance.config.getString(
           pdfReaderPreferPageImageRenderThreadTypeKey,
+          IPageImageWorkerType.multiThread.name,
         ),
       );
 
