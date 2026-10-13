@@ -85,7 +85,7 @@ class NovelPageState extends State<NovelPage> {
       }
     } else {
       // update
-      await descBox.update(descId, value: desc!);
+      await descBox.updateByid(descId, value: desc!);
     }
     setState(() {});
     // image

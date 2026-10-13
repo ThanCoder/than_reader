@@ -69,7 +69,7 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
         );
     if (res == null) return;
 
-    await infoBox.update(
+    await infoBox.updateByid(
       info.generatedId,
       value: res.info,
       contentWriter: TextCompressContentWriter(res.desc),
