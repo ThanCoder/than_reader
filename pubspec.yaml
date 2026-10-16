@@ -13,16 +13,16 @@ dependencies:
     sdk: flutter
 
   # material_ui: ^1.0.1
-  cfb_store: ^0.7.0
+  cfb_store: ^0.8.0
   mime: ^2.0.0
   crypto: ^3.0.7
   archive: ^4.0.9
   flutter_html: ^3.0.0
-  desktop_drop: ^0.7.1
+  desktop_drop: ^0.8.4
   flutter_svg: ^2.3.0
   html: ^0.15.6
   than_pkg_linux: ^0.2.0
-  than_pkg_android: ^0.6.1
+  than_pkg_android: ^0.7.0
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
   dart_core_extensions: ^0.7.0
@@ -40,6 +40,7 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
+  # flutter pub upgrade --major-versions
 
 dev_dependencies:
   flutter_test:

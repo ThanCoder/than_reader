@@ -16,7 +16,7 @@ import 'package:than_reader/platforms/components/group_list/group_list_style_pro
 import 'package:than_reader/platforms/components/group_list/group_list_type.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_chooser.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_provider.dart';
-import 'package:than_reader/platforms/components/menu/item_menu.dart';
+import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/book_group_result_page.dart';
@@ -264,11 +264,6 @@ class _MobileHomePageState extends State<MobileHomePage> {
   }
 
   void onRightClicked(ReaderFile file) {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => ItemMenu(file: file),
-    );
+    ReaderItemMenuSheet.show(context, file: file);
   }
 }

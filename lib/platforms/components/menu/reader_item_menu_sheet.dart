@@ -10,16 +10,28 @@ import 'package:than_reader/platforms/components/menu/info_menu.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/router.dart';
 
-class ItemMenu extends StatefulWidget {
-  const ItemMenu({super.key, required this.file});
+class ReaderItemMenuSheet extends StatefulWidget {
+  const ReaderItemMenuSheet({super.key, required this.file});
 
   final ReaderFile file;
 
   @override
-  State<ItemMenu> createState() => _ItemMenuState();
+  State<ReaderItemMenuSheet> createState() => _ReaderItemMenuSheetState();
+
+  static Future<void> show(
+    BuildContext context, {
+    required ReaderFile file,
+  }) async {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => ReaderItemMenuSheet(file: file),
+    );
+  }
 }
 
-class _ItemMenuState extends State<ItemMenu> {
+class _ReaderItemMenuSheetState extends State<ReaderItemMenuSheet> {
   ColorScheme get col => Theme.of(context).colorScheme;
 
   final favCon = ControllerManager.read<FavController>();

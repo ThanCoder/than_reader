@@ -81,9 +81,6 @@ class _NovelChapterContentReaderState extends State<NovelChapterContentReader> {
   }
 
   Future<NovelChapter?> fetchChapter(double chNumber) async {
-    // return await widget.box.findOne(
-    //   (val) => val.chapter == chNumber && val.lang == lang,
-    // );
     await for (var val in widget.box.streamFindOne(
       (val) => val.chapter == chNumber && val.lang == lang,
     )) {
@@ -122,7 +119,10 @@ class _NovelChapterContentReaderState extends State<NovelChapterContentReader> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _body());
+    return Scaffold(
+      body: _body(),
+      appBar: contents.isNotEmpty ? null : AppBar(),
+    );
   }
 
   Widget _body() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/list_style/list_style_provider.dart';
-import 'package:than_reader/platforms/components/menu/item_menu.dart';
+import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/router.dart';
@@ -59,11 +59,6 @@ class _BookGroupResultPageState extends State<BookGroupResultPage> {
   }
 
   void onRightClicked(ReaderFile file) async {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => ItemMenu(file: file),
-    );
+    ReaderItemMenuSheet.show(context, file: file);
   }
 }

@@ -5,7 +5,7 @@ import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/reader_grid_item.dart';
-import 'package:than_reader/platforms/components/menu/item_menu.dart';
+import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/router.dart';
 
 class SearchPage extends StatefulWidget {
@@ -81,12 +81,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void onRightClicked(ReaderFile file) async {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => ItemMenu(file: file),
-    );
+    ReaderItemMenuSheet.show(context, file: file);
   }
 
   @override
@@ -103,7 +98,10 @@ class _SearchPageState extends State<SearchPage> {
       slivers: [
         _searchWidget(),
         if (searching) SliverToBoxAdapter(child: LinearProgressIndicator()),
-        if (result.isEmpty) _emptyQueryWidget(),
+        if (result.isEmpty && searchController.text.isEmpty)
+          _emptyQueryWidget('Search for something'),
+        if (result.isEmpty && searchController.text.isNotEmpty)
+          _emptyQueryWidget('Not Found!'),
 
         if (result.isNotEmpty) SliverToBoxAdapter(child: SizedBox(height: 10)),
         if (result.isNotEmpty)
@@ -132,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  SliverFillRemaining _emptyQueryWidget() {
+  SliverFillRemaining _emptyQueryWidget(String text) {
     return SliverFillRemaining(
       child: Center(
         child: Container(
@@ -142,7 +140,7 @@ class _SearchPageState extends State<SearchPage> {
             borderRadius: .circular(15),
           ),
           child: Text(
-            'Search for something',
+            text,
             style: TextStyle(
               fontWeight: .w700,
               fontSize: 18,

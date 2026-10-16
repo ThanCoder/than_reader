@@ -1,6 +1,8 @@
-import 'package:cfb_store/cfb_store.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/core/controller/fav_controller.dart';
@@ -12,13 +14,20 @@ import 'package:than_reader/platforms/platform_app.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 
+import 'const_keys.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AppUtil.instance.init();
 
-  // recent
-  await CFBStore.instance.open(AppUtil.instance.getConfigPath('app.cf.json'));
+  if (Platform.isLinux) {
+    final cf = AppUtil.instance.config;
+    await ThanPkgLinux.getInstance.window.setWindowSize(
+      width: cf.getDouble(appWindowWidthKey, 600).toInt(),
+      height: cf.getDouble(appWindowHeightKey, 400).toInt(),
+    );
+  }
 
   await ReaderInfoStore.instance.init(
     AppUtil.instance.getPlatfromExternalConfigPath('reader-file-info-store.du'),

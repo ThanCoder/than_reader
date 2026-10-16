@@ -1,4 +1,7 @@
 const String appThemeKeys = 'app-theme';
+const String appWindowWidthKey = 'appWindowWidthKey';
+const String appWindowHeightKey = 'appWindowHeightKey';
+
 const String pdfReaderPreferThemeModeChooserKey =
     'PdfReaderPreferThemeModeChooser';
 const String appListStyleKey = 'appListStyleKey';
