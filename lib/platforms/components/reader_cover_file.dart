@@ -7,9 +7,19 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
 
 class ReaderCoverFile extends StatelessWidget {
-  const ReaderCoverFile({super.key, required this.file, this.borderRadius});
+  const ReaderCoverFile({
+    super.key,
+    required this.file,
+    this.borderRadius,
+    this.height,
+    this.width,
+    this.fit,
+  });
   final ReaderFile file;
   final BorderRadiusGeometry? borderRadius;
+  final double? width;
+  final double? height;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +52,9 @@ class ReaderCoverFile extends StatelessWidget {
   Widget image(File file) {
     return Image.file(
       file,
-      fit: .cover,
+      width: width,
+      height: height,
+      fit: fit ?? .cover,
       errorBuilder: (context, error, stackTrace) {
         return errorImage();
       },

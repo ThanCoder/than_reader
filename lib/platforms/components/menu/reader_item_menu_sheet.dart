@@ -6,7 +6,8 @@ import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
-import 'package:than_reader/platforms/components/menu/info_menu.dart';
+import 'package:than_reader/platforms/components/menu/reader_info_menu_sheet.dart';
+import 'package:than_reader/platforms/components/menu/reader_item_config_edit_sheet.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/router.dart';
 
@@ -57,6 +58,7 @@ class _ReaderItemMenuSheetState extends State<ReaderItemMenuSheet> {
             ),
             Divider(),
             infoWidget,
+            editConfigWidget,
             favWidget,
             infoFormWidget,
             renameWidget,
@@ -82,12 +84,24 @@ class _ReaderItemMenuSheetState extends State<ReaderItemMenuSheet> {
       ),
       onTap: () {
         context.pop();
-        showModalBottomSheet(
-          context: context,
-          showDragHandle: true,
-          isScrollControlled: true,
-          builder: (context) => InfoMenu(file: widget.file),
-        );
+        ReaderInfoMenuSheet.show(context, file: widget.file);
+      },
+    );
+  }
+
+  Widget get editConfigWidget {
+    return ListTile(
+      tileColor: col.surfaceContainer,
+      shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+      leading: Icon(Icons.edit_document, color: col.onSurfaceVariant),
+      title: Text('Edit Reader Config'),
+      trailing: Icon(
+        Icons.arrow_forward_ios_outlined,
+        color: col.onSurfaceVariant.withValues(alpha: .45),
+      ),
+      onTap: () {
+        context.pop();
+        ReaderItemConfigEditSheet.show(context, file: widget.file);
       },
     );
   }

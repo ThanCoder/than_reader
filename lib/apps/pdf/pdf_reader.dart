@@ -109,7 +109,11 @@ class _PdfReaderState extends State<PdfReader> {
       pdfStreamSub = controller.stream.ready.listen((_) {
         st.stop();
         if (mounted) {
-          showSnackbar(context, 'Loaded: ${st.elapsedMilliseconds} ms');
+          String msg = '${st.elapsedMilliseconds} ms';
+          if (st.elapsed.inSeconds > 0) {
+            msg = '${st.elapsed.inSeconds} Seconds';
+          }
+          showSnackbar(context, 'Loaded: $msg');
         }
         init();
       });
