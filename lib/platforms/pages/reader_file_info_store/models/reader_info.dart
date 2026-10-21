@@ -2,8 +2,6 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 
-import 'package:than_reader/core/models/reader_file.dart';
-
 class ReaderInfoAdapter extends IDuJsonMetaAdapter<ReaderInfo> {
   @override
   int get adapterId => 1;
@@ -29,7 +27,6 @@ class ReaderInfo extends IDuModel {
   final List<String> urls;
   final List<String> genres;
   final List<String> tags;
-  final FileType type;
   final DateTime date;
   ReaderInfo({
     required this.title,
@@ -40,7 +37,6 @@ class ReaderInfo extends IDuModel {
     required this.genres,
     required this.tags,
     required this.coverUrl,
-    required this.type,
     required this.date,
     required this.mc,
   });
@@ -61,7 +57,6 @@ class ReaderInfo extends IDuModel {
       genres: [],
       tags: [],
       coverUrl: '',
-      type: .pdf,
       date: .now(),
     );
   }
@@ -76,7 +71,7 @@ class ReaderInfo extends IDuModel {
       'genres': genres,
       'tags': tags,
       'coverUrl': coverUrl,
-      'type': type.name,
+
       'date': date.millisecondsSinceEpoch,
       'mc': mc,
     };
@@ -92,7 +87,7 @@ class ReaderInfo extends IDuModel {
       genres: map.getStringList(['genres']),
       tags: map.getStringList(['tags']),
       coverUrl: map.getString(['coverUrl']),
-      type: .fromValue(map.getString(['type'])),
+
       date: .fromMillisecondsSinceEpoch(map.getInt(['date'])),
       mc: map.getString(['mc']),
     );
@@ -108,7 +103,6 @@ class ReaderInfo extends IDuModel {
     List<String>? urls,
     List<String>? genres,
     List<String>? tags,
-    FileType? type,
     DateTime? date,
   }) {
     return ReaderInfo(
@@ -121,8 +115,37 @@ class ReaderInfo extends IDuModel {
       urls: urls ?? this.urls,
       genres: genres ?? this.genres,
       tags: tags ?? this.tags,
-      type: type ?? this.type,
       date: date ?? this.date,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'author': author,
+      'mc': mc,
+      'translator': translator,
+      'coverUrl': coverUrl,
+      'configIds': configIds,
+      'urls': urls,
+      'genres': genres,
+      'tags': tags,
+      'date': date.millisecondsSinceEpoch,
+    };
+  }
+
+  factory ReaderInfo.fromJson(Map<String, dynamic> json) {
+    return ReaderInfo(
+      title: json['title'],
+      author: json['author'],
+      mc: json['mc'],
+      translator: json['translator'],
+      coverUrl: json['coverUrl'],
+      configIds: List<String>.from(json['configIds']),
+      urls: List<String>.from(json['urls']),
+      genres: List<String>.from(json['genres']),
+      tags: List<String>.from(json['tags']),
+      date: DateTime.fromMillisecondsSinceEpoch(json['date']),
     );
   }
 }

@@ -24,6 +24,7 @@ class AllFileControllerError extends IControllerEvent {
 class AllFileControllerLoading extends IControllerEvent {}
 
 class AllFileControllerStateChanged extends IControllerEvent {}
+
 class AllFileControllerSortChanged extends IControllerEvent {}
 
 /// ***********Events******************
@@ -34,6 +35,7 @@ class AllFileController extends IController {
 
   List<ReaderFile> _list = [];
   List<ReaderFile> get list => _list;
+  final Map<String, ReaderFile> map = {};
 
   final cf = CFBStore.instance;
   static const String sortIdKey = 'all-file-sort-id-key';
@@ -46,8 +48,13 @@ class AllFileController extends IController {
     try {
       _state = _state.copyWith(isLoading: true);
       addEvent(AllFileControllerLoading());
-
       _list = await FileScanner.scanAll();
+
+      map.clear();
+      for (var f in _list) {
+        map[f.configId] = f;
+      }
+
       _state = _state.copyWith(isLoading: false);
 
       // check sort
@@ -114,6 +121,7 @@ class AllFileController extends IController {
     final index = list.indexWhere((e) => e.path == file.path);
     if (index == -1) return;
     list.removeAt(index);
+    map.remove(file.configId);
 
     // remove disk
     final f = File(file.path);

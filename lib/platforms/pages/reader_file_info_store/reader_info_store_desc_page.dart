@@ -1,8 +1,10 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 import 'package:than_reader/router.dart';
@@ -68,23 +70,6 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
     );
   }
 
-  Widget get descWidget {
-    return FutureBuilder(
-      future: widget.info.getContent<String>(),
-      builder: (context, snapshot) {
-        String desc = '';
-        if (snapshot.hasData) {
-          final res = snapshot.data!;
-
-          if (res.isOk) {
-            desc = res.unwrap();
-          }
-        }
-        return SelectableText(desc, style: TextStyle(fontSize: 18));
-      },
-    );
-  }
-
   Widget get infoWidget {
     return Column(
       crossAxisAlignment: .start,
@@ -106,7 +91,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           children: [
             _wrapItem('author: ${widget.info.author}'),
             _wrapItem('translator: ${widget.info.translator}'),
-            _wrapItem('Type: ${widget.info.type.label}'),
+            if (widget.info.mc.isNotEmpty) _wrapItem('MC: ${widget.info.mc}'),
             _wrapItem('Date: ${widget.info.date.formatTimeAgo()}'),
           ],
         ),
@@ -122,6 +107,33 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           },
         ),
       ],
+    );
+  }
+
+  Widget get descWidget {
+    return FutureBuilder(
+      future: widget.info.getContent<String>(),
+      builder: (context, snapshot) {
+        String desc = '';
+        if (snapshot.hasData) {
+          final res = snapshot.data!;
+
+          if (res.isOk) {
+            desc = res.unwrap();
+          }
+        }
+        return ExpandableText(
+          desc,
+          expandText: 'Show More',
+          collapseText: 'Show Less',
+          linkColor: Colors.blue,
+          maxLines: 9,
+          style: TextStyle(fontSize: 18),
+        );
+        // return Column(
+        //   children: [SelectableText(desc, style: TextStyle(fontSize: 18))],
+        // );
+      },
     );
   }
 
@@ -189,7 +201,8 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
   Widget get _bookListWidget {
     return SliverPadding(
       padding: .symmetric(vertical: 10, horizontal: 15),
-      sliver: SliverList.builder(
+      sliver: SliverList.separated(
+        separatorBuilder: (context, index) => SizedBox(height: 10),
         itemCount: list.length,
         itemBuilder: (context, index) {
           final item = list[index];
@@ -197,6 +210,9 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
             file: item,
             onClicked: (file) {
               goReaderModuleApp(context, file, canGoInfoPage: false);
+            },
+            onRightClicked: (file) {
+              ReaderItemMenuSheet.show(context, file: file);
             },
           );
         },

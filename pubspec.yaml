@@ -3,7 +3,7 @@ description: "PDF Reader App Material UI."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 repository: https://github.com/ThanCoder/than_reader.git
 
-version: 2.4.0
+version: 2.5.0
 
 environment:
   sdk: ^3.13.0
@@ -40,6 +40,7 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
+  expandable_text: ^2.3.0
   # flutter pub upgrade --major-versions
 
 dev_dependencies:

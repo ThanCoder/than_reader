@@ -35,20 +35,21 @@ class _PdfImageCacheConfigWidgetState extends State<PdfImageCacheConfigWidget> {
     return (mb * pow);
   }
 
-  final maxCountList = [5, 30, 50, 100, 200, 300, 400, 500]
-      .map(
-        (e) => DropdownMenuItem<int>(
-          value: e,
-          child: Row(
-            spacing: 5,
-            children: [
-              Text('$e', style: TextStyle(fontSize: 18, fontWeight: .w700)),
-              Text('Max Count'),
-            ],
-          ),
-        ),
-      )
-      .toList();
+  final maxCountList =
+      [5, 30, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+          .map(
+            (e) => DropdownMenuItem<int>(
+              value: e,
+              child: Row(
+                spacing: 5,
+                children: [
+                  Text('$e', style: TextStyle(fontSize: 18, fontWeight: .w700)),
+                  Text('Max Count'),
+                ],
+              ),
+            ),
+          )
+          .toList();
 
   late final maxSizeBytesList = [1, 3, 5, 10, 15, 20, 30, 50, 100]
       .map((n) => getSize(n))

@@ -2,7 +2,10 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
+import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/platforms/components/reader_cover_file.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
@@ -76,6 +79,16 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
     );
   }
 
+  void onTap(ReaderInfo info) {
+    if (widget.bookTitle != null) {
+      showItemMenu(info);
+      return;
+    }
+    context.pushMaterialPageRoute(
+      builder: (mainCtx) => ReaderInfoStoreDescPage(info: info),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +138,21 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
     );
   }
 
+  Widget? _cover(ReaderInfo info) {
+    if (info.configIds.isNotEmpty) {
+      final file =
+          ControllerManager.read<AllFileController>().map[info.configIds.first];
+      if (file != null) {
+        return SizedBox(
+          width: 80,
+          height: 80,
+          child: ReaderCoverFile(file: file),
+        );
+      }
+    }
+    return null;
+  }
+
   Widget _item(ReaderInfo info) {
     return Container(
       padding: .symmetric(vertical: 10, horizontal: 14),
@@ -134,17 +162,11 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
       ),
       child: InkWell(
         borderRadius: .circular(15),
-        onTap: () {
-          if (widget.bookTitle != null) {
-            showItemMenu(info);
-            return;
-          }
-          context.pushMaterialPageRoute(
-            builder: (mainCtx) => ReaderInfoStoreDescPage(info: info),
-          );
-        },
+        onTap: () => onTap(info),
         child: Row(
+          spacing: 10,
           children: [
+            ?_cover(info),
             Expanded(
               child: Column(
                 crossAxisAlignment: .start,
@@ -162,7 +184,6 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
                     children: [
                       _wrapItem('author: ${info.author}'),
                       _wrapItem('translator: ${info.translator}'),
-                      _wrapItem('Type: ${info.type.label}'),
                       _wrapItem('Date: ${info.date.formatTimeAgo()}'),
                     ],
                   ),
