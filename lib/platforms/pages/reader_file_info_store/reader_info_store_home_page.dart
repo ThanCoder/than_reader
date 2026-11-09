@@ -10,17 +10,19 @@ import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_form_page.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/routes.dart';
 
-class ReaderInfoStorePage extends StatefulWidget {
+class ReaderInfoStoreHomePage extends StatefulWidget {
   const new({super.key, this.bookTitle, this.bookConfigIds});
   final String? bookTitle;
   final String? bookConfigIds;
 
   @override
-  State<ReaderInfoStorePage> createState() => _ReaderInfoStorePageState();
+  State<ReaderInfoStoreHomePage> createState() =>
+      _ReaderInfoStoreHomePageState();
 }
 
-class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
+class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
   final store = ReaderInfoStore.instance.store;
   final infoBox = ReaderInfoStore.instance.infoBox;
   ColorScheme get col => Theme.of(context).colorScheme;
@@ -55,33 +57,39 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
     await infoBox.deleteById(info.generatedId);
   }
 
-  void showItemMenu(ReaderInfo info) async {
-    String desc = '';
-    final descRes = await info.getContent<String>();
-    if (descRes.isOk) {
-      desc = descRes.unwrap();
-    }
-    if (!mounted) return;
-    final res = await context
-        .pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
-          builder: (mainCtx) => ReaderInfoStoreFormPage(
-            info: info,
-            desc: desc,
-            newConfigId: widget.bookConfigIds,
-          ),
-        );
-    if (res == null) return;
-
-    await infoBox.updateByid(
-      info.generatedId,
-      value: res.info,
-      contentWriter: TextCompressContentWriter(res.desc),
+  void editFormPage(ReaderInfo info) async {
+    await editReaderFileFormPage(
+      context,
+      info: info,
+      bookConfigIds: widget.bookConfigIds,
     );
+
+    // String desc = '';
+    // final descRes = await info.getContent<String>();
+    // if (descRes.isOk) {
+    //   desc = descRes.unwrap();
+    // }
+    // if (!mounted) return;
+    // final res = await context
+    //     .pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
+    //       builder: (mainCtx) => ReaderInfoStoreFormPage(
+    //         info: info,
+    //         desc: desc,
+    //         newConfigId: widget.bookConfigIds,
+    //       ),
+    //     );
+    // if (res == null) return;
+
+    // await infoBox.updateByid(
+    //   info.generatedId,
+    //   value: res.info,
+    //   contentWriter: TextCompressContentWriter(res.desc),
+    // );
   }
 
   void onTap(ReaderInfo info) {
     if (widget.bookTitle != null) {
-      showItemMenu(info);
+      editFormPage(info);
       return;
     }
     context.pushMaterialPageRoute(
@@ -184,43 +192,50 @@ class _ReaderInfoStorePageState extends State<ReaderInfoStorePage> {
                     children: [
                       _wrapItem('author: ${info.author}'),
                       _wrapItem('translator: ${info.translator}'),
-                      _wrapItem('Date: ${info.date.formatTimeAgo()}'),
+                      _wrapItem(info.date.formatDate()),
                     ],
                   ),
                 ],
               ),
             ),
             SizedBox(width: 10),
-            Column(
-              spacing: 8,
-              children: [
-                IconButton(
-                  style: IconButton.styleFrom(
-                    backgroundColor: col.error,
-                    foregroundColor: col.onError,
-                  ),
-                  onPressed: () {
-                    deleteItem(info);
-                  },
-                  icon: Icon(Icons.delete_forever_outlined),
-                ),
-                IconButton(
-                  style: IconButton.styleFrom(
-                    backgroundColor: col.secondaryContainer,
-                    foregroundColor: col.onSecondaryContainer,
-                  ),
-                  onPressed: () {
-                    showItemMenu(info);
-                  },
-                  icon: Icon(Icons.edit_document),
-                ),
-              ],
-            ),
+            _itemPopupMenu(info),
           ],
         ),
       ),
     );
   }
+
+  Widget _itemPopupMenu(ReaderInfo info) => PopupMenuButton<String>(
+    initialValue: 'edit',
+    borderRadius: .circular(12),
+    onSelected: (value) {
+      switch (value) {
+        case 'edit':
+          editFormPage(info);
+          break;
+        case 'delete':
+          deleteItem(info);
+          break;
+      }
+    },
+    itemBuilder: (context) => [
+      PopupMenuItem(
+        value: 'edit',
+        child: Row(
+          spacing: 10,
+          children: [Icon(Icons.edit_document), Text('Edit')],
+        ),
+      ),
+      PopupMenuItem(
+        value: 'delete',
+        child: Row(
+          spacing: 10,
+          children: [Icon(Icons.delete_forever_outlined), Text('Delete')],
+        ),
+      ),
+    ],
+  );
 
   Widget _wrapItem(String text) {
     return Container(

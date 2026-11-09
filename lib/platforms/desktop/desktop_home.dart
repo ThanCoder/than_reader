@@ -7,7 +7,7 @@ import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
 import 'package:than_reader/platforms/pages/more_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
-import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
 
 class DesktopHome extends StatefulWidget {
   const DesktopHome({super.key});
@@ -72,7 +72,7 @@ class _DesktopHomeState extends State<DesktopHome> {
         SearchPage(),
         ReaderTrackerPage(),
         MorePage(),
-        ReaderInfoStorePage(),
+        ReaderInfoStoreHomePage(),
         NovelHomePage(),
         ServerHomePage(),
       ],

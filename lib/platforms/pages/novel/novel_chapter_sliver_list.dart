@@ -71,7 +71,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
               NovelChapterEditFormPage(chapter: item, box: box),
         );
     if (res == null) return;
-    final upRes = await box.updateByid(
+    final upRes = await box.updateById(
       item.generatedId,
       value: res.chapter,
       contentWriter: TextCompressContentWriter(res.contentText),

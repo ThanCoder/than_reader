@@ -37,6 +37,12 @@ class ReaderFileUtil {
     }
   }
 
+  static Future<PdfConfig?> getPdfConfigOrNull(ReaderFile file) async {
+    final res = await getPdfConfig(file);
+    if (res.isErr) return null;
+    return res.unwrap();
+  }
+
   static Future<Result<PdfConfig, String>> getPdfConfig(ReaderFile file) async {
     final pathRes = getConfigPath(file);
     if (pathRes.isErr) {

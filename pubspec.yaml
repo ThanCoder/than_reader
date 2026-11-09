@@ -21,18 +21,18 @@ dependencies:
   desktop_drop: ^0.8.4
   flutter_svg: ^2.3.0
   html: ^0.15.6
-  than_pkg_linux: ^0.2.0
+  than_pkg_linux: ^0.3.0
   than_pkg_android: ^0.7.0
   flutter_colorpicker: ^1.1.0
   package_info_plus: ^10.2.1
-  dart_core_extensions: ^0.7.0
+  dart_core_extensions: ^0.8.0
   image_picker: ^1.2.4
   url_launcher: ^6.3.2
+  expandable_text: ^2.3.0
 
   t_widgets:
     git: https://github.com/ThanCoder/t_widgets.git
   t_pdf_reader:
-    # path: /home/thancoder/projects/dart_plugins/t_pdf_reader
     git: https://github.com/ThanCoder/t_pdf_reader.git
   t_server:
     git: https://github.com/ThanCoder/t_server.git
@@ -40,7 +40,7 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
-  expandable_text: ^2.3.0
+  
   # flutter pub upgrade --major-versions
 
 dev_dependencies:

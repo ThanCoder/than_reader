@@ -12,7 +12,7 @@ import 'package:than_reader/core/utils/reader_file_util.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
-import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
 
 Future<void> goReaderModuleApp(
   BuildContext context,
@@ -87,8 +87,10 @@ Future<void> goInfoDescPage(BuildContext context, ReaderFile file) async {
 Future<void> goInfoFormPage(BuildContext context, ReaderFile file) async {
   // if (!context.mounted) return;
   await context.pushMaterialPageRoute(
-    builder: (mainCtx) =>
-        ReaderInfoStorePage(bookTitle: file.name, bookConfigIds: file.configId),
+    builder: (mainCtx) => ReaderInfoStoreHomePage(
+      bookTitle: file.name,
+      bookConfigIds: file.configId,
+    ),
   );
   // final res = await context.pushMaterialPageRoute<ReaderInfoStoreFormPageData>(
   //   builder: (mainCtx) => ReaderInfoStoreFormPage(info: info, desc: desc),

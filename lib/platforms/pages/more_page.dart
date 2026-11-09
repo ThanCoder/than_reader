@@ -8,7 +8,7 @@ import 'package:than_reader/platforms/pages/app_about_dialog.dart';
 import 'package:than_reader/platforms/pages/dev_pages/dev_route_tile.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
-import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_page.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -65,7 +65,7 @@ class MorePage extends StatelessWidget {
                 title: Text('Info Store'),
                 onTap: () {
                   context.pushMaterialPageRoute(
-                    builder: (mainCtx) => ReaderInfoStorePage(),
+                    builder: (mainCtx) => ReaderInfoStoreHomePage(),
                   );
                 },
               ),

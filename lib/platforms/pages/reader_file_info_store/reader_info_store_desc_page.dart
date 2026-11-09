@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/utils/reader_file_util.dart';
+import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
+import 'package:than_reader/platforms/pages/reader_file_info_store/routes.dart';
 import 'package:than_reader/router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -21,12 +25,15 @@ class ReaderInfoStoreDescPage extends StatefulWidget {
 
 class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
   List<ReaderFile> list = [];
+  late ReaderInfo info;
 
   @override
   void initState() {
+    info = widget.info;
+
     super.initState();
 
-    final ids = widget.info.configIds;
+    final ids = info.configIds;
     if (ids.isNotEmpty) {
       final books = <String, ReaderFile>{};
       for (var f in allCon.list) {
@@ -43,12 +50,36 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
   }
 
   final allCon = ControllerManager.read<AllFileController>();
+  final infoBox = ReaderInfoStore.instance.infoBox;
+
+  void showMenu() async {
+    await editReaderFileFormPage(
+      context,
+      info: info,
+      // bookConfigIds: info.configIds,
+    );
+    final res = await infoBox.getById(widget.info.generatedId);
+    if (!mounted) return;
+
+    if (res.isErr) {
+      showErrorDialog(context, res.unwrapError());
+      return;
+    }
+    info = res.unwrap();
+    setState(() {});
+  }
+
   ColorScheme get col => Theme.of(context).colorScheme;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Info')),
+      appBar: AppBar(
+        title: Text('Info'),
+        actions: [
+          IconButton(onPressed: showMenu, icon: Icon(Icons.more_vert_outlined)),
+        ],
+      ),
       body: CustomScrollView(
         slivers: [
           SliverList.list(
@@ -76,7 +107,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
       spacing: 10,
       children: [
         Text(
-          widget.info.title,
+          info.title,
           maxLines: 1,
           overflow: .ellipsis,
           style: TextStyle(
@@ -89,19 +120,19 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           spacing: 5,
           runSpacing: 5,
           children: [
-            _wrapItem('author: ${widget.info.author}'),
-            _wrapItem('translator: ${widget.info.translator}'),
-            if (widget.info.mc.isNotEmpty) _wrapItem('MC: ${widget.info.mc}'),
-            _wrapItem('Date: ${widget.info.date.formatTimeAgo()}'),
+            _wrapItem('author: ${info.author}'),
+            _wrapItem('translator: ${info.translator}'),
+            if (info.mc.isNotEmpty) _wrapItem('MC: ${info.mc}'),
+            _wrapItem('Date: ${info.date.formatTimeAgo()}'),
           ],
         ),
 
-        // _wrapperWidget('Config Id', list: widget.info.configIds),
-        _wrapperWidget('Genres', list: widget.info.genres),
-        _wrapperWidget('Tags', list: widget.info.tags),
+        // _wrapperWidget('Config Id', list: info.configIds),
+        _wrapperWidget('Genres', list: info.genres),
+        _wrapperWidget('Tags', list: info.tags),
         _wrapperWidget(
           'Urls',
-          list: widget.info.urls,
+          list: info.urls,
           onTap: (item) {
             launchUrlString(item);
           },
@@ -112,12 +143,14 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
 
   Widget get descWidget {
     return FutureBuilder(
-      future: widget.info.getContent<String>(),
+      future: infoBox.getContent<String>(info),
       builder: (context, snapshot) {
         String desc = '';
         if (snapshot.hasData) {
           final res = snapshot.data!;
-
+          if (res.isErr) {
+            desc = res.unwrapError();
+          }
           if (res.isOk) {
             desc = res.unwrap();
           }
@@ -128,7 +161,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
           collapseText: 'Show Less',
           linkColor: Colors.blue,
           maxLines: 9,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 16),
         );
         // return Column(
         //   children: [SelectableText(desc, style: TextStyle(fontSize: 18))],
@@ -139,7 +172,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
 
   Widget _wrapItem(String text, {bool isSelectable = true}) {
     final sty = TextStyle(
-      fontSize: 14,
+      fontSize: 12,
       fontWeight: .w400,
       color: col.onSecondary,
     );
@@ -206,13 +239,47 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
         itemCount: list.length,
         itemBuilder: (context, index) {
           final item = list[index];
-          return ReaderListItem(
-            file: item,
-            onClicked: (file) {
-              goReaderModuleApp(context, file, canGoInfoPage: false);
-            },
-            onRightClicked: (file) {
-              ReaderItemMenuSheet.show(context, file: file);
+          return FutureBuilder(
+            future: ReaderFileUtil.getPdfConfigOrNull(item),
+            builder: (context, snapshot) {
+              final cf = snapshot.data;
+
+              return Column(
+                children: [
+                  ReaderListItem(
+                    file: item,
+                    onClicked: (file) async {
+                      await goReaderModuleApp(
+                        context,
+                        file,
+                        canGoInfoPage: false,
+                      );
+                      if (!mounted) return;
+                      setState(() {});
+                    },
+                    onRightClicked: (file) async {
+                      await ReaderItemMenuSheet.show(context, file: file);
+                      if (!mounted) return;
+                      setState(() {});
+                    },
+                  ),
+                  if (cf != null && cf.totalPage > 0)
+                    Row(
+                      spacing: 10,
+                      children: [
+                        Text(
+                          '${cf.page}/${cf.totalPage} - ${((cf.page / cf.totalPage) * 100).toStringAsFixed(2)}%',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Expanded(
+                          child: LinearProgressIndicator(
+                            value: cf.page / cf.totalPage,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              );
             },
           );
         },
