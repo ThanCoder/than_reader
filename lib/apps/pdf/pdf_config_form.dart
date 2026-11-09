@@ -40,10 +40,12 @@ class _PdfConfigFormState extends State<PdfConfigForm> {
         children: [
           InputText(
             controller: pageCon,
-            maxLines: 1,
-            label: Text('Page'),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            keyboardType: .number,
+            inputTextProps: .new(
+              maxLines: 1,
+              label: Text('Page'),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: .number,
+            ),
           ),
 
           Row(

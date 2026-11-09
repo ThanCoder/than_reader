@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
-
-import 'package:than_reader/platforms/components/forms/input_text.dart';
+import 'package:than_reader/platforms/components/forms/form_input_text.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 
 class ReaderInfoStoreFormPageData {
@@ -38,7 +37,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
   }
 
   late ReaderInfo info;
-
+  final formKey = GlobalKey<FormState>();
   final titleCon = TextEditingController();
   final authorCon = TextEditingController();
   final translatorCon = TextEditingController();
@@ -99,6 +98,9 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
   }
 
   void saveAndClose() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
     context.pop<ReaderInfoStoreFormPageData>(
       .new(
         info: info.copyWith(
@@ -106,6 +108,7 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
           author: authorCon.text,
           coverUrl: coverUrlCon.text,
           translator: translatorCon.text,
+          mc: mcCon.text,
           date: .now(),
         ),
         desc: descCon.text,
@@ -144,37 +147,85 @@ class _ReaderInfoStoreFormPageState extends State<ReaderInfoStoreFormPage> {
     );
   }
 
-  Column _body() {
-    return Column(
-      spacing: 10,
-      crossAxisAlignment: .start,
-      children: [
-        SizedBox(height: 10),
-
-        InputText(controller: titleCon, maxLines: 1, label: Text('Title')),
-        InputText(controller: authorCon, maxLines: 1, label: Text('Author')),
-        InputText(
-          controller: mcCon,
-          maxLines: 1,
-          label: Text('Main Charactor'),
-        ),
-        InputText(
-          controller: translatorCon,
-          maxLines: 1,
-          label: Text('Translator'),
-        ),
-        InputText(
-          controller: coverUrlCon,
-          maxLines: 1,
-          label: Text('Cover Url'),
-        ),
-        _bookIdWidget,
-        _urlWidget,
-        _genresWidget,
-        _tagsWidget,
-        InputText(controller: descCon, label: Text('Description')),
-        SizedBox(height: 50),
-      ],
+  Widget _body() {
+    return Form(
+      key: formKey,
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: .start,
+        children: [
+          SizedBox(height: 10),
+          FormInputText(
+            controller: titleCon,
+            inputTextProps: .new(maxLines: 1, label: Text('Title')),
+            validator: (val) {
+              if (val != null && val.isEmpty) {
+                return 'text required!';
+              }
+              return null;
+            },
+          ),
+          FormInputText(
+            controller: authorCon,
+            inputTextProps: .new(maxLines: 1, label: Text('Author')),
+            validator: (val) {
+              if (val != null && val.isEmpty) {
+                return 'text required!';
+              }
+              return null;
+            },
+          ),
+          FormInputText(
+            controller: mcCon,
+            inputTextProps: .new(maxLines: 1, label: Text('Main Charactor')),
+            validator: (val) {
+              if (val != null && val.isEmpty) {
+                return '`Main Charactor` required!';
+              }
+              return null;
+            },
+          ),
+          FormInputText(
+            inputTextProps: .new(maxLines: 1, label: Text('Translator')),
+            controller: translatorCon,
+            validator: (val) {
+              if (val != null && val.isEmpty) {
+                return 'text required!';
+              }
+              return null;
+            },
+          ),
+          FormInputText(
+            inputTextProps: .new(maxLines: 1, label: Text('Cover Url')),
+            controller: coverUrlCon,
+          ),
+          SwitchListTile.adaptive(
+            title: Text('Adult Novel'),
+            value: info.isAdult,
+            onChanged: (value) {
+              info = info.copyWith(isAdult: value);
+              setState(() {});
+            },
+          ),
+          SwitchListTile.adaptive(
+            title: Text('Completed Novel'),
+            value: info.isCompleted,
+            onChanged: (value) {
+              info = info.copyWith(isCompleted: value);
+              setState(() {});
+            },
+          ),
+          _bookIdWidget,
+          _urlWidget,
+          _genresWidget,
+          _tagsWidget,
+          FormInputText(
+            controller: descCon,
+            inputTextProps: .new(maxLines: null, label: Text('Description')),
+          ),
+          SizedBox(height: 50),
+        ],
+      ),
     );
   }
 

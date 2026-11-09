@@ -28,6 +28,8 @@ class ReaderInfo extends IDuModel {
   final List<String> genres;
   final List<String> tags;
   final DateTime date;
+  final bool isAdult;
+  final bool isCompleted;
   ReaderInfo({
     required this.title,
     required this.author,
@@ -39,6 +41,8 @@ class ReaderInfo extends IDuModel {
     required this.coverUrl,
     required this.date,
     required this.mc,
+    required this.isAdult,
+    required this.isCompleted,
   });
   factory ReaderInfo.empty({
     String? title,
@@ -46,8 +50,12 @@ class ReaderInfo extends IDuModel {
     String? translator,
     String? mc,
     List<String>? configIds,
+    bool? isAdult,
+    bool? isCompleted,
   }) {
     return .new(
+      isAdult: isAdult ?? false,
+      isCompleted: isCompleted ?? false,
       title: title ?? 'Untitled',
       author: author ?? 'Unknown',
       translator: translator ?? 'Unknown',
@@ -71,9 +79,10 @@ class ReaderInfo extends IDuModel {
       'genres': genres,
       'tags': tags,
       'coverUrl': coverUrl,
-
       'date': date.millisecondsSinceEpoch,
       'mc': mc,
+      'isAdult': isAdult,
+      'isCompleted': isCompleted,
     };
   }
 
@@ -87,9 +96,10 @@ class ReaderInfo extends IDuModel {
       genres: map.getStringList(['genres']),
       tags: map.getStringList(['tags']),
       coverUrl: map.getString(['coverUrl']),
-
       date: .fromMillisecondsSinceEpoch(map.getInt(['date'])),
       mc: map.getString(['mc']),
+      isAdult: map.getBool(['isAdult']),
+      isCompleted: map.getBool(['isCompleted']),
     );
   }
 
@@ -104,6 +114,8 @@ class ReaderInfo extends IDuModel {
     List<String>? genres,
     List<String>? tags,
     DateTime? date,
+    bool? isAdult,
+    bool? isCompleted,
   }) {
     return ReaderInfo(
       title: title ?? this.title,
@@ -116,6 +128,8 @@ class ReaderInfo extends IDuModel {
       genres: genres ?? this.genres,
       tags: tags ?? this.tags,
       date: date ?? this.date,
+      isAdult: isAdult ?? this.isAdult,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
@@ -132,20 +146,5 @@ class ReaderInfo extends IDuModel {
       'tags': tags,
       'date': date.millisecondsSinceEpoch,
     };
-  }
-
-  factory ReaderInfo.fromJson(Map<String, dynamic> json) {
-    return ReaderInfo(
-      title: json['title'],
-      author: json['author'],
-      mc: json['mc'],
-      translator: json['translator'],
-      coverUrl: json['coverUrl'],
-      configIds: List<String>.from(json['configIds']),
-      urls: List<String>.from(json['urls']),
-      genres: List<String>.from(json['genres']),
-      tags: List<String>.from(json['tags']),
-      date: DateTime.fromMillisecondsSinceEpoch(json['date']),
-    );
   }
 }

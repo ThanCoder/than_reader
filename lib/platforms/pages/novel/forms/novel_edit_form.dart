@@ -133,21 +133,21 @@ class _NovelEditFormState extends State<NovelEditForm> {
                 _coverImage(),
                 InputText(
                   controller: titleCon,
-                  maxLines: 1,
-                  label: Text('Title'),
+                  inputTextProps: .new(maxLines: 1, label: Text('Title')),
                 ),
 
                 InputText(
                   controller: authorCon,
-                  maxLines: 1,
-                  label: Text('Author'),
+                  inputTextProps: .new(maxLines: 1, label: Text('Author')),
                 ),
                 InputText(
                   controller: translatorCon,
-                  maxLines: 1,
-                  label: Text('Translator'),
+                  inputTextProps: .new(maxLines: 1, label: Text('Translator')),
                 ),
-                InputText(controller: mcCon, maxLines: 1, label: Text('MC')),
+                InputText(
+                  controller: mcCon,
+                  inputTextProps: .new(maxLines: 1, label: Text('MC')),
+                ),
                 urlWidget,
                 if (desc.urls.isNotEmpty) SizedBox(height: 10),
 
@@ -155,8 +155,10 @@ class _NovelEditFormState extends State<NovelEditForm> {
                 if (desc.tags.isNotEmpty) SizedBox(height: 10),
                 InputText(
                   controller: descCon,
-                  maxLines: null,
-                  label: Text('Description'),
+                  inputTextProps: .new(
+                    maxLines: null,
+                    label: Text('Description'),
+                  ),
                 ),
                 SizedBox(height: 50),
               ],

@@ -26,6 +26,30 @@ class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
   final store = ReaderInfoStore.instance.store;
   final infoBox = ReaderInfoStore.instance.infoBox;
   ColorScheme get col => Theme.of(context).colorScheme;
+  final searchFoc = FocusNode();
+  final searchCon = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchFoc.dispose();
+  }
+
+  bool isSearched = false;
+
+  Future<void> init() async {}
+
+  void _onSearch(String val) {
+    setState(() {
+      isSearched = true;
+    });
+  }
 
   void createNewInfo() async {
     final res = await context
@@ -105,6 +129,10 @@ class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
         slivers: [
           SliverPadding(
             padding: .symmetric(vertical: 10, horizontal: 12),
+            sliver: SliverList.list(children: [_searchbar()]),
+          ),
+          SliverPadding(
+            padding: .symmetric(vertical: 10, horizontal: 12),
             sliver: _body(),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 70)),
@@ -116,6 +144,31 @@ class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
       ),
     );
   }
+
+  SearchBar _searchbar() => SearchBar(
+    shape: WidgetStatePropertyAll(
+      RoundedRectangleBorder(borderRadius: .circular(14)),
+    ),
+    onChanged: _onSearch,
+    controller: searchCon,
+    hintText: 'Search....',
+    focusNode: searchFoc,
+    onTapOutside: (event) {
+      searchFoc.unfocus();
+      searchCon.clear();
+      setState(() {
+        isSearched = false;
+      });
+    },
+    trailing: [
+      IconButton(
+        onPressed: () {
+          searchFoc.unfocus();
+        },
+        icon: Icon(Icons.clear_all_outlined),
+      ),
+    ],
+  );
 
   Widget _body() {
     return StreamBuilder(
@@ -129,9 +182,13 @@ class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
                 child: Center(child: CircularProgressIndicator.adaptive()),
               );
             }
-            final list = snapshot.data ?? [];
+            var list = snapshot.data ?? [];
+            if (isSearched && searchCon.text.isNotEmpty) {
+              list = list
+                  .where((e) => e.title.upper.contains(searchCon.text.upper))
+                  .toList();
+            }
             list.sort((a, b) => b.date.compareTo(a.date));
-
             return SliverList.separated(
               itemCount: list.length,
               separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -193,6 +250,8 @@ class _ReaderInfoStoreHomePageState extends State<ReaderInfoStoreHomePage> {
                       _wrapItem('author: ${info.author}'),
                       _wrapItem('translator: ${info.translator}'),
                       _wrapItem(info.date.formatDate()),
+                      if (info.isAdult) _wrapItem('Adult'),
+                      _wrapItem(info.isCompleted ? 'Completed' : 'OnGoing'),
                     ],
                   ),
                 ],
