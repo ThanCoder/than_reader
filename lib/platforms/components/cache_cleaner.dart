@@ -1,5 +1,5 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';

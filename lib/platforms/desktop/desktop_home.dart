@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
+import 'package:than_reader/platforms/pages/more_page.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
-import 'package:than_reader/platforms/pages/more_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
 
@@ -19,9 +19,8 @@ class DesktopHome extends StatefulWidget {
 class _DesktopHomeState extends State<DesktopHome> {
   @override
   Widget build(BuildContext context) {
-    final col = context.colorScheme;
     return Scaffold(
-      backgroundColor: col.surface,
+      // backgroundColor: col.surface,
       body: Row(
         children: [
           // nav
@@ -35,9 +34,7 @@ class _DesktopHomeState extends State<DesktopHome> {
   }
 
   Widget _nav() {
-    final col = context.colorScheme;
     return NavigationRail(
-      backgroundColor: col.surfaceContainer,
       scrollable: true,
 
       destinations: [

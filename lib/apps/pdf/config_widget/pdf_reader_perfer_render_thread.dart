@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/utils/app_utils.dart';

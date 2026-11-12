@@ -1,5 +1,5 @@
 import 'package:cfb_store/cfb_store.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/constanst_keys.dart';
 import 'package:than_reader/platforms/components/color_picker_dialog.dart';
@@ -25,7 +25,7 @@ class _AppSeedsColorChooserState extends State<AppSeedsColorChooser> {
 
   @override
   Widget build(BuildContext context) {
-    final col = context.colorScheme;
+    final col = Theme.of(context).colorScheme;
     return StreamBuilder(
       stream: cf.stream.put.where(
         (e) => e.key == appSeedsColorEnableKey || e.key == appSeedsColorIntKey,

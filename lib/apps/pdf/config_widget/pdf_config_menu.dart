@@ -1,5 +1,5 @@
 import 'package:cfb_store/cfb_store.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_image_cache_config_widget.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';

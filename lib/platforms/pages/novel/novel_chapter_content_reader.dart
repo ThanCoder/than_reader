@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dual_store/dual_store.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_reader/core/controller/i_controller.dart';

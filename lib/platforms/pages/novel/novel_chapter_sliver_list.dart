@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dual_store/dual_store.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';

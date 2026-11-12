@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
 import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';

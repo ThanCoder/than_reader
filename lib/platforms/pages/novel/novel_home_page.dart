@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
@@ -117,11 +117,14 @@ class _NovelHomePageState extends State<NovelHomePage> {
 
               if (con.error == null && con.list.isEmpty)
                 SliverFillRemaining(child: Center(child: Text('Not Found!'))),
-
-              SliverList.separated(
-                separatorBuilder: (context, index) => SizedBox(height: 10),
-                itemCount: con.list.length,
-                itemBuilder: (context, index) => listItem(con.list[index]),
+              // list
+              SliverPadding(
+                padding: .symmetric(vertical: 10, horizontal: 12),
+                sliver: SliverList.separated(
+                  separatorBuilder: (context, index) => SizedBox(height: 10),
+                  itemCount: con.list.length,
+                  itemBuilder: (context, index) => listItem(con.list[index]),
+                ),
               ),
             ],
           );

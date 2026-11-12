@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_perfer_render_thread.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
 import 'package:than_reader/const_keys.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/desktop/desktop_home.dart';
@@ -34,24 +34,22 @@ class _PlatformAppSwitcherState extends State<PlatformAppSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    if (TPlatform.isDesktop) {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          this.constraints = constraints;
-          saveSize();
-          final isMobile = constraints.maxWidth < 500;
-          if (isMobile) {
-            return MobileHome();
-          }
-          return DesktopHome();
-        },
-      );
-    }
-    // final isMobile = constraints.maxWidth < 600;
     final isMobile = TPlatform.isMobile;
     if (isMobile) {
       return MobileHome();
     }
-    return DesktopHome();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        this.constraints = constraints;
+        saveSize();
+        final isMobile = constraints.maxWidth < 500;
+        if (isMobile) {
+          return MobileHome();
+        }
+        return DesktopHome();
+      },
+    );
+    // final isMobile = constraints.maxWidth < 600;
   }
 }

@@ -6,13 +6,13 @@ repository: https://github.com/ThanCoder/than_reader.git
 version: 2.5.0
 
 environment:
-  sdk: ^3.13.0
+  sdk: ^3.14.0
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # material_ui: ^1.0.1
+  material_ui: ^1.11.0
   cfb_store: ^0.8.0
   mime: ^2.0.0
   crypto: ^3.0.7
@@ -29,6 +29,7 @@ dependencies:
   image_picker: ^1.2.4
   url_launcher: ^6.3.2
   expandable_text: ^2.3.0
+  cached_network_image: ^4.0.0
 
   t_widgets:
     git: https://github.com/ThanCoder/t_widgets.git
@@ -40,7 +41,6 @@ dependencies:
     git: https://github.com/ThanCoder/dual_store.git
   t_client:
     git: https://github.com/ThanCoder/t_client
-  
   # flutter pub upgrade --major-versions
 
 dev_dependencies:

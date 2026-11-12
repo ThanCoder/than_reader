@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/apps/pdf/pdf_config.dart';
 import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';

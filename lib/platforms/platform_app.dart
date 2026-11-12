@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/constanst_keys.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/platform_app_switcher.dart';
+import 'package:than_reader/theme/theme_provider.dart';
 
 class PlatformApp extends StatefulWidget {
   const PlatformApp({super.key});
@@ -30,7 +30,7 @@ class _PlatformAppState extends State<PlatformApp> {
         final colorEnable = cf.getBool(appSeedsColorEnableKey);
         final enable = colorEnable && seedInt != 0;
 
-        return TMaterialThemeProvider(
+        return MaterialThemeProvider(
           theme: !enable
               ? null
               : .light(useMaterial3: true).copyWith(
@@ -48,8 +48,8 @@ class _PlatformAppState extends State<PlatformApp> {
                   ),
                 ),
           getTheme: () =>
-              TMaterialThemeProviderType.fromName(cf.getString(appThemeKeys)),
-          onChanged: (TMaterialThemeProviderType type) {
+              MaterialThemeProviderType.fromName(cf.getString(appThemeKeys)),
+          onChanged: (MaterialThemeProviderType type) {
             cf.putAndWriteAll(appThemeKeys, type.name);
           },
           child: PlatformAppSwitcher(),

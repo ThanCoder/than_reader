@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_client/t_client.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';

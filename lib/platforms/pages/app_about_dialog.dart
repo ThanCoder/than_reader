@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 
 class AppAboutDialogListTile extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';

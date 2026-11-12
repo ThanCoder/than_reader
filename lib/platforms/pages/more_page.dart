@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_setting_page.dart';
 import 'package:than_reader/platforms/components/app_seeds_color_chooser.dart';
@@ -9,6 +9,7 @@ import 'package:than_reader/platforms/pages/dev_pages/dev_route_tile.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
+import 'package:than_reader/theme/theme_provider.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -26,7 +27,7 @@ class MorePage extends StatelessWidget {
           child: Column(
             spacing: 5,
             children: [
-              TMaterialThemeProviderChooser(),
+              MaterialThemeProviderChooser(),
               AppVersionView(),
               AppSeedsColorChooser(),
               CacheCleaner(key: UniqueKey()),
