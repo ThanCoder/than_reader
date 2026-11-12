@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
 
 enum MaterialThemeProviderType {
   system,

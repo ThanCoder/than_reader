@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
 import 'package:than_reader/platforms/pages/more_page.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
