@@ -8,7 +8,6 @@ on:
         required: true
         type: string
 
-
 permissions:
   contents: write
 
@@ -64,7 +63,7 @@ jobs:
 
     - name: Build Android APK
       run: |
-        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi -v
+        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi
 
     - name: Upload Android APKs
       uses: actions/upload-artifact@v4
