@@ -134,13 +134,10 @@ class _SearchPageState extends State<SearchPage> {
               if (allC.adultBook.isNotEmpty)
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    final files = allC.adultBook
-                        .map((e) => allC.map[e]!)
-                        .toList();
                     context.push(
                       builder: (context) => SearchConfigResultPage(
                         title: 'Adult Books',
-                        files: files,
+                        files: allC.toAdultBooks,
                       ),
                     );
                   },
@@ -150,13 +147,10 @@ class _SearchPageState extends State<SearchPage> {
               if (allC.completedBook.isNotEmpty)
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    final files = allC.completedBook
-                        .map((e) => allC.map[e]!)
-                        .toList();
                     context.push(
                       builder: (context) => SearchConfigResultPage(
                         title: 'Completed Books',
-                        files: files,
+                        files: allC.toCompletedBooks,
                       ),
                     );
                   },

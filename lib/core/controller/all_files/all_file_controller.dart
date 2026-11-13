@@ -61,8 +61,29 @@ class AllFileController extends IController {
   List<ReaderFile> _list = [];
   List<ReaderFile> get list => _list;
   final Map<String, ReaderFile> map = {};
+
   final Set<String> adultBook = {};
   final Set<String> completedBook = {};
+
+  List<ReaderFile> get toAdultBooks {
+    final res = <ReaderFile>[];
+    for (var id in adultBook) {
+      final book = map[id];
+      if (book == null) continue;
+      res.add(book);
+    }
+    return res;
+  }
+
+  List<ReaderFile> get toCompletedBooks {
+    final res = <ReaderFile>[];
+    for (var id in completedBook) {
+      final book = map[id];
+      if (book == null) continue;
+      res.add(book);
+    }
+    return res;
+  }
 
   final cf = CFBStore.instance;
   static const String sortIdKey = 'all-file-sort-id-key';
@@ -180,9 +201,12 @@ class AllFileController extends IController {
     if (f.existsSync()) {
       await f.delete();
     }
+    adultBook.remove(file.configId);
+    completedBook.remove(file.configId);
 
     addEvent(AllFileControllerLoaded());
     addEvent(AllFileControllerDeleted(file));
+    addEvent(AllFileControllerConfigStateChanged(file.configId));
   }
 
   void rename(ReaderFile file, String renamedName) async {

@@ -1,30 +1,37 @@
+# 3.0.0
+
+- Flutter Upgrade.
+- migrate_design_widgets.
+- Added New Features.
+
 # 2.3.0
-+ Added `Recent Item Color`
-+ Changed Icon.
+
+- Added `Recent Item Color`
+- Changed Icon.
 
 ## 2.2.0
 
-+ Added `Rename Option`
-+ Fixed `Pdf Reader`
-+ Fixed `Some Error Fixed.`
-+ Added `Grid,List Style.`
+- Added `Rename Option`
+- Fixed `Pdf Reader`
+- Fixed `Some Error Fixed.`
+- Added `Grid,List Style.`
 
 ## 2.1.0
-* Added `Pdf Reader` -> `bookmark`
-* Added `Reader List Type Icon`
+
+- Added `Pdf Reader` -> `bookmark`
+- Added `Reader List Type Icon`
 
 ## 2.0.0
 
-* New UI `Material UI`
-* Supported `Pdf`
+- New UI `Material UI`
+- Supported `Pdf`
 
 ## 1.5.0
 
-+ Supported `Epub`
-+ Added `Share Server`
-+ Fixed `Some Bugs`.
-
+- Supported `Epub`
+- Added `Share Server`
+- Fixed `Some Bugs`.
 
 ## 1.2.0
 
-+ Fixed `Some Bugs`.
+- Fixed `Some Bugs`.

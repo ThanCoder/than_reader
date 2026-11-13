@@ -40,7 +40,7 @@ class _ConfigBookLableItemState extends State<ConfigBookLableItem> {
         if (con.adultBook.contains(widget.file.configId))
           _iconItem(Icons.explicit_outlined),
         if (con.completedBook.contains(widget.file.configId))
-          _iconItem(Icons.check_circle_outline),
+          _iconItem(Icons.check_circle),
       ],
     );
   }

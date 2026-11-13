@@ -4,6 +4,7 @@ import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/util_ext.dart';
+import 'package:than_reader/platforms/components/config_book_lable_item.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
@@ -96,6 +97,7 @@ class ReaderListItem extends StatelessWidget {
 
   Widget _content(ColorScheme col) {
     return Column(
+      crossAxisAlignment: .start,
       children: [
         _menuList(
           col,
@@ -115,6 +117,8 @@ class ReaderListItem extends StatelessWidget {
           name: 'Size',
           title: file.size.toFileSizeLabel(),
         ),
+        SizedBox(height: 10),
+        ConfigBookLableItem(file: file),
       ],
     );
   }
