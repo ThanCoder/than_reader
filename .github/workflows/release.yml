@@ -1,4 +1,4 @@
-name: Flutter Build and Release
+name: Flutter Build and Release -> Android,Linux
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
         description: "Release tag (ဥပမာ: v1.0.0)"
         required: true
         type: string
+
 
 permissions:
   contents: write
@@ -63,7 +64,7 @@ jobs:
 
     - name: Build Android APK
       run: |
-        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi
+        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi -v
 
     - name: Upload Android APKs
       uses: actions/upload-artifact@v4
