@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
-import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
-import 'package:than_reader/platforms/components/forms/input_text.dart';
-import 'package:than_reader/platforms/components/forms/tag_input_field.dart';
+import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
+import 'package:than_reader/ui/forms/input_text.dart';
+import 'package:than_reader/ui/forms/tag_input_field.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 
 enum NovelEditFormRespCoverType { none, update, delete }

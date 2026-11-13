@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/controller/all_files/all_file_state.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/reader_config/reader_config_util.dart';
 import 'package:than_reader/core/utils/file_scanner.dart';
+import 'package:than_reader/ui/sort_provider/sort_provider.dart';
 
 /// ***********Events******************
 class AllFileControllerLoaded extends IControllerEvent {}
@@ -18,7 +19,7 @@ class AllFileControllerDeleted extends IControllerEvent {
 
 class AllFileControllerError extends IControllerEvent {
   final String message;
-  AllFileControllerError(this.message);
+  const AllFileControllerError(this.message);
 }
 
 class AllFileControllerLoading extends IControllerEvent {}
@@ -27,15 +28,41 @@ class AllFileControllerStateChanged extends IControllerEvent {}
 
 class AllFileControllerSortChanged extends IControllerEvent {}
 
+class AllFileControllerConfigStateChanged extends IControllerEvent {
+  final String? configId;
+  const new(this.configId);
+}
+
 /// ***********Events******************
 
 class AllFileController extends IController {
   @override
-  Future<void> init() async {}
+  Future<void> init() async {
+    ReaderConfigUtil.instance.events.listen((configId) async {
+      final file = map[configId];
+      if (file == null) return;
+      final cf = await ReaderConfigUtil.instance.getPdfConfigOrNull(file);
+      if (cf == null) return;
+      if (cf.isAdult) {
+        adultBook.add(configId);
+      } else {
+        adultBook.remove(configId);
+      }
+      if (cf.isCompleted) {
+        completedBook.add(configId);
+      } else {
+        completedBook.remove(configId);
+      }
+
+      addEvent(AllFileControllerConfigStateChanged(configId));
+    });
+  }
 
   List<ReaderFile> _list = [];
   List<ReaderFile> get list => _list;
   final Map<String, ReaderFile> map = {};
+  final Set<String> adultBook = {};
+  final Set<String> completedBook = {};
 
   final cf = CFBStore.instance;
   static const String sortIdKey = 'all-file-sort-id-key';
@@ -51,6 +78,7 @@ class AllFileController extends IController {
       _list = await FileScanner.scanAll();
 
       map.clear();
+
       for (var f in _list) {
         map[f.configId] = f;
       }
@@ -60,11 +88,13 @@ class AllFileController extends IController {
       // check sort
       final sortId = cf.getInt(sortIdKey);
       final sortIsTrue = cf.getBool(sortIsTRueKey);
-      final curSort = getSortItem(sortId, sortIsTrue);
+      final curSort = geSortItem(sortId, sortIsTrue);
       if (curSort != null) {
         currentSort = curSort;
         onSort();
       }
+
+      _fetchConfig();
 
       addEvent(AllFileControllerLoaded());
       addEvent(AllFileControllerStateChanged());
@@ -74,10 +104,32 @@ class AllFileController extends IController {
     }
   }
 
+  void _fetchConfig() async {
+    adultBook.clear();
+    completedBook.clear();
+
+    for (var e in map.entries) {
+      final key = e.key;
+      final value = e.value;
+
+      final cf = await ReaderConfigUtil.instance.getPdfConfigOrNull(value);
+      if (cf != null) {
+        if (cf.isAdult) {
+          adultBook.add(key);
+        }
+        if (cf.isCompleted) {
+          completedBook.add(key);
+        }
+      }
+    }
+
+    addEvent(AllFileControllerConfigStateChanged(null));
+  }
+
   //*****************sort*******************************
-  final sortList = <TSortItem>[.nameTSortItem, .dateTSortItem, .sizeTSortItem];
-  TSortItem currentSort = .dateTSortItem;
-  void setSort(TSortItem item) {
+  final sortList = <SortItem>[.nameItem, .dateItem, .sizeItem];
+  SortItem currentSort = .dateItem;
+  void setSort(SortItem item) {
     currentSort = item;
     onSort();
     addEvent(AllFileControllerStateChanged());
@@ -85,26 +137,26 @@ class AllFileController extends IController {
   }
 
   void onSort() {
-    if (currentSort.id == TSortItem.nameTSortItem.id) {
+    if (currentSort.id == SortItem.nameItem.id) {
       list.sortA2Z(a2z: currentSort.isTrue);
     }
-    if (currentSort.id == TSortItem.dateTSortItem.id) {
+    if (currentSort.id == SortItem.dateItem.id) {
       list.sortDate(new2old: currentSort.isTrue);
     }
-    if (currentSort.id == TSortItem.sizeTSortItem.id) {
+    if (currentSort.id == SortItem.sizeItem.id) {
       list.sortSize(small2big: currentSort.isTrue);
     }
   }
 
-  TSortItem? getSortItem(int sortId, bool isTrue) {
-    if (sortId == TSortItem.nameTSortItem.id) {
-      return TSortItem.nameTSortItem.copyWith(isTrue: isTrue);
+  SortItem? geSortItem(int sortId, bool isTrue) {
+    if (sortId == SortItem.nameItem.id) {
+      return SortItem.nameItem.copyWith(isTrue: isTrue);
     }
-    if (sortId == TSortItem.dateTSortItem.id) {
-      return TSortItem.dateTSortItem.copyWith(isTrue: isTrue);
+    if (sortId == SortItem.dateItem.id) {
+      return SortItem.dateItem.copyWith(isTrue: isTrue);
     }
-    if (sortId == TSortItem.sizeTSortItem.id) {
-      return TSortItem.sizeTSortItem.copyWith(isTrue: isTrue);
+    if (sortId == SortItem.sizeItem.id) {
+      return SortItem.sizeItem.copyWith(isTrue: isTrue);
     }
     return null;
   }

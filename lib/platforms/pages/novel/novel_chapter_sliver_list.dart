@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/ui/components/refresh_button.dart';
+import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_edit_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/novel_chapter_content_reader.dart';

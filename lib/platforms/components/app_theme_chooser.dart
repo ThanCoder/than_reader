@@ -1,8 +1,9 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/platforms/components/menu_item.dart';
+import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/ui/theme/theme_provider.dart';
 
 class AppThemeChooser extends StatefulWidget {
   const AppThemeChooser({super.key});
@@ -13,9 +14,9 @@ class AppThemeChooser extends StatefulWidget {
 
 class _AppThemeChooserState extends State<AppThemeChooser> {
   late final col = context.colorScheme;
-  final items = TMaterialThemeProviderType.values
+  final items = MaterialThemeProviderType.values
       .map(
-        (e) => DropdownMenuItem<TMaterialThemeProviderType>(
+        (e) => DropdownMenuItem<MaterialThemeProviderType>(
           value: e,
           child: Text(e.lable),
         ),
@@ -35,7 +36,7 @@ class _AppThemeChooserState extends State<AppThemeChooser> {
           return DropdownButtonHideUnderline(
             child: DropdownButton(
               borderRadius: .circular(15),
-              value: TMaterialThemeProviderType.fromName(
+              value: MaterialThemeProviderType.fromName(
                 cf.getString(appThemeKeys),
               ),
               items: items,

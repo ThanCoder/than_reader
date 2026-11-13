@@ -226,30 +226,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  file_selector:
-    dependency: transitive
-    description:
-      name: file_selector
-      sha256: bd15e43e9268db636b53eeaca9f56324d1622af30e5c34d6e267649758c84d9a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
-  file_selector_android:
-    dependency: transitive
-    description:
-      name: file_selector_android
-      sha256: d670cd0ce77a2e785b18d8b4d0a8d6a222d6a813ec9b7ddf2790a1b4fb6fa92c
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2+11"
-  file_selector_ios:
-    dependency: transitive
-    description:
-      name: file_selector_ios
-      sha256: "5b42ec0ef7626124b4624ea244341e9df780406793c204e89fa68a2e71af115c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.3+7"
   file_selector_linux:
     dependency: transitive
     description:
@@ -274,14 +250,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
-  file_selector_web:
-    dependency: transitive
-    description:
-      name: file_selector_web
-      sha256: "73181fbc5257776d8ecaa6a94ab3c8e920ad143b9132a6d984a9271dfc6928d3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.5"
   file_selector_windows:
     dependency: transitive
     description:
@@ -356,22 +324,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.35"
-  flutter_spinkit:
-    dependency: transitive
-    description:
-      name: flutter_spinkit
-      sha256: "77850df57c00dc218bfe96071d576a8babec24cf58b2ed121c83cca4a2fdce7f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.2"
   flutter_svg:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: bce4a000275c0d0ac42f3fdcf0a6162fb95ac30983ba7ee6cffcf60f6ad33611
+      sha256: "455a22036f8d1b7c74f53283c8644d6af2f6f7c9ec72c7b06a2ff70fb3954a54"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.4"
+    version: "2.4.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -650,10 +610,10 @@ packages:
     dependency: transitive
     description:
       name: octo_image
-      sha256: "9c9e56f655c301fd2e6c26390461b4fbd23be861b29607c5e2e4d16e8231ce50"
+      sha256: "1eabd04ba4371863a91a063feba8069f0f15c4ad9d9a72fbcd3cab1ecd86ea6c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   package_config:
     dependency: transitive
     description:
@@ -746,10 +706,10 @@ packages:
     dependency: transitive
     description:
       name: pdfium_dart
-      sha256: "3e250021b2f462058aae216837902fdc8b2cb7f0657e4ec2bc9ac541f960ff84"
+      sha256: caf60231f755418e66e76ad0699503b09b03bd8bd8949f1c7a532239c80d7531
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.2"
   petitparser:
     dependency: transitive
     description:
@@ -913,7 +873,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "12cf433219cf00eb5e812b5c1832b731b927123b"
+      resolved-ref: ea6226359c2dc8d1dda91654d1257ca6cab1c720
       url: "https://github.com/ThanCoder/t_pdf_reader.git"
     source: git
     version: "1.6.0"
@@ -926,15 +886,6 @@ packages:
       url: "https://github.com/ThanCoder/t_server.git"
     source: git
     version: "4.0.0"
-  t_widgets:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "2659fdae13e404c5c9b70d267ad2f3f6e927d80e"
-      url: "https://github.com/ThanCoder/t_widgets.git"
-    source: git
-    version: "2.7.0"
   term_glyph:
     dependency: transitive
     description:

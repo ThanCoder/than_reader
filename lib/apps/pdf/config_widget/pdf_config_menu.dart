@@ -1,7 +1,7 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_image_cache_config_widget.dart';
-import 'package:than_reader/apps/pdf/pdf_config.dart';
+import 'package:than_reader/core/reader_config/pdf_config.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';

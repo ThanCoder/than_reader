@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/managers/cache_manager.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
+import 'package:than_reader/ui/components/loader.dart';
 
 class ReaderCoverFile extends StatelessWidget {
   const ReaderCoverFile({
@@ -42,7 +42,7 @@ class ReaderCoverFile extends StatelessWidget {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == .waiting) {
-          return Center(child: TLoader());
+          return Center(child: Loader());
         }
         return image(cacheFile);
       },

@@ -1,15 +1,15 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/controller/reader_track/reader_history_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/apps/pdf/pdf_config.dart';
+import 'package:than_reader/core/reader_config/pdf_config.dart';
 import 'package:than_reader/core/models/reader_history.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
-import 'package:than_reader/core/utils/reader_file_util.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/core/reader_config/reader_config_util.dart';
+import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_desc_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
@@ -37,7 +37,7 @@ Future<void> goReaderModuleApp(
       }
     }
   }
-  final configRes = await ReaderFileUtil.getPdfConfig(file);
+  final configRes = await ReaderConfigUtil.instance.getPdfConfig(file);
   if (!context.mounted) return;
 
   if (configRes.isErr) {
@@ -56,7 +56,7 @@ Future<void> goReaderModuleApp(
   );
   if (newCof != null) {
     // if (!context.mounted) return;
-    await ReaderFileUtil.savePdfConfig(newCof, file);
+    await ReaderConfigUtil.instance.savePdfConfig(newCof, file);
     his = his.copyWith(lastPage: newCof.page, totalPage: newCof.totalPage);
   }
   stopWatch.stop();

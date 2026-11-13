@@ -7,7 +7,7 @@ extension IPageImageWorkerTypeX on IPageImageWorkerType {
   static IPageImageWorkerType fromValue(String val) {
     return IPageImageWorkerType.values.firstWhere(
       (e) => e.name == val,
-      orElse: () => .singleThread,
+      orElse: () => .multiThread,
     );
   }
 }

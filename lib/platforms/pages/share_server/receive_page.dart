@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:t_client/t_client.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/ui/components/loader.dart';
+import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/share_server/active_host_scanner_dialog.dart';
 import 'package:than_reader/platforms/pages/share_server/share_download_menu.dart';
 import 'package:than_reader/platforms/pages/share_server/share_downloader_dialog.dart';
@@ -124,7 +124,7 @@ class _ReceivePageState extends State<ReceivePage> {
       body: RefreshIndicator.adaptive(
         onRefresh: init,
         child: isLoading
-            ? Center(child: TLoaderRandom())
+            ? Center(child: Loader())
             : CustomScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 slivers: [

@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/apps/pdf/pdf_config_form.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/utils/reader_file_util.dart';
+import 'package:than_reader/core/reader_config/reader_config_util.dart';
 
 class ReaderItemConfigEditSheet extends StatefulWidget {
   const new({super.key, required this.file});
@@ -48,7 +48,7 @@ class _ReaderItemConfigEditSheetState extends State<ReaderItemConfigEditSheet> {
   Widget get formWidget {
     if (widget.file.type == .pdf) {
       return FutureBuilder(
-        future: ReaderFileUtil.getPdfConfig(widget.file),
+        future: ReaderConfigUtil.instance.getPdfConfig(widget.file),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final res = snapshot.data!;
@@ -57,7 +57,7 @@ class _ReaderItemConfigEditSheetState extends State<ReaderItemConfigEditSheet> {
                 config: res.unwrap(),
                 onSaved: (newConfig) {
                   context.pop();
-                  ReaderFileUtil.savePdfConfig(newConfig, widget.file);
+                  ReaderConfigUtil.instance.savePdfConfig(newConfig, widget.file);
                 },
               );
             }

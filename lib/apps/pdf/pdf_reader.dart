@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_config_menu.dart';
@@ -14,8 +14,9 @@ import 'package:than_reader/apps/pdf/pdf_reader_bookmark_drawer.dart';
 import 'package:than_reader/apps/pdf/config_widget/preload_page_view.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/apps/pdf/pdf_config.dart';
-import 'package:than_reader/platforms/components/dialog/snack_alert.dart';
+import 'package:than_reader/core/reader_config/pdf_config.dart';
+import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/ui/dialog/snack_alert.dart';
 
 import 'config_widget/pdf_scrollbar_toggler_btn.dart';
 
@@ -294,7 +295,10 @@ class _PdfReaderState extends State<PdfReader> {
       appBar: config.isFullscreen
           ? null
           : AppBar(
-              title: Text('PDF Reader'),
+              title: Text(
+                widget.file.name.getName(),
+                style: TextStyle(fontSize: 15, fontWeight: .w700),
+              ),
               backgroundColor: col.surface,
               foregroundColor: col.onSurface,
             ),

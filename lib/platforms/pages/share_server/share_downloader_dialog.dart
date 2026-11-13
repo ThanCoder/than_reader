@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:t_client/t_client.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class ShareDownloaderDialog extends StatefulWidget {

@@ -1,5 +1,6 @@
 // enum FileType { pdf, epub, mobi, txt, unknown }
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:than_reader/core/utils/utils.dart';
 
 enum FileType {
   pdf,
@@ -91,13 +92,7 @@ class ReaderFile {
 
 extension AppFileExtensions on List<ReaderFile> {
   void sortA2Z({bool a2z = true}) {
-    sort((a, b) {
-      if (a2z) {
-        return a.name.compareTo(b.name);
-      } else {
-        return b.name.compareTo(a.name);
-      }
-    });
+    sort((a, b)=> a2z ? naturalCompare(a.name, b.name):naturalCompare(b.name, a.name));
   }
 
   void sortDate({bool new2old = true}) {

@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
-import 'package:than_reader/platforms/components/dialog/confirm_alert_dialog.dart';
-import 'package:than_reader/platforms/components/dialog/prompt_alert_dialog.dart';
-import 'package:than_reader/platforms/components/forms/form_input_text.dart';
+import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/ui/components/t_chip.dart';
+import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
+import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
+import 'package:than_reader/ui/forms/form_input_text.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 
 class ReaderInfoStoreFormPageData {

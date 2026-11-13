@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/platforms/components/config_book_lable_item.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
@@ -71,7 +72,12 @@ class ReaderGridItem extends StatelessWidget {
                   top: 0,
                   child: ReaderInfoStoreBookIdView(book: file),
                 ),
-                Positioned(left: 0, right: 0, bottom: 0, child: _content(col)),
+                Positioned(
+                  left: 30,
+                  top: 0,
+                  child: ConfigBookLableItem(file: file),
+                ),
+                Positioned(left: 0, right: 0, bottom: 0, child: _title(col)),
               ],
             ),
           );
@@ -80,7 +86,7 @@ class ReaderGridItem extends StatelessWidget {
     );
   }
 
-  Widget _content(ColorScheme col) {
+  Widget _title(ColorScheme col) {
     return Container(
       padding: .symmetric(vertical: 5, horizontal: 8),
       decoration: BoxDecoration(

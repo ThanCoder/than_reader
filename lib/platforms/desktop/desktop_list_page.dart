@@ -1,6 +1,6 @@
 import 'package:cfb_store/cfb_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
@@ -17,6 +17,8 @@ import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dar
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/book_group_result_page.dart';
 import 'package:than_reader/router.dart';
+import 'package:than_reader/ui/components/loader.dart';
+import 'package:than_reader/ui/sort_provider/sort_provider.dart';
 
 class DesktopListPage extends StatefulWidget {
   const DesktopListPage({super.key});
@@ -36,6 +38,16 @@ class _DesktopListPageState extends State<DesktopListPage> {
 
   Future<void> init({bool useCache = true}) async {
     await allC.loadAll(useCache: useCache);
+  }
+
+  void onClicked(ReaderFile file) async {
+    await goReaderModuleApp(context, file);
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  void onRightClicked(ReaderFile file) async {
+    ReaderItemMenuSheet.show(context, file: file);
   }
 
   @override
@@ -70,7 +82,7 @@ class _DesktopListPageState extends State<DesktopListPage> {
       StreamBuilder(
         stream: allC.events.whereType<AllFileControllerStateChanged>(),
         builder: (context, asyncSnapshot) {
-          return TSortProviderButton(
+          return SortProviderDialog.buttonWidget(
             value: allC.currentSort,
             list: allC.sortList,
             onApply: (item) {
@@ -105,11 +117,13 @@ class _DesktopListPageState extends State<DesktopListPage> {
         final isLoading = allC.state.isLoading;
         final files = allC.list;
 
-        if (isLoading) {
-          return Center(child: TLoaderRandom());
+        if (isLoading && allC.list.isEmpty) {
+          return Center(child: Loader());
         }
         return CustomScrollView(
           slivers: [
+            if (isLoading && allC.list.isNotEmpty)
+              SliverToBoxAdapter(child: LinearProgressIndicator()),
             SliverPadding(
               padding: .symmetric(vertical: 10, horizontal: 10),
               sliver: _listProvider(files),
@@ -208,15 +222,5 @@ class _DesktopListPageState extends State<DesktopListPage> {
         ),
       ),
     );
-  }
-
-  void onClicked(ReaderFile file) async {
-    await goReaderModuleApp(context, file);
-    if (!mounted) return;
-    setState(() {});
-  }
-
-  void onRightClicked(ReaderFile file) async {
-    ReaderItemMenuSheet.show(context, file: file);
   }
 }

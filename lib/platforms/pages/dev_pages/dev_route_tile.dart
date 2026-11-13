@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'dev_home_page.dart';
 
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 
 class DevRouteTile extends StatelessWidget {
   const new({super.key});

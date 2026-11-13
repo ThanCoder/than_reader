@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:cfb_store/cfb_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/ui/components/loader.dart';
+import 'package:than_reader/ui/components/refresh_button.dart';
+import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/components/group_list/book_group_grid_item.dart';
 import 'package:than_reader/platforms/components/group_list/book_group_list_item.dart';
 import 'package:than_reader/platforms/components/group_list/group_list_style_chooser.dart';
@@ -21,6 +23,7 @@ import 'package:than_reader/platforms/components/reader_grid_item.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/book_group_result_page.dart';
 import 'package:than_reader/router.dart';
+import 'package:than_reader/ui/sort_provider/sort_provider.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -80,7 +83,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       StreamBuilder(
         stream: allC.events.whereType<AllFileControllerStateChanged>(),
         builder: (context, asyncSnapshot) {
-          return TSortProviderButton(
+          return SortProviderDialog.buttonWidget(
             value: allC.currentSort,
             list: allC.sortList,
             onApply: (item) {
@@ -114,8 +117,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
         final isLoading = allC.state.isLoading;
         final files = allC.list;
 
-        if (isLoading) {
-          return Center(child: TLoaderRandom());
+        if (isLoading && allC.list.isEmpty) {
+          return Center(child: Loader());
         }
         if (files.isEmpty) {
           return _refershCard();
@@ -124,6 +127,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
           onRefresh: () => init(useCache: false),
           child: CustomScrollView(
             slivers: [
+              if (isLoading && allC.list.isNotEmpty)
+                SliverToBoxAdapter(child: LinearProgressIndicator()),
+
               SliverPadding(
                 padding: .symmetric(horizontal: 10, vertical: 10),
                 sliver: _listProvider(files),

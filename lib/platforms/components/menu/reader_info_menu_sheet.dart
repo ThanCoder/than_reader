@@ -2,7 +2,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
-import 'package:than_reader/core/utils/reader_file_util.dart';
+import 'package:than_reader/core/reader_config/reader_config_util.dart';
 import 'package:than_reader/core/utils/util_ext.dart';
 import 'package:than_reader/platforms/pages/fav/fav_label.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
@@ -37,7 +37,7 @@ class _ReaderInfoMenuSheetState extends State<ReaderInfoMenuSheet> {
 
   void init() async {
     if (widget.file.type == .pdf) {
-      final res = await ReaderFileUtil.getPdfConfig(widget.file);
+      final res = await ReaderConfigUtil.instance.getPdfConfig(widget.file);
       if (res.isOk) {
         final cf = res.unwrap();
         if (cf.totalPage == 0) return;

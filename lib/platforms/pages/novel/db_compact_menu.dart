@@ -1,7 +1,7 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 
 class DBCompactMenu extends StatefulWidget {
   const new({super.key, required this.store});

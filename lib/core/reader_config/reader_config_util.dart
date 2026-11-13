@@ -1,13 +1,23 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:than_reader/apps/pdf/pdf_config.dart';
+import 'package:than_reader/core/reader_config/pdf_config.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/core/utils/result.dart';
 
-class ReaderFileUtil {
-  static Result<String, String> getConfigPath(ReaderFile file) {
+class ReaderConfigUtil {
+  static final ReaderConfigUtil instance = ReaderConfigUtil._();
+  ReaderConfigUtil._();
+  factory ReaderConfigUtil() => instance;
+
+  final _eventCon = StreamController<String>.broadcast();
+
+  /// listen changed config id
+  Stream<String> get events => _eventCon.stream;
+
+  Result<String, String> getConfigPath(ReaderFile file) {
     final cfName = '${file.configId}-config.cbf';
     if (Platform.isAndroid) {
       return Ok(AppUtil.instance.getAndroidExternalConfigPath(cfName));
@@ -18,7 +28,7 @@ class ReaderFileUtil {
     return Err('Platform only -> `linux,android`');
   }
 
-  static Future<Result<bool, String>> savePdfConfig(
+  Future<Result<bool, String>> savePdfConfig(
     PdfConfig config,
     ReaderFile file,
   ) async {
@@ -31,19 +41,21 @@ class ReaderFileUtil {
       final map = config.toMap();
       final f = File(pathRes.unwrap());
       await f.writeAsString(jsonEncode(map));
+      // event
+      _eventCon.add(file.configId);
       return Ok(true);
     } catch (e) {
       return Err(e.toString());
     }
   }
 
-  static Future<PdfConfig?> getPdfConfigOrNull(ReaderFile file) async {
+  Future<PdfConfig?> getPdfConfigOrNull(ReaderFile file) async {
     final res = await getPdfConfig(file);
     if (res.isErr) return null;
     return res.unwrap();
   }
 
-  static Future<Result<PdfConfig, String>> getPdfConfig(ReaderFile file) async {
+  Future<Result<PdfConfig, String>> getPdfConfig(ReaderFile file) async {
     final pathRes = getConfigPath(file);
     if (pathRes.isErr) {
       return Err(pathRes.unwrapError());

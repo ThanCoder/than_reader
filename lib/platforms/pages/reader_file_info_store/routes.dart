@@ -1,6 +1,6 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_form_page.dart';

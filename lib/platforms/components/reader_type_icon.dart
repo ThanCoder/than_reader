@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 
 class ReaderTypeIcon extends StatelessWidget {
-  const ReaderTypeIcon({super.key, required this.file, this.size = 25});
+  const new({super.key, required this.file, this.size = 25});
   final ReaderFile file;
   final double size;
 

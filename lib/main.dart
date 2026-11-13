@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
 import 'package:than_pkg_linux/than_pkg_linux.dart';
 import 'package:than_reader/apps/pdf/pdf_reader.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
@@ -49,9 +48,6 @@ void main() async {
   // ModuleApps.instance.registerModule(EpubApp());
   // ModuleApps.instance.registerModule(PdfApp());
 
-  await TWidgets.instance.init(
-    defaultImageAssetsPath: 'assets/images/app_icon.png',
-  );
 
   runApp(const PlatformApp());
 }

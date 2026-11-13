@@ -3,7 +3,7 @@ import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/constanst_keys.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/platform_app_switcher.dart';
-import 'package:than_reader/theme/theme_provider.dart';
+import 'package:than_reader/ui/theme/theme_provider.dart';
 
 class PlatformApp extends StatefulWidget {
   const PlatformApp({super.key});

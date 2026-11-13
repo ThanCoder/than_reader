@@ -1,7 +1,7 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:than_reader/platforms/components/dialog/snack_alert.dart';
+import 'package:than_reader/ui/dialog/snack_alert.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 
 class NovelChapterFormPage extends StatefulWidget {

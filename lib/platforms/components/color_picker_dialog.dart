@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 
 class ColorPickerDialog extends StatefulWidget {
   const ColorPickerDialog({super.key, required this.pickerColor});

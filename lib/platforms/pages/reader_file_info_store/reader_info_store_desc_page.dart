@@ -4,8 +4,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/controller/all_files/all_file_controller.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/models/reader_file.dart';
-import 'package:than_reader/core/utils/reader_file_util.dart';
-import 'package:than_reader/platforms/components/dialog/error_alert_dialog.dart';
+import 'package:than_reader/core/reader_config/reader_config_util.dart';
+import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/components/menu/reader_item_menu_sheet.dart';
 import 'package:than_reader/platforms/components/reader_list_item.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/models/reader_info.dart';
@@ -240,7 +240,7 @@ class _ReaderInfoStoreDescPageState extends State<ReaderInfoStoreDescPage> {
         itemBuilder: (context, index) {
           final item = list[index];
           return FutureBuilder(
-            future: ReaderFileUtil.getPdfConfigOrNull(item),
+            future: ReaderConfigUtil.instance.getPdfConfigOrNull(item),
             builder: (context, snapshot) {
               final cf = snapshot.data;
 

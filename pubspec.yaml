@@ -31,8 +31,6 @@ dependencies:
   expandable_text: ^2.3.0
   cached_network_image: ^4.0.0
 
-  t_widgets:
-    git: https://github.com/ThanCoder/t_widgets.git
   t_pdf_reader:
     git: https://github.com/ThanCoder/t_pdf_reader.git
   t_server:

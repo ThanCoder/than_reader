@@ -2,8 +2,8 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:t_pdf_reader/t_pdf_reader.dart';
 
-import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/apps/pdf/config_widget/pdf_reader_prefer_theme_mode_chooser.dart';
+import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
 import 'package:than_reader/const_keys.dart';
@@ -23,6 +23,8 @@ class PdfConfig {
     required this.bookmark,
     required this.preloadPageCount,
     required this.renderImageType,
+    required this.isAdult,
+    required this.isCompleted,
   });
 
   final int page;
@@ -37,6 +39,8 @@ class PdfConfig {
   final List<PdfConfigBookmark> bookmark;
   final int preloadPageCount;
   final PageRenderImageType renderImageType;
+  final bool isAdult;
+  final bool isCompleted;
 
   factory PdfConfig.empty() {
     return .new(
@@ -55,6 +59,8 @@ class PdfConfig {
       bookmark: [],
       preloadPageCount: 2,
       renderImageType: .jpg,
+      isAdult: false,
+      isCompleted: false,
     );
   }
 
@@ -72,11 +78,15 @@ class PdfConfig {
       'bookmark': bookmark.map((e) => e.toMap()).toList(),
       'preloadPageCount': preloadPageCount,
       'renderImageType': renderImageType.name,
+      'isAdult': isAdult,
+      'isCompleted': isCompleted,
     };
   }
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
     return PdfConfig(
+      isAdult: map.getBool(['isAdult']),
+      isCompleted: map.getBool(['isCompleted']),
       page: map['page'] as int,
       totalPage: map['totalPage'] as int,
       zoom: map['zoom'] as double,
@@ -105,11 +115,6 @@ class PdfConfig {
     );
   }
 
-  @override
-  String toString() {
-    return 'PdfConfig(page: $page, totalPage: $totalPage, zoom: $zoom, offsetX: $offsetX, isFullscreen: $isFullscreen, isKeepScreen: $isKeepScreen, scrollbarEnable: $scrollbarEnable, orientation: $orientation, readerThemeMode: $readerThemeMode)';
-  }
-
   PdfConfig copyWith({
     int? page,
     int? totalPage,
@@ -123,6 +128,8 @@ class PdfConfig {
     List<PdfConfigBookmark>? bookmark,
     int? preloadPageCount,
     PageRenderImageType? renderImageType,
+    bool? isAdult,
+    bool? isCompleted,
   }) {
     return PdfConfig(
       page: page ?? this.page,
@@ -137,6 +144,8 @@ class PdfConfig {
       bookmark: bookmark ?? this.bookmark,
       preloadPageCount: preloadPageCount ?? this.preloadPageCount,
       renderImageType: renderImageType ?? this.renderImageType,
+      isAdult: isAdult ?? this.isAdult,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 }

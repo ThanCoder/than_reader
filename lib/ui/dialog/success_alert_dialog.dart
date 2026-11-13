@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:t_widgets/t_widgets.dart';
+import 'package:than_reader/ui/build_context_x.dart';
 
 void showSuccessDialog(BuildContext context, String message) {
   showDialog(
