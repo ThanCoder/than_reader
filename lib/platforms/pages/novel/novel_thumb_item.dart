@@ -24,6 +24,7 @@ class _NovelThumbItemState extends State<NovelThumbItem> {
     if (thumbFile.existsSync()) {
       return Image.file(
         thumbFile,
+        fit: .cover,
         errorBuilder: (context, error, stackTrace) =>
             Image.asset('assets/logo/DualStore Dual-Database Logo.png'),
       );
@@ -37,6 +38,7 @@ class _NovelThumbItemState extends State<NovelThumbItem> {
         }
         return Image.file(
           thumbFile,
+          fit: .cover,
           errorBuilder: (context, error, stackTrace) =>
               Image.asset('assets/logo/DualStore Dual-Database Logo.png'),
         );

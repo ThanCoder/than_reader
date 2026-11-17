@@ -141,33 +141,52 @@ class _NovelHomePageState extends State<NovelHomePage> {
       ),
       onSecondaryTap: () => showItemMenu(file),
       child: Container(
-        padding: .symmetric(vertical: 10, horizontal: 12),
+        padding: .symmetric(vertical: 5, horizontal: 8),
         decoration: BoxDecoration(
           borderRadius: .circular(14),
           color: col.surfaceContainer,
         ),
         child: Row(
-          spacing: 10,
+          spacing: 8,
           children: [
-            SizedBox(width: 80, height: 80, child: NovelThumbItem(file: file)),
-            Column(
-              crossAxisAlignment: .start,
-              spacing: 5,
-              children: [
-                Text(file.name, style: TextStyle(fontWeight: .w700)),
-                Text(
-                  'Novel Database File',
-                  style: TextStyle(fontWeight: .w400, fontSize: 14),
-                ),
-              ],
+            SizedBox(
+              width: 70,
+              height: 70,
+              child: ClipRRect(
+                borderRadius: .circular(20),
+                child: NovelThumbItem(file: file),
+              ),
             ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios_outlined),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .start,
+                spacing: 5,
+                children: [
+                  Text(
+                    file.name,
+                    maxLines: 2,
+                    overflow: .ellipsis,
+                    style: TextStyle(fontWeight: .w700, fontSize: 14),
+                  ),
+                  Text(
+                    'Novel Database File',
+                    style: TextStyle(fontWeight: .w400, fontSize: 12),
+                  ),
+                  Row(
+                    mainAxisAlignment: .end,
+                    children: [
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: Colors.teal,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-

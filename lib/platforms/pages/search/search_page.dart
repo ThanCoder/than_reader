@@ -119,48 +119,56 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _bookConfigLableWidget() {
+    final isExists = allC.adultBook.isNotEmpty || allC.completedBook.isNotEmpty;
     return SliverToBoxAdapter(
-      child: Column(
-        spacing: 10,
-        crossAxisAlignment: .start,
-        children: [
-          Text(
-            'Reader Config Files',
-            style: TextStyle(fontSize: 18, fontWeight: .w700),
-          ),
-          Row(
-            spacing: 10,
-            children: [
-              if (allC.adultBook.isNotEmpty)
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    context.push(
-                      builder: (context) => SearchConfigResultPage(
-                        title: 'Adult Books',
-                        files: allC.toAdultBooks,
-                      ),
-                    );
-                  },
-                  label: Text('Adult Books : ${allC.adultBook.length}'),
-                  icon: Icon(Icons.explicit_outlined),
-                ),
-              if (allC.completedBook.isNotEmpty)
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    context.push(
-                      builder: (context) => SearchConfigResultPage(
-                        title: 'Completed Books',
-                        files: allC.toCompletedBooks,
-                      ),
-                    );
-                  },
-                  label: Text('Completed Books : ${allC.completedBook.length}'),
-                  icon: Icon(Icons.check_circle_outline),
-                ),
-            ],
-          ),
-        ],
-      ),
+      child: !isExists
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                spacing: 10,
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    'Reader Config Files',
+                    style: TextStyle(fontSize: 18, fontWeight: .w700),
+                  ),
+                  Row(
+                    spacing: 10,
+                    children: [
+                      if (allC.adultBook.isNotEmpty)
+                        FilledButton.tonalIcon(
+                          onPressed: () {
+                            context.push(
+                              builder: (context) => SearchConfigResultPage(
+                                title: 'Adult Books',
+                                files: allC.toAdultBooks,
+                              ),
+                            );
+                          },
+                          label: Text('Adult Books : ${allC.adultBook.length}'),
+                          icon: Icon(Icons.explicit_outlined),
+                        ),
+                      if (allC.completedBook.isNotEmpty)
+                        FilledButton.tonalIcon(
+                          onPressed: () {
+                            context.push(
+                              builder: (context) => SearchConfigResultPage(
+                                title: 'Completed Books',
+                                files: allC.toCompletedBooks,
+                              ),
+                            );
+                          },
+                          label: Text(
+                            'Completed Books : ${allC.completedBook.length}',
+                          ),
+                          icon: Icon(Icons.check_circle_outline),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -206,7 +214,7 @@ class _SearchPageState extends State<SearchPage> {
   SliverToBoxAdapter _searchWidget() {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: .symmetric(vertical: 10, horizontal: 0),
+        padding: .symmetric(vertical: 10, horizontal: 10),
         child: SearchBar(
           hintText: 'Search...',
           focusNode: focusNode,
