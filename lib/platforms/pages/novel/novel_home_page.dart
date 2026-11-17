@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:than_reader/platforms/pages/novel/novel_thumb_item.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
@@ -10,7 +11,7 @@ import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
-import 'package:than_reader/platforms/pages/novel/novel_file.dart';
+import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:than_reader/platforms/pages/novel/novel_file_item_menu.dart';
 import 'package:than_reader/platforms/pages/novel/novel_page.dart';
 
@@ -86,12 +87,12 @@ class _NovelHomePageState extends State<NovelHomePage> {
             IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
         ],
       ),
-      body: _body,
       floatingActionButton: FloatingActionButton(
         heroTag: 'newNovelFile',
         onPressed: newNovelFile,
         child: Icon(Icons.add_outlined),
       ),
+      body: _body,
     );
   }
 
@@ -119,7 +120,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
                 SliverFillRemaining(child: Center(child: Text('Not Found!'))),
               // list
               SliverPadding(
-                padding: .symmetric(vertical: 10, horizontal: 12),
+                padding: .symmetric(vertical: 6, horizontal: 8),
                 sliver: SliverList.separated(
                   separatorBuilder: (context, index) => SizedBox(height: 10),
                   itemCount: con.list.length,
@@ -135,21 +136,38 @@ class _NovelHomePageState extends State<NovelHomePage> {
 
   Widget listItem(NovelFile file) {
     return GestureDetector(
+      onTap: () => context.pushMaterialPageRoute(
+        builder: (mainCtx) => NovelPage(file: file),
+      ),
       onSecondaryTap: () => showItemMenu(file),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: .circular(14)),
-        tileColor: col.surfaceContainer,
-        leading: Icon(Icons.storage_outlined),
-        trailing: Icon(Icons.arrow_forward_ios_outlined),
-        title: Text(file.name, style: TextStyle(fontWeight: .w700)),
-        subtitle: Text('Novel Database File'),
-        onTap: () {
-          context.pushMaterialPageRoute(
-            builder: (mainCtx) => NovelPage(file: file),
-          );
-        },
-        onLongPress: () => showItemMenu(file),
+      child: Container(
+        padding: .symmetric(vertical: 10, horizontal: 12),
+        decoration: BoxDecoration(
+          borderRadius: .circular(14),
+          color: col.surfaceContainer,
+        ),
+        child: Row(
+          spacing: 10,
+          children: [
+            SizedBox(width: 80, height: 80, child: NovelThumbItem(file: file)),
+            Column(
+              crossAxisAlignment: .start,
+              spacing: 5,
+              children: [
+                Text(file.name, style: TextStyle(fontWeight: .w700)),
+                Text(
+                  'Novel Database File',
+                  style: TextStyle(fontWeight: .w400, fontSize: 14),
+                ),
+              ],
+            ),
+            Spacer(),
+            Icon(Icons.arrow_forward_ios_outlined),
+          ],
+        ),
       ),
     );
   }
 }
+
+

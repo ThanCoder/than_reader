@@ -1,3 +1,7 @@
+# 3.1.0
+
+- Modified `Novel App`
+
 # 3.0.0
 
 - Flutter Upgrade.

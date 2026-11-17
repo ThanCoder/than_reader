@@ -2,10 +2,11 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
+import 'package:dual_store/dual_store.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/utils/path_scanner.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
-import 'package:than_reader/platforms/pages/novel/novel_file.dart';
+import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 
 class NovelFileScanner extends PathScanner {
   new({required super.scanFolders});
@@ -31,6 +32,9 @@ class NovelFileScanner extends PathScanner {
       final list = <NovelFile>[];
       final entries = await NovelFileScanner(scanFolders: scanFolders).scan();
       for (var entry in entries) {
+        final res = DualStore.readHeaderSync(entry.path);
+        if (res.isErr) continue;
+
         list.add(
           .new(
             name: entry.onlyName,

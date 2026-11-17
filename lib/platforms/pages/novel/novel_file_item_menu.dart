@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:than_reader/platforms/pages/novel/novel_file.dart';
+import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 
 class NovelFileItemMenu extends StatefulWidget {
   const new({super.key, required this.file});

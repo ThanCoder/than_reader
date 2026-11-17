@@ -52,6 +52,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   NovelChapter? _lastClickedItem;
+
   void goReader(NovelChapter item) async {
     await context.pushMaterialPageRoute(
       builder: (mainCtx) => NovelChapterContentReader(

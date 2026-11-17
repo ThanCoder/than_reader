@@ -10,7 +10,7 @@ import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_form_page.
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_edit_form.dart';
-import 'package:than_reader/platforms/pages/novel/novel_file.dart';
+import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class NovelPage extends StatefulWidget {
@@ -292,7 +292,7 @@ class NovelPageState extends State<NovelPage> {
               ),
               subtitle: Text('Novel Review'),
               children: [
-                Text(
+                SelectableText(
                   data.desc,
                   style: const TextStyle(fontSize: 15, height: 1.6),
                 ),
