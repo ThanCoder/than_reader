@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/ui/build_context_x.dart';
@@ -8,20 +9,20 @@ import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
-import 'package:than_reader/platforms/pages/novel/novel_chapter_sliver_list.dart';
+import 'package:than_reader/platforms/pages/novel/desc_page/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_edit_form.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class NovelPage extends StatefulWidget {
+class NovelDescHomePage extends StatefulWidget {
   const new({super.key, required this.file});
   final NovelFile file;
 
   @override
-  State<NovelPage> createState() => NovelPageState();
+  State<NovelDescHomePage> createState() => NovelDescHomePageState();
 }
 
-class NovelPageState extends State<NovelPage> {
+class NovelDescHomePageState extends State<NovelDescHomePage> {
   @override
   void initState() {
     db.registerAdapter(NovelDescAdapter());
@@ -81,7 +82,7 @@ class NovelPageState extends State<NovelPage> {
     if (descId == -1) {
       final res = await descBox.add(desc!);
       if (res.isOk) {
-        descId = res.unwrap();
+        descId = res.unwrap().generatedId;
       }
     } else {
       // update
@@ -197,6 +198,8 @@ class NovelPageState extends State<NovelPage> {
           style: TextStyle(fontSize: 18),
         ),
         actions: [
+          if (TPlatform.isDesktop)
+            IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
           IconButton(onPressed: showMenu, icon: Icon(Icons.more_vert_outlined)),
         ],
       ),
@@ -211,19 +214,23 @@ class NovelPageState extends State<NovelPage> {
         if (!db.opened) {
           return Center(child: CircularProgressIndicator.adaptive());
         }
-        return CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: .symmetric(vertical: 10, horizontal: 5),
-              sliver: _descWidget,
-            ),
+        return RefreshIndicator.adaptive(
+          onRefresh: init,
+          child: CustomScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: .symmetric(vertical: 10, horizontal: 5),
+                sliver: _descWidget,
+              ),
 
-            SliverPadding(
-              padding: .symmetric(vertical: 10, horizontal: 15),
-              sliver: NovelChapterSliverList(db: db),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 80)),
-          ],
+              SliverPadding(
+                padding: .symmetric(vertical: 10, horizontal: 15),
+                sliver: NovelChapterSliverList(db: db),
+              ),
+              SliverToBoxAdapter(child: SizedBox(height: 80)),
+            ],
+          ),
         );
       },
     );

@@ -33,7 +33,12 @@ class BookGroupGridItem extends StatelessWidget {
                   title,
                   maxLines: 2,
                   overflow: .ellipsis,
-                  style: TextStyle(color: col.onSurface, fontWeight: .w600),
+                  textAlign: .center,
+                  style: TextStyle(
+                    color: col.onSurface,
+                    fontWeight: .w600,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),

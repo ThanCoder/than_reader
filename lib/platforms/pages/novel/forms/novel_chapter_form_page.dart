@@ -25,6 +25,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   @override
   void initState() {
     _language = widget.lang;
+    _titleController.text = 'Untitled';
     super.initState();
     showAutoLatestChapterNumber();
   }
@@ -42,6 +43,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     list.sortChapter();
     if (list.isEmpty) {
       _chapterController.text = '1';
+      _titleController.text = 'Untitled';
     } else {
       _chapterController.text = '${list.last.chapter + 1}';
     }
@@ -103,100 +105,101 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
           ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _titleController,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Chapter Title',
-                hintText: 'Enter chapter title',
-                prefixIcon: Icon(Icons.title),
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Chapter title is required';
-                }
+      body: _form(),
+    );
+  }
 
-                return null;
-              },
+  Form _form() {
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          TextFormField(
+            controller: _titleController,
+            textInputAction: TextInputAction.next,
+            decoration: const InputDecoration(
+              labelText: 'Chapter Title',
+              hintText: 'Enter chapter title',
+              prefixIcon: Icon(Icons.title),
+              border: OutlineInputBorder(),
             ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Chapter title is required';
+              }
 
-            const SizedBox(height: 16),
+              return null;
+            },
+          ),
 
-            TextFormField(
-              controller: _chapterController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              textInputAction: TextInputAction.done,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Chapter Number',
-                hintText: 'e.g. 1, 1.5, 2',
-                prefixIcon: Icon(Icons.numbers),
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Chapter number is required';
-                }
+          const SizedBox(height: 16),
 
-                final chapter = double.tryParse(value.trim());
-
-                if (chapter == null) {
-                  return 'Enter a valid chapter number';
-                }
-
-                if (chapter < 0) {
-                  return 'Chapter number cannot be negative';
-                }
-
-                return null;
-              },
+          TextFormField(
+            controller: _chapterController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.done,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              labelText: 'Chapter Number',
+              hintText: 'e.g. 1, 1.5, 2',
+              prefixIcon: Icon(Icons.numbers),
+              border: OutlineInputBorder(),
             ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Chapter number is required';
+              }
 
-            const SizedBox(height: 16),
+              final chapter = double.tryParse(value.trim());
 
-            _langChooser(),
+              if (chapter == null) {
+                return 'Enter a valid chapter number';
+              }
 
-            const SizedBox(height: 16),
+              if (chapter < 0) {
+                return 'Chapter number cannot be negative';
+              }
 
-            TextFormField(
-              controller: contentCon,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Chapter Content',
-                hintText: 'Enter chapter Content',
-                // prefixIcon: Icon(Icons.content_cut_outlined),
-                border: OutlineInputBorder(),
-              ),
-              maxLines: null,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Chapter content is required';
-                }
+              return null;
+            },
+          ),
 
-                return null;
-              },
+          const SizedBox(height: 16),
+
+          _langChooser(),
+
+          const SizedBox(height: 16),
+
+          TextFormField(
+            controller: contentCon,
+            decoration: const InputDecoration(
+              labelText: 'Chapter Content',
+              hintText: 'Enter chapter Content',
+              // prefixIcon: Icon(Icons.content_cut_outlined),
+              border: OutlineInputBorder(),
             ),
+            maxLines: null,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Chapter content is required';
+              }
 
-            const SizedBox(height: 24),
+              return null;
+            },
+          ),
 
-            SizedBox(
-              height: 52,
-              child: FilledButton.icon(
-                onPressed: _save,
-                icon: const Icon(Icons.save),
-                label: const Text('Save Chapter'),
-              ),
+          const SizedBox(height: 24),
+
+          SizedBox(
+            height: 52,
+            child: FilledButton.icon(
+              onPressed: _save,
+              icon: const Icon(Icons.save),
+              label: const Text('Save Chapter'),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

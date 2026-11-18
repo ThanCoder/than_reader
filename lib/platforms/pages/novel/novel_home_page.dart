@@ -13,7 +13,7 @@ import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:than_reader/platforms/pages/novel/novel_file_item_menu.dart';
-import 'package:than_reader/platforms/pages/novel/novel_page.dart';
+import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_home_page.dart';
 
 class NovelHomePage extends StatefulWidget {
   const new({super.key});
@@ -137,7 +137,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
   Widget listItem(NovelFile file) {
     return GestureDetector(
       onTap: () => context.pushMaterialPageRoute(
-        builder: (mainCtx) => NovelPage(file: file),
+        builder: (mainCtx) => NovelDescHomePage(file: file),
       ),
       onSecondaryTap: () => showItemMenu(file),
       child: Container(

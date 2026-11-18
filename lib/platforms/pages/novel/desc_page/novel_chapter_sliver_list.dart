@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/ui/build_context_x.dart';
-import 'package:than_reader/ui/components/refresh_button.dart';
 import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_edit_form_page.dart';
@@ -38,7 +37,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
-  Map<ChapterLaguage, List<NovelChapter>> groups = {};
+  final Map<ChapterLaguage, List<NovelChapter>> groups = {};
 
   Future<void> init() async {
     groups.clear();
@@ -142,17 +141,24 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           padding: .symmetric(vertical: 10, horizontal: 15),
           sliver: SliverList.list(
             children: [
-              Text(
-                'Chapters',
-                style: TextStyle(
-                  fontWeight: .w700,
-                  fontSize: 18,
-                  color: col.onSurface,
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Chapters',
+                    style: TextStyle(
+                      fontWeight: .w700,
+                      fontSize: 18,
+                      color: col.onSurface,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: init,
+                    icon: Icon(Icons.refresh_outlined),
+                  ),
+                ],
               ),
               SizedBox(height: 16),
-              if (groups.isEmpty)
-                RefreshButton(text: Text('List Empty'), onClicked: init),
 
               _langsWidget(),
             ],
