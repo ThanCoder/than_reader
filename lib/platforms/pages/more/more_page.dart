@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
+import 'package:than_reader/platforms/pages/more/create_linux_desktop_icon.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/apps/pdf/pdf_reader_setting_page.dart';
 import 'package:than_reader/platforms/components/app_seeds_color_chooser.dart';
 import 'package:than_reader/platforms/components/app_version_view.dart';
 import 'package:than_reader/platforms/components/cache_cleaner.dart';
-import 'package:than_reader/platforms/pages/app_about_dialog.dart';
+import 'package:than_reader/platforms/pages/more/app_about_dialog.dart';
 import 'package:than_reader/platforms/pages/dev_pages/dev_route_tile.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
@@ -82,6 +85,15 @@ class MorePage extends StatelessWidget {
                   );
                 },
               ),
+              if (Platform.isLinux)
+                CreateLinuxDesktopIcon(
+                  desktopFileName: 'than.reader',
+                  assetIconPath: 'assets/logo/app-icon-for-a-universal-document-reader-mobile-ap.png-1788497328588.png',
+                  name: 'Than Reader',
+                  genericName: 'Doc Reader',
+                  categories: 'Document Reader',
+                  comment: 'doc reader',
+                ),
               DevRouteTile(),
               AppAboutDialogListTile(
                 appDesc: 'Document Reader App.\nSupported `Pdf`.',

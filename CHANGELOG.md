@@ -1,5 +1,6 @@
 # 3.1.0
 
+- Added `Linux Desktop Creator.`
 - Modified `Novel App`
 
 # 3.0.0

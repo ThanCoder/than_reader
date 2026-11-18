@@ -4,7 +4,7 @@ import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/mobile/mobile_home_page.dart';
-import 'package:than_reader/platforms/pages/more_page.dart';
+import 'package:than_reader/platforms/pages/more/more_page.dart';
 
 class MobileHome extends StatefulWidget {
   const MobileHome({super.key});

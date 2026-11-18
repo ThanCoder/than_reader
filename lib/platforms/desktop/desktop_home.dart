@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/platforms/pages/fav/fav_list_page.dart';
-import 'package:than_reader/platforms/pages/more_page.dart';
+import 'package:than_reader/platforms/pages/more/more_page.dart';
 import 'package:than_reader/platforms/pages/novel/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
