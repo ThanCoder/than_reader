@@ -13,15 +13,15 @@ class NovelChapterFormPage extends StatefulWidget {
     super.key,
     this.lang = .myanmar,
     this.editChapter,
-    required this.getContentText,
     required this.onSaved,
     required this.getLastChapter,
+    required this.getChapter,
   });
 
   final ChapterLaguage lang;
   final NovelChapter? editChapter;
-  final Future<String?> Function(ChapterLaguage lang, double chNumber)
-  getContentText;
+  final Future<NovelChapter?> Function(ChapterLaguage lang, double chNumber)
+  getChapter;
   final NovelChapter? Function(ChapterLaguage lang) getLastChapter;
   final Future<String?> Function(NovelChapter savedChapter, String contentText)
   onSaved;
@@ -78,11 +78,14 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   void init() async {
     // final res = await widget.chapter.getContentOrNull<String>();
-    final res = await widget.getContentText(
+    final res = await widget.getChapter(
       _language,
       double.tryParse(_chapterController.text) ?? 0,
     );
-    _contentCon.text = res ?? '';
+    if (res != null) {
+      final content = await res.getContentOrNull<String>();
+      _contentCon.text = content ?? '';
+    }
   }
 
   void _getLastChapter() async {
@@ -123,19 +126,25 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   void prevChNumber() async {
     if (_currentCh <= 1) return;
+    _titleController.text = 'Untitled';
+    _contentCon.text = '';
     _chapterController.text = '${_currentCh - 1}';
-    final res = await widget.getContentText(_language, _currentCh);
-    if (res == null) return;
-    if (!mounted) return;
-    _contentCon.text = res;
+    final ch = await widget.getChapter(_language, _currentCh);
+    if (ch == null) return;
+    _titleController.text = ch.title;
+    final res = await ch.getContentOrNull<String>();
+    _contentCon.text = res ?? '';
   }
 
   void nextChNumber() async {
+    _titleController.text = 'Untitled';
+    _contentCon.text = '';
     _chapterController.text = '${_currentCh + 1}';
-    final res = await widget.getContentText(_language, _currentCh);
-    if (res == null) return;
-    if (!mounted) return;
-    _contentCon.text = res;
+    final ch = await widget.getChapter(_language, _currentCh);
+    if (ch == null) return;
+    _titleController.text = ch.title;
+    final res = await ch.getContentOrNull<String>();
+    _contentCon.text = res ?? '';
   }
 
   void _contentFormChanged(String val) {
@@ -174,9 +183,8 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
         _contentCon.text.trim(),
       );
       if (msg == null) return;
-      _contentCon.text = '';
       _titleController.text = 'Untitled';
-      _chapterController.text = '${ch + 1}';
+      nextChNumber();
 
       if (!mounted) return;
       showSuccessDialog(context, msg);
@@ -402,13 +410,21 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
           onPressed: () async {
             final ch = double.tryParse(_chapterController.text.trim());
             if (ch == null) return;
-            final res = await widget.getContentText(_language, ch);
+            // chapter
+            final chapter = await widget.getChapter(_language, ch);
             if (!mounted) return;
-            if (res == null) {
+            if (chapter == null) {
+              showErrorDialog(context, '`$ch`: Chapter No Found!');
+              return;
+            }
+            // content
+            final content = await chapter.getContentOrNull<String>();
+            if (!mounted) return;
+            if (content == null) {
               showErrorDialog(context, 'Last Content Text No Found!');
               return;
             }
-            _contentCon.text = res;
+            _contentCon.text = content;
             setState(() {});
           },
           child: Text('Get Last Content'),

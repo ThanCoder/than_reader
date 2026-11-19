@@ -8,6 +8,7 @@ import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
@@ -46,6 +47,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
       final name = await showPromptAlertDialog(
         context,
         'Untitled',
+        title: 'New Novel File',
         confirmText: 'New Novel',
         onErrorCheck: (text) {
           if (text.isEmpty) {
@@ -71,8 +73,55 @@ class _NovelHomePageState extends State<NovelHomePage> {
     }
   }
 
+  void _onReanme(NovelFile file) async {
+    final txt = await showPromptAlertDialog(
+      context,
+      file.name,
+      title: 'Rename NovelFile',
+      closeText: 'Close',
+      confirmText: 'Rename',
+      onErrorCheck: (text) {
+        if (text.isEmpty) {
+          return 'Required!';
+        }
+        if (text == file.name) return null;
+        final f = File(
+          '${file.path.pathBuf.parent.join(text).path}.${file.ext}',
+        );
+        if (f.existsSync()) {
+          return 'Already Exists';
+        }
+
+        return null;
+      },
+    );
+    if (txt == null || txt == file.name) return;
+    final newPath = '${file.path.pathBuf.parent.join(txt).path}.${file.ext}';
+    await con.rename(file, newPath);
+  }
+
+  void _onDelete(NovelFile file) async {
+    final conf = await showConfirmDialog(
+      context,
+      'Want To Delete Forever?',
+      closeText: 'No',
+      confirmText: 'Delete Forever!',
+      confirmColor: context.colorScheme.error,
+      confirmForegroundColor: context.colorScheme.onError,
+    );
+    if (!conf) return;
+    await con.delete(file);
+  }
+
   void showItemMenu(NovelFile file) {
-    NovelFileItemMenu.show(context, file: file);
+    NovelFileItemMenu.show(
+      context,
+      file: file,
+      props: .new(
+        onRename: () => _onReanme(file),
+        onDelete: () => _onDelete(file),
+      ),
+    );
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
@@ -140,6 +189,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
         builder: (mainCtx) => NovelDescHomePage(file: file),
       ),
       onSecondaryTap: () => showItemMenu(file),
+      onLongPress: () => showItemMenu(file),
       child: Container(
         padding: .symmetric(vertical: 5, horizontal: 8),
         decoration: BoxDecoration(
@@ -168,13 +218,20 @@ class _NovelHomePageState extends State<NovelHomePage> {
                     overflow: .ellipsis,
                     style: TextStyle(fontWeight: .w700, fontSize: 14),
                   ),
-                  Text(
-                    'Novel Database File',
-                    style: TextStyle(fontWeight: .w400, fontSize: 12),
+                  Row(
+                    children: [
+                      Text(
+                        'Novel Database File',
+                        style: TextStyle(fontWeight: .w400, fontSize: 12),
+                      ),
+                      Spacer(),
+                      Text(file.size.fileSizeLabel()),
+                    ],
                   ),
                   Row(
-                    mainAxisAlignment: .end,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
+                      Text(file.date.formatDate()),
                       Icon(
                         Icons.arrow_forward_ios_outlined,
                         color: Colors.teal,

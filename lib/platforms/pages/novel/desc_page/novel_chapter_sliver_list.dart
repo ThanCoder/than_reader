@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -95,12 +96,12 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           }
           return null;
         },
-        getContentText: (lang, chNumber) async {
+        getChapter: (lang, chNumber) async {
           final ch = await box.findOne(
             (e) => e.lang == lang && e.chapter == chNumber,
           );
           if (ch != null) {
-            return await ch.getContentOrNull<String>();
+            return ch;
           }
           return null;
         },
@@ -152,7 +153,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   void showItemMenu(NovelChapter item) async {
-    ChapterListItemMenuSheet.show(
+    await ChapterListItemMenuSheet.show(
       context,
       item,
       props: ChapterListItemMenuProps(
@@ -164,6 +165,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         },
       ),
     );
+    _lastClickedItem = item;
+    if (!mounted) return;
+    setState(() {});
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
@@ -175,7 +179,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         SliverPadding(
           padding: .symmetric(vertical: 10, horizontal: 15),
           sliver: SliverList.list(
-            children: [_header(), SizedBox(height: 16), _langsWidget()],
+            children: [_header(), SizedBox(height: 16), _subHeader()],
           ),
         ),
 
@@ -207,8 +211,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     );
   }
 
-  Widget _langsWidget() => Padding(
-    padding: const EdgeInsets.all(8.0),
+  Widget _subHeader() => Padding(
+    padding: .symmetric(vertical: 8),
     child: Wrap(
       spacing: 5,
       runSpacing: 5,
@@ -216,7 +220,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     ),
   );
 
-  Widget _langItem(ChapterLaguage e) {
+  Widget _langItem(ChapterLaguage e, {double fontSize = 17}) {
     final selected = e == NovelChapterSliverList.lang;
     return GestureDetector(
       onTap: () {
@@ -225,7 +229,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         });
       },
       child: Container(
-        padding: .symmetric(vertical: 2, horizontal: 4),
+        padding: .symmetric(vertical: 4, horizontal: 6),
         decoration: BoxDecoration(
           color: selected ? col.primary : col.surfaceContainer,
           borderRadius: .circular(14),
@@ -233,7 +237,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         child: Text(
           e.label,
           style: TextStyle(
-            fontSize: 17,
+            fontSize: fontSize,
             fontWeight: .w700,
             color: selected ? col.onPrimary : col.onSurface,
           ),
@@ -273,7 +277,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         shape: RoundedRectangleBorder(borderRadius: .circular(14)),
         title: Row(
           children: [
-            Text(item.chapter.toString()),
+            Text(
+              item.chapter.toString().replaceAll('.0', ''),
+              style: TextStyle(fontSize: 18, fontWeight: .bold),
+            ),
             SizedBox(width: 10),
             Container(
               padding: .symmetric(vertical: 2, horizontal: 4),
@@ -283,12 +290,16 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
               ),
               child: Text(
                 item.lang.label,
-                style: TextStyle(color: col.onPrimary),
+                style: TextStyle(color: col.onPrimary, fontSize: 12),
               ),
             ),
           ],
         ),
-        subtitle: Text(item.title),
+        subtitle: Column(
+          crossAxisAlignment: .start,
+          spacing: 4,
+          children: [Text(item.title), Text(item.date.formatDate())],
+        ),
         onTap: () => goReader(item),
         onLongPress: () => showItemMenu(item),
       ),

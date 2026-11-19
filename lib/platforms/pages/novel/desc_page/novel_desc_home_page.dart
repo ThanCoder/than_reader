@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_menu_sheet.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
@@ -64,7 +65,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     setState(() {});
   }
 
-  void editDesc() async {
+  void _editDesc() async {
     final formRes = await context.pushMaterialPageRoute<NovelEditFormResp>(
       builder: (mainCtx) => NovelEditForm(
         desc: desc ?? .empty(),
@@ -121,49 +122,17 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     }
   }
 
-  void datebaseCompact() async {
+  void _datebaseCompact() async {
     await DBCompactMenu.show(context, db);
   }
 
   void showMenu() async {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            spacing: 10,
-            children: [
-              ListTile(
-                tileColor: col.surfaceContainer,
-                shape: RoundedRectangleBorder(borderRadius: .circular(14)),
-                title: Text('Edit Description'),
-                leading: Icon(Icons.edit_document),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
-                onTap: () {
-                  context.pop();
-                  editDesc();
-                },
-              ),
-              if (db.state.deletedCount > 0)
-                ListTile(
-                  tileColor: col.surfaceContainer,
-                  shape: RoundedRectangleBorder(borderRadius: .circular(14)),
-                  title: Text('Databse Compact'),
-                  subtitle: Text('Databse Cleanup'),
-                  leading: Icon(Icons.clean_hands_outlined),
-                  trailing: Icon(Icons.arrow_forward_ios_outlined),
-                  onTap: () {
-                    context.pop();
-                    datebaseCompact();
-                  },
-                ),
-              SizedBox(height: 50),
-            ],
-          ),
-        ),
+    NovelDescMenuSheet.show(
+      context,
+      .new(
+        onEdit: _editDesc,
+        onCompact: _datebaseCompact,
+        showCompactTile: () => db.state.deletedCount > 0,
       ),
     );
   }
@@ -172,20 +141,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          desc != null ? desc!.title : widget.file.name,
-          style: TextStyle(fontSize: 18),
-        ),
-        actions: [
-          if (TPlatform.isDesktop)
-            IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
-          IconButton(onPressed: showMenu, icon: Icon(Icons.more_vert_outlined)),
-        ],
-      ),
-      body: _body,
-    );
+    return Scaffold(body: _body);
   }
 
   Widget get _body {
@@ -200,6 +156,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
           child: CustomScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             slivers: [
+              _appbar(),
               SliverPadding(
                 padding: .symmetric(vertical: 10, horizontal: 5),
                 sliver: _descWidget,
@@ -217,6 +174,23 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     );
   }
 
+  SliverAppBar _appbar() {
+    return SliverAppBar(
+      snap: true,
+      floating: true,
+      pinned: false,
+      title: Text(
+        desc != null ? desc!.title : widget.file.name,
+        style: TextStyle(fontSize: 18),
+      ),
+      actions: [
+        if (TPlatform.isDesktop)
+          IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
+        IconButton(onPressed: showMenu, icon: Icon(Icons.more_vert_outlined)),
+      ],
+    );
+  }
+
   Widget get _descWidget {
     final data = desc;
 
@@ -224,7 +198,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
       return SliverFillRemaining(
         child: Center(
           child: TextButton(
-            onPressed: editDesc,
+            onPressed: _editDesc,
             child: const Text('Add Description'),
           ),
         ),
