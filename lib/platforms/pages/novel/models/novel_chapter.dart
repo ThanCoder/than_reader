@@ -1,4 +1,5 @@
 import 'package:dual_store/dual_store.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum ChapterLaguage {
   myanmar,
@@ -10,6 +11,14 @@ enum ChapterLaguage {
       myanmar => 'Myanmar',
       english => 'English',
       china => 'China',
+    };
+  }
+
+  IconData get icon {
+    return switch (this) {
+      ChapterLaguage.myanmar => Icons.translate,
+      ChapterLaguage.english => Icons.language,
+      ChapterLaguage.china => Icons.translate,
     };
   }
 }

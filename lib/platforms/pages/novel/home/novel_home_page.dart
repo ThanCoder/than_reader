@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:than_reader/platforms/pages/novel/novel_thumb_item.dart';
+import 'package:than_reader/platforms/pages/novel/home/novel_thumb_item.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
-import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
+import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
-import 'package:than_reader/platforms/pages/novel/novel_file_item_menu.dart';
+import 'package:than_reader/platforms/pages/novel/home/novel_file_item_menu.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_home_page.dart';
 
 class NovelHomePage extends StatefulWidget {

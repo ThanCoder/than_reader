@@ -18,6 +18,7 @@ const String pdfReaderPreferPageImageRenderThreadTypeKey =
 const int pdfReaderPreloadPageCount = 2;
 
 const String novelExtName = 'dustore';
+const String novelChapterContentReplaceListKey = 'novelChapterContentReplaceListKey';
 
 const List<String> novelAllTags = [
   'Original',

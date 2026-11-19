@@ -7,7 +7,6 @@ import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
-import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_edit_form.dart';
@@ -122,13 +121,6 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     }
   }
 
-  void newChapter() async {
-    await context.pushMaterialPageRoute(
-      builder: (mainCtx) =>
-          NovelChapterFormPage(store: db, lang: NovelChapterSliverList.lang),
-    );
-  }
-
   void datebaseCompact() async {
     await DBCompactMenu.show(context, db);
   }
@@ -153,17 +145,6 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
                 onTap: () {
                   context.pop();
                   editDesc();
-                },
-              ),
-              ListTile(
-                tileColor: col.surfaceContainer,
-                shape: RoundedRectangleBorder(borderRadius: .circular(14)),
-                title: Text('Add Chapter'),
-                leading: Icon(Icons.new_label),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
-                onTap: () {
-                  context.pop();
-                  newChapter();
                 },
               ),
               if (db.state.deletedCount > 0)

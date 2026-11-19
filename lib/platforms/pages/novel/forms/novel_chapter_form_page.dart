@@ -1,13 +1,30 @@
-import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:than_reader/ui/dialog/snack_alert.dart';
+import 'package:than_reader/const_keys.dart';
+import 'package:than_reader/core/utils/app_utils.dart';
+import 'package:than_reader/platforms/pages/novel/forms/chapter_content_replacer_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/forms/chapter_form_setting_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/models/chapter_content_replacer.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
+import 'package:than_reader/ui/index.dart';
 
 class NovelChapterFormPage extends StatefulWidget {
-  const new({super.key, required this.store, required this.lang});
+  const new({
+    super.key,
+    this.lang = .myanmar,
+    this.editChapter,
+    required this.getContentText,
+    required this.onSaved,
+    required this.getLastChapter,
+  });
+
   final ChapterLaguage lang;
-  final DualStore store;
+  final NovelChapter? editChapter;
+  final Future<String?> Function(ChapterLaguage lang, double chNumber)
+  getContentText;
+  final NovelChapter? Function(ChapterLaguage lang) getLastChapter;
+  final Future<String?> Function(NovelChapter savedChapter, String contentText)
+  onSaved;
 
   @override
   State<NovelChapterFormPage> createState() => _NovelChapterFormPageState();
@@ -18,94 +35,177 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   final _titleController = TextEditingController();
   final _chapterController = TextEditingController();
-  final contentCon = TextEditingController();
+  final _contentCon = TextEditingController();
+  final _contentFocus = FocusNode();
 
-  ChapterLaguage _language = .myanmar;
+  late ChapterLaguage _language;
+  List<ChapterContentReplacer> replacerList = [];
 
   @override
   void initState() {
-    _language = widget.lang;
-    _titleController.text = 'Untitled';
+    final editChapter = widget.editChapter;
+    if (editChapter != null) {
+      _titleController.text = editChapter.title;
+      _chapterController.text = editChapter.chapter.toString();
+      _language = editChapter.lang;
+    } else {
+      // new
+      _language = widget.lang;
+      _titleController.text = 'Untitled';
+      _chapterController.text = '1';
+      _getLastChapter();
+    }
+    // config
+    replacerList = cf
+        .getMapList(novelChapterContentReplaceListKey)
+        .map((e) => ChapterContentReplacer.fromJson(e))
+        .toList();
+
     super.initState();
-    showAutoLatestChapterNumber();
+    init();
   }
+
+  final cf = AppUtil.instance.config;
 
   @override
   void dispose() {
     _titleController.dispose();
     _chapterController.dispose();
-    contentCon.dispose();
+    _contentCon.dispose();
+    _contentFocus.dispose();
     super.dispose();
   }
 
-  void showAutoLatestChapterNumber() async {
-    final list = await chapterBox.find((val) => val.lang == _language);
-    list.sortChapter();
-    if (list.isEmpty) {
-      _chapterController.text = '1';
-      _titleController.text = 'Untitled';
+  void init() async {
+    // final res = await widget.chapter.getContentOrNull<String>();
+    final res = await widget.getContentText(
+      _language,
+      double.tryParse(_chapterController.text) ?? 0,
+    );
+    _contentCon.text = res ?? '';
+  }
+
+  void _getLastChapter() async {
+    final lastCh = widget.getLastChapter(_language);
+    if (lastCh != null) {
+      _chapterController.text = '${lastCh.chapter + 1}';
     } else {
-      _chapterController.text = '${list.last.chapter + 1}';
+      _chapterController.text = '1';
     }
   }
 
-  DuBox<NovelChapter> get chapterBox => widget.store.getBox();
+  void _moreSetting() async {
+    await ChapterFormSettingSheet.show(
+      context,
+      .new(showReplacerSetting: showReplacerSetting),
+    );
+  }
+
+  void showReplacerSetting() async {
+    final res = await ChapterContentReplacerSheet.show(context, replacerList);
+    if (res == null) return;
+    replacerList = res;
+    cf.putAndWriteAll(
+      novelChapterContentReplaceListKey,
+      res.map((e) => e.toJson()).toList(),
+    );
+  }
+
+  void _pastToContent() async {
+    final res = await Clipboard.getData('text/plain');
+    if (res == null || res.text == null) return;
+    if (!mounted) return;
+    _contentCon.text = res.text!;
+    setState(() {});
+  }
+
+  double get _currentCh => double.tryParse(_chapterController.text.trim()) ?? 1;
+
+  void prevChNumber() async {
+    if (_currentCh <= 1) return;
+    _chapterController.text = '${_currentCh - 1}';
+    final res = await widget.getContentText(_language, _currentCh);
+    if (res == null) return;
+    if (!mounted) return;
+    _contentCon.text = res;
+  }
+
+  void nextChNumber() async {
+    _chapterController.text = '${_currentCh + 1}';
+    final res = await widget.getContentText(_language, _currentCh);
+    if (res == null) return;
+    if (!mounted) return;
+    _contentCon.text = res;
+  }
+
+  void _contentFormChanged(String val) {
+    if (val.isEmpty) return;
+    final lines = val.split('\n');
+    if (lines.isEmpty) return;
+    _titleController.text = lines.first.trim();
+  }
+
+  void _replaceContentText() {
+    String content = _contentCon.text;
+    if (content.isEmpty) return;
+
+    for (final replacer in replacerList) {
+      content = replacer.apply(content);
+    }
+
+    _contentCon.text = content.trim();
+  }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final chapter = NovelChapter(
-      title: _titleController.text.trim(),
-      lang: _language,
-      chapter: double.parse(_chapterController.text.trim()),
-      date: .now(),
-    );
+    try {
+      final ch = double.parse(_chapterController.text.trim());
 
-    await chapterBox.add(
-      chapter,
-      contentWriter: TextCompressContentWriter(contentCon.text),
-    );
-    if (!mounted) return;
+      final msg = await widget.onSaved(
+        .new(
+          title: _titleController.text,
+          lang: _language,
+          chapter: ch,
+          date: .now(),
+        ),
+        _contentCon.text.trim(),
+      );
+      if (msg == null) return;
+      _contentCon.text = '';
+      _titleController.text = 'Untitled';
+      _chapterController.text = '${ch + 1}';
 
-    _titleController.text = '';
-    // _chapterController.text = '';
-    contentCon.text = '';
-
-    showSnackbar(context, 'Added');
-  }
-
-  String _languageName(ChapterLaguage language) {
-    return switch (language) {
-      ChapterLaguage.myanmar => 'Myanmar',
-      ChapterLaguage.english => 'English',
-      ChapterLaguage.china => 'Chinese',
-    };
-  }
-
-  IconData _languageIcon(ChapterLaguage language) {
-    return switch (language) {
-      ChapterLaguage.myanmar => Icons.translate,
-      ChapterLaguage.english => Icons.language,
-      ChapterLaguage.china => Icons.translate,
-    };
+      if (!mounted) return;
+      showSuccessDialog(context, msg);
+    } catch (e) {
+      showErrorDialog(context, e.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Chapter'),
-        actions: [
-          IconButton(
-            onPressed: _save,
-            icon: const Icon(Icons.check),
-            tooltip: 'Save',
-          ),
-        ],
-      ),
-      body: _form(),
+    return Scaffold(appBar: _appbar(), body: _form());
+  }
+
+  AppBar _appbar() {
+    return AppBar(
+      title: Text('Chapter Form'),
+      actions: [
+        FilledButton.icon(
+          onPressed: _save,
+          label: Text('Save'),
+          icon: const Icon(Icons.check_outlined),
+        ),
+        SizedBox(width: 10),
+        IconButton(
+          onPressed: _moreSetting,
+          icon: Icon(Icons.settings_outlined),
+        ),
+        SizedBox(width: 10),
+      ],
     );
   }
 
@@ -135,7 +235,36 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
           const SizedBox(height: 16),
 
-          TextFormField(
+          _numberForm(),
+
+          const SizedBox(height: 16),
+
+          _langDropdownForm(),
+
+          const SizedBox(height: 16),
+
+          _contentForm(),
+
+          const SizedBox(height: 24),
+
+          SizedBox(
+            height: 52,
+            child: FilledButton.icon(
+              onPressed: _save,
+              icon: const Icon(Icons.save),
+              label: const Text('Save Chapter'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _numberForm() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
             controller: _chapterController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textInputAction: TextInputAction.done,
@@ -164,47 +293,29 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
               return null;
             },
           ),
-
-          const SizedBox(height: 16),
-
-          _langChooser(),
-
-          const SizedBox(height: 16),
-
-          TextFormField(
-            controller: contentCon,
-            decoration: const InputDecoration(
-              labelText: 'Chapter Content',
-              hintText: 'Enter chapter Content',
-              // prefixIcon: Icon(Icons.content_cut_outlined),
-              border: OutlineInputBorder(),
-            ),
-            maxLines: null,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Chapter content is required';
-              }
-
-              return null;
-            },
+        ),
+        SizedBox(width: 10),
+        IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: context.colorScheme.surfaceContainer,
           ),
-
-          const SizedBox(height: 24),
-
-          SizedBox(
-            height: 52,
-            child: FilledButton.icon(
-              onPressed: _save,
-              icon: const Icon(Icons.save),
-              label: const Text('Save Chapter'),
-            ),
+          icon: Icon(Icons.exposure_neg_1, color: Colors.red),
+          onPressed: prevChNumber,
+        ),
+        SizedBox(width: 10),
+        IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: context.colorScheme.surfaceContainer,
           ),
-        ],
-      ),
+          icon: Icon(Icons.plus_one_outlined, color: Colors.green),
+          onPressed: nextChNumber,
+        ),
+        SizedBox(width: 20),
+      ],
     );
   }
 
-  DropdownButtonFormField<ChapterLaguage> _langChooser() {
+  DropdownButtonFormField<ChapterLaguage> _langDropdownForm() {
     return DropdownButtonFormField<ChapterLaguage>(
       initialValue: _language,
       decoration: const InputDecoration(
@@ -217,19 +328,102 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
           value: language,
           child: Row(
             children: [
-              Icon(_languageIcon(language), size: 20),
+              Icon(language.icon, size: 20),
               const SizedBox(width: 12),
-              Text(_languageName(language)),
+              Text(language.label),
             ],
           ),
         );
       }).toList(),
       onChanged: (value) {
         if (value == null) return;
+
         _language = value;
-        showAutoLatestChapterNumber();
         setState(() {});
+        _getLastChapter();
       },
+    );
+  }
+
+  Widget _contentForm() {
+    return Column(
+      spacing: 8,
+      crossAxisAlignment: .start,
+      children: [
+        _contentFormActions(),
+        TextFormField(
+          focusNode: _contentFocus,
+          controller: _contentCon,
+          decoration: const InputDecoration(
+            labelText: 'Chapter Content',
+            hintText: 'Enter chapter Content',
+            // prefixIcon: Icon(Icons.content_cut_outlined),
+            border: OutlineInputBorder(),
+          ),
+          maxLines: null,
+          onTapOutside: (event) {
+            _contentFocus.unfocus();
+          },
+          onChanged: _contentFormChanged,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Chapter content is required';
+            }
+
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _contentFormActions() {
+    return Wrap(
+      spacing: 15,
+      runSpacing: 15,
+      children: [
+        IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: context.colorScheme.surfaceContainer,
+          ),
+          icon: Icon(Icons.paste_outlined),
+          onPressed: _pastToContent,
+        ),
+        IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: context.colorScheme.surfaceContainer,
+          ),
+          icon: Icon(Icons.copy_all_outlined),
+          onPressed: () {
+            Clipboard.setData(.new(text: _contentCon.text));
+          },
+        ),
+        FilledButton(
+          onPressed: () async {
+            final ch = double.tryParse(_chapterController.text.trim());
+            if (ch == null) return;
+            final res = await widget.getContentText(_language, ch);
+            if (!mounted) return;
+            if (res == null) {
+              showErrorDialog(context, 'Last Content Text No Found!');
+              return;
+            }
+            _contentCon.text = res;
+            setState(() {});
+          },
+          child: Text('Get Last Content'),
+        ),
+        FilledButton(
+          onPressed: _replaceContentText,
+          child: Text('Replace Text'),
+        ),
+        FilledButton(
+          onPressed: () {
+            _contentCon.text = '';
+          },
+          child: Text('Clear Text'),
+        ),
+      ],
     );
   }
 }
