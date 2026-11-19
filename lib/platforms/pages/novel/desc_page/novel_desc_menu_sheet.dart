@@ -4,12 +4,13 @@ import 'package:than_reader/ui/build_context_x.dart';
 class NovelDescMenuSheetProps {
   final VoidCallback onEdit;
   final VoidCallback onCompact;
+  final VoidCallback onNewChapter;
   final bool Function() showCompactTile;
 
-  const NovelDescMenuSheetProps({
+  const new({
     required this.onEdit,
     required this.onCompact,
-    required this.showCompactTile,
+    required this.showCompactTile, required this.onNewChapter,
   });
 }
 
@@ -51,6 +52,17 @@ class _NovelDescMenuSheetState extends State<NovelDescMenuSheet> {
               onTap: () {
                 context.pop();
                 widget.props.onEdit();
+              },
+            ),
+            ListTile(
+              tileColor: context.colorScheme.surfaceContainer,
+              shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+              title: Text('New Chapter'),
+              leading: Icon(Icons.add_circle_outline),
+              trailing: Icon(Icons.arrow_forward_ios_outlined),
+              onTap: () {
+                context.pop();
+                widget.props.onNewChapter();
               },
             ),
             if (widget.props.showCompactTile())

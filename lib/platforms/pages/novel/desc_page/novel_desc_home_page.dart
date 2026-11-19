@@ -4,6 +4,7 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_menu_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/desc_page/routes.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
@@ -29,6 +30,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     db.registerAdapter(NovelChapterAdapter());
     init();
     super.initState();
+    NovelChapterSliverList.lang = .myanmar;
   }
 
   @override
@@ -133,6 +135,9 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
         onEdit: _editDesc,
         onCompact: _datebaseCompact,
         showCompactTile: () => db.state.deletedCount > 0,
+        onNewChapter: () {
+          goChapterFormPage(context, box: chapterBox);
+        },
       ),
     );
   }

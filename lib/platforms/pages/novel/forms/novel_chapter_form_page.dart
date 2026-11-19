@@ -11,18 +11,18 @@ import 'package:than_reader/ui/index.dart';
 class NovelChapterFormPage extends StatefulWidget {
   const new({
     super.key,
-    this.lang = .myanmar,
+    this.lang,
     this.editChapter,
     required this.onSaved,
     required this.getLastChapter,
     required this.getChapter,
   });
 
-  final ChapterLaguage lang;
+  final ChapterLaguage? lang;
   final NovelChapter? editChapter;
   final Future<NovelChapter?> Function(ChapterLaguage lang, double chNumber)
   getChapter;
-  final NovelChapter? Function(ChapterLaguage lang) getLastChapter;
+  final Future<NovelChapter?> Function(ChapterLaguage lang) getLastChapter;
   final Future<String?> Function(NovelChapter savedChapter, String contentText)
   onSaved;
 
@@ -50,7 +50,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
       _language = editChapter.lang;
     } else {
       // new
-      _language = widget.lang;
+      _language = widget.lang?? .myanmar;
       _titleController.text = 'Untitled';
       _chapterController.text = '1';
       _getLastChapter();
@@ -89,7 +89,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   }
 
   void _getLastChapter() async {
-    final lastCh = widget.getLastChapter(_language);
+    final lastCh = await widget.getLastChapter(_language);
     if (lastCh != null) {
       _chapterController.text = '${lastCh.chapter + 1}';
     } else {
@@ -187,7 +187,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
       nextChNumber();
 
       if (!mounted) return;
-      showSuccessDialog(context, msg);
+      showSnackbar(context, msg);
     } catch (e) {
       showErrorDialog(context, e.toString());
     }

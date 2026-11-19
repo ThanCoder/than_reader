@@ -61,6 +61,13 @@ class _ChapterContentReplacerSheetState
     setState(() {});
   }
 
+  void onEdit(ChapterContentReplacer item) {
+    _item = item;
+    _matchCon.text = item.matchText;
+    _toTextCon.text = item.toText;
+    setState(() {});
+  }
+
   void _save() {
     context.pop(_list);
   }
@@ -91,7 +98,7 @@ class _ChapterContentReplacerSheetState
           FormInputText(
             controller: _matchCon,
             inputTextProps: .new(
-              maxLines: 1,
+              maxLines: null,
               label: Text('Match Text (Search Text)'),
             ),
           ),
@@ -115,54 +122,55 @@ class _ChapterContentReplacerSheetState
     return Column(
       children: widget.list
           .map(
-            (e) => Container(
-              margin: .only(bottom: 10),
-              padding: .symmetric(vertical: 5, horizontal: 7),
-              decoration: BoxDecoration(
-                color: e == _item
-                    ? context.colorScheme.surfaceContainerHigh
-                    : context.colorScheme.surfaceContainer,
-                borderRadius: .circular(12),
-              ),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: .start,
-                    spacing: 5,
-                    children: [
-                      Text(
-                        e.matchText,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 11, fontWeight: .w600),
+            (e) => GestureDetector(
+              onTap: () => onEdit(e),
+              child: Container(
+                margin: .only(bottom: 10),
+                padding: .symmetric(vertical: 5, horizontal: 7),
+                decoration: BoxDecoration(
+                  color: e == _item
+                      ? context.colorScheme.surfaceContainerHigh
+                      : context.colorScheme.surfaceContainer,
+                  borderRadius: .circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        spacing: 5,
+                        children: [
+                          Text(
+                            e.matchText,
+                            maxLines: 1,
+                            style: TextStyle(fontSize: 11, fontWeight: .w600),
+                          ),
+                          Text(
+                            e.toText,
+                            maxLines: 2,
+                            style: TextStyle(fontSize: 10, fontWeight: .w400),
+                          ),
+                        ],
                       ),
-                      Text(
-                        e.toText,
-                        maxLines: 2,
-                        style: TextStyle(fontSize: 10, fontWeight: .w400),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      _item = e;
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.edit_document),
-                  ),
-                  SizedBox(width: 10),
-                  IconButton(
-                    onPressed: () {
-                      _item = null;
-                      final index = _list.indexWhere((it) => it.id == e.id);
-                      if (index == -1) return;
-                      _list.removeAt(index);
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.delete_forever_outlined),
-                  ),
-                  SizedBox(width: 10),
-                ],
+                    ),
+                    IconButton(
+                      onPressed: () => onEdit(e),
+                      icon: Icon(Icons.edit_document),
+                    ),
+                    SizedBox(width: 10),
+                    IconButton(
+                      onPressed: () {
+                        _item = null;
+                        final index = _list.indexWhere((it) => it.id == e.id);
+                        if (index == -1) return;
+                        _list.removeAt(index);
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.delete_forever_outlined),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                ),
               ),
             ),
           )
