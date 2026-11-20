@@ -45,7 +45,7 @@ class NovelFileScanner extends PathScanner {
           ),
         );
       }
-      // list.sortDate();
+      list.sort((a, b) => b.date.compareTo(a.date));
       // sort newest
       return list;
     });

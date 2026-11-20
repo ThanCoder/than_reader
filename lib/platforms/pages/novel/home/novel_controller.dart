@@ -22,7 +22,6 @@ class NovelController extends IController {
       addEvent(NovelControllerStateChanged());
 
       list = await NovelFileScanner.scanAll();
-      list.sort((a, b) => b.date.second.compareTo(a.date.second));
 
       isLoading = false;
       addEvent(NovelControllerStateChanged());

@@ -1,27 +1,7 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
 
-enum ChapterLaguage {
-  myanmar,
-  english,
-  china;
-
-  String get label {
-    return switch (this) {
-      myanmar => 'Myanmar',
-      english => 'English',
-      china => 'China',
-    };
-  }
-
-  IconData get icon {
-    return switch (this) {
-      ChapterLaguage.myanmar => Icons.translate,
-      ChapterLaguage.english => Icons.language,
-      ChapterLaguage.china => Icons.translate,
-    };
-  }
-}
+part 'chapter_language.dart';
 
 class NovelChapterAdapter extends IDuBinaryMetaAdapter<NovelChapter> {
   @override
@@ -81,6 +61,11 @@ class NovelChapter extends IDuModel {
       chapter: chapter ?? this.chapter,
       date: date ?? this.date,
     );
+  }
+
+  @override
+  String toString() {
+    return '''NovelChapter(title: $title, lang: $lang, chapter: $chapter, date: $date)''';
   }
 }
 

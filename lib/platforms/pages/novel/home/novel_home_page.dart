@@ -204,7 +204,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
               height: 70,
               child: ClipRRect(
                 borderRadius: .circular(20),
-                child: NovelThumbItem(file: file),
+                child: NovelThumbItem(file: file, key: ValueKey(file.name)),
               ),
             ),
             Expanded(

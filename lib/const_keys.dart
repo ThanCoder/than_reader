@@ -18,7 +18,8 @@ const String pdfReaderPreferPageImageRenderThreadTypeKey =
 const int pdfReaderPreloadPageCount = 2;
 
 const String novelExtName = 'dustore';
-const String novelChapterContentReplaceListKey = 'novelChapterContentReplaceListKey';
+const String novelChapterContentReplaceListKey =
+    'novelChapterContentReplaceListKey';
 
 const List<String> novelAllTags = [
   'Original',
@@ -58,4 +59,9 @@ const List<String> novelAllTags = [
   'Wuxia',
   'Xianxia',
   'Xuanhuan',
+  'Cultivation',
+  'Business',
+  'Management',
+  'System',
+  'Game',
 ];

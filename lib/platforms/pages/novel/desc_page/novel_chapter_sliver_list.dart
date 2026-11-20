@@ -5,10 +5,10 @@ import 'package:dual_store/dual_store.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/chapter_list_item_menu_sheet.dart';
-import 'package:than_reader/platforms/pages/novel/desc_page/routes.dart';
-import 'package:than_reader/ui/build_context_x.dart';
+import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/novel_content/novel_chapter_content_reader.dart';
+import 'package:than_reader/ui/index.dart';
 
 class NovelChapterSliverList extends StatefulWidget {
   const new({super.key, required this.db});
@@ -27,9 +27,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
       if (event is BoxAdded) {
         final val = event.value;
         if (val is NovelChapter) {
-          groups.putIfAbsent(val.lang, () => []).add(val);
-          if (!mounted) return;
-          setState(() {});
+          final list = _currentChapterList;
+          list.add(val);
+          _onSort();
         }
       }
       if (event is BoxUpdated) {
@@ -81,6 +81,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     for (var val in list) {
       groups.putIfAbsent(val.lang, () => []).add(val);
     }
+    if (groups.isNotEmpty) {
+      final firstLang = ChapterLaguage.fromVal(groups.keys.first.name);
+      NovelChapterSliverList.lang = firstLang;
+    }
     if (!mounted) return;
     setState(() {});
   }
@@ -122,19 +126,67 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     setState(() {});
   }
 
+  List<NovelChapter> get _currentChapterList =>
+      groups[NovelChapterSliverList.lang] ?? [];
+
+  // sort
+  var _numberSort = SortItem(
+    id: 1,
+    title: 'Number',
+    isTrue: true,
+    trueTitle: 'Small To Big',
+    falseTitle: 'Big To Small',
+  );
+  void _onSort() {
+    if (_numberSort.isTrue) {
+      final list = _currentChapterList;
+      list.sortChapter(smToBg: true);
+      groups[NovelChapterSliverList.lang] = list;
+    } else {
+      final list = _currentChapterList;
+      list.sortChapter(smToBg: false);
+      groups[NovelChapterSliverList.lang] = list;
+    }
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
   ColorScheme get col => Theme.of(context).colorScheme;
 
   @override
   Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        SliverPadding(
-          padding: .symmetric(vertical: 10, horizontal: 15),
-          sliver: SliverList.list(
-            children: [_header(), SizedBox(height: 16), _subHeader()],
+        // SliverPadding(
+        //   padding: .symmetric(vertical: 10, horizontal: 15),
+        //   sliver: SliverList.list(
+        //     children: [_header(), SizedBox(height: 16), _subHeader()],
+        //   ),
+        // ),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _HeaderDelegate(
+            height: 124,
+            child: SizedBox(
+              height: 124,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 15,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _header(),
+                    const SizedBox(height: 16),
+                    _langHeader(),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
-
         _listWidget(),
       ],
     );
@@ -142,6 +194,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
 
   Row _header() {
     return Row(
+      spacing: 10,
       children: [
         Text(
           'Chapters',
@@ -153,17 +206,26 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         ),
         Spacer(),
         IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
-        SizedBox(width: 10),
+        // SizedBox(width: 10),
         IconButton(
           onPressed: _goChapterFormPage,
           icon: Icon(Icons.add_circle_outline_outlined),
+        ),
+        SortProviderDialog.buttonWidget(
+          value: _numberSort,
+          list: [_numberSort],
+          title: 'Sort Number',
+          onApply: (item) {
+            _numberSort = item;
+            _onSort();
+          },
         ),
         // SizedBox(width: 10),
       ],
     );
   }
 
-  Widget _subHeader() => Padding(
+  Widget _langHeader() => Padding(
     padding: .symmetric(vertical: 8),
     child: Wrap(
       spacing: 5,
@@ -199,7 +261,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   Widget _listWidget() {
-    final list = groups[NovelChapterSliverList.lang] ?? [];
+    final list = _currentChapterList;
     if (list.isEmpty) {
       return SliverToBoxAdapter(
         child: Center(
@@ -256,5 +318,35 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         onLongPress: () => showItemMenu(item),
       ),
     );
+  }
+}
+
+class _HeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double height;
+
+  const _HeaderDelegate({required this.child, required this.height});
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Material(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _HeaderDelegate oldDelegate) {
+    return oldDelegate.child != child;
   }
 }

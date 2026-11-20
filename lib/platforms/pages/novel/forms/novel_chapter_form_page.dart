@@ -43,18 +43,6 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   @override
   void initState() {
-    final editChapter = widget.editChapter;
-    if (editChapter != null) {
-      _titleController.text = editChapter.title;
-      _chapterController.text = editChapter.chapter.toString();
-      _language = editChapter.lang;
-    } else {
-      // new
-      _language = widget.lang?? .myanmar;
-      _titleController.text = 'Untitled';
-      _chapterController.text = '1';
-      _getLastChapter();
-    }
     // config
     replacerList = cf
         .getMapList(novelChapterContentReplaceListKey)
@@ -77,14 +65,17 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   }
 
   void init() async {
-    // final res = await widget.chapter.getContentOrNull<String>();
-    final res = await widget.getChapter(
-      _language,
-      double.tryParse(_chapterController.text) ?? 0,
-    );
-    if (res != null) {
-      final content = await res.getContentOrNull<String>();
-      _contentCon.text = content ?? '';
+    final editChapter = widget.editChapter;
+    if (editChapter != null) {
+      _titleController.text = editChapter.title;
+      _chapterController.text = editChapter.chapter.toString();
+      _language = editChapter.lang;
+    } else {
+      // new
+      _language = widget.lang ?? .myanmar;
+      _titleController.text = 'Untitled';
+      _chapterController.text = '1';
+      _getLastChapter();
     }
   }
 
@@ -95,6 +86,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     } else {
       _chapterController.text = '1';
     }
+    _fetchContentCurrentContent();
   }
 
   void _moreSetting() async {
@@ -119,7 +111,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     if (res == null || res.text == null) return;
     if (!mounted) return;
     _contentCon.text = res.text!;
-    setState(() {});
+    _contentFormChanged(res.text!);
   }
 
   double get _currentCh => double.tryParse(_chapterController.text.trim()) ?? 1;
@@ -129,17 +121,17 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     _titleController.text = 'Untitled';
     _contentCon.text = '';
     _chapterController.text = '${_currentCh - 1}';
-    final ch = await widget.getChapter(_language, _currentCh);
-    if (ch == null) return;
-    _titleController.text = ch.title;
-    final res = await ch.getContentOrNull<String>();
-    _contentCon.text = res ?? '';
+    _fetchContentCurrentContent();
   }
 
   void nextChNumber() async {
     _titleController.text = 'Untitled';
     _contentCon.text = '';
     _chapterController.text = '${_currentCh + 1}';
+    _fetchContentCurrentContent();
+  }
+
+  void _fetchContentCurrentContent() async {
     final ch = await widget.getChapter(_language, _currentCh);
     if (ch == null) return;
     _titleController.text = ch.title;

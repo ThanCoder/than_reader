@@ -2,9 +2,10 @@ import 'dart:typed_data';
 
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_menu_sheet.dart';
-import 'package:than_reader/platforms/pages/novel/desc_page/routes.dart';
+import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/platforms/pages/novel/db_compact_menu.dart';
@@ -30,7 +31,6 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     db.registerAdapter(NovelChapterAdapter());
     init();
     super.initState();
-    NovelChapterSliverList.lang = .myanmar;
   }
 
   @override
@@ -251,20 +251,28 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
 
           // const SizedBox(height: 8),
           if (data.desc.isNotEmpty)
-            ExpansionTile(
-              shape: RoundedRectangleBorder(borderRadius: .circular(14)),
-              title: const Text(
-                'Description',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text('Novel Review'),
-              children: [
-                SelectableText(
-                  data.desc,
-                  style: const TextStyle(fontSize: 15, height: 1.6),
-                ),
-              ],
+            ExpandableText(
+              data.desc,
+              expandText: 'More',
+              collapseText: 'Less',
+              collapseOnTextTap: true,
+              maxLines: 5,
+              linkColor: Colors.blue,
             ),
+          // ExpansionTile(
+          //   shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+          //   title: const Text(
+          //     'Description',
+          //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          //   ),
+          //   subtitle: Text('Novel Review'),
+          //   children: [
+          //     SelectableText(
+          //       data.desc,
+          //       style: const TextStyle(fontSize: 15, height: 1.6),
+          //     ),
+          //   ],
+          // ),
 
           if (data.tags.isNotEmpty) ...[
             const SizedBox(height: 24),
