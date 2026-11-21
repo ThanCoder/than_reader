@@ -3,6 +3,8 @@ part of 'chapter_content_replacer.dart';
 class ChapterContentReplacerLine extends IChapterContentReplacer {
   @override
   final String id;
+  @override
+  final bool enable;
   final int start;
   final int line;
   final String toText;
@@ -12,6 +14,7 @@ class ChapterContentReplacerLine extends IChapterContentReplacer {
     required this.start,
     required this.line,
     required this.toText,
+    required this.enable,
   });
 
   @override
@@ -37,34 +40,43 @@ class ChapterContentReplacerLine extends IChapterContentReplacer {
 
   @override
   Map<String, dynamic> toJson() {
-    return {'id': id, 'start': start, 'line': line, 'toText': toText};
+    return {
+      'id': id,
+      'enable': enable,
+      'start': start,
+      'line': line,
+      'toText': toText,
+    };
   }
 
   factory ChapterContentReplacerLine.fromJson(Map<String, dynamic> json) {
     return ChapterContentReplacerLine(
       id: json['id'],
+      enable: json['enable'] ?? false,
       start: json['start'],
       line: json['line'],
       toText: json['toText'],
     );
   }
 
+  @override
+  String toString() {
+    return '''ChapterContentReplacerLine(id: $id, enable: $enable, start: $start, line: $line, toText: $toText)''';
+  }
+
   ChapterContentReplacerLine copyWith({
     String? id,
+    bool? enable,
     int? start,
     int? line,
     String? toText,
   }) {
     return ChapterContentReplacerLine(
       id: id ?? this.id,
+      enable: enable ?? this.enable,
       start: start ?? this.start,
       line: line ?? this.line,
       toText: toText ?? this.toText,
     );
-  }
-
-  @override
-  String toString() {
-    return '''ChapterContentReplacerLine(id: $id, start: $start, line: $line, toText: $toText)''';
   }
 }

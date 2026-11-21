@@ -6,6 +6,7 @@ sealed class IChapterContentReplacer {
   String apply(String text);
   Map<String, dynamic> toJson();
   String get id;
+  bool get enable;
 
   bool get isLineMatcher => this is ChapterContentReplacerLine;
   bool get isTexMatcher => this is ChapterContentReplacerText;

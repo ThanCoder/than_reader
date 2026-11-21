@@ -47,6 +47,7 @@ class _ChapterContentReplacerSheetState
       line: 0,
       toText: '',
       start: 0,
+      enable: true,
     );
     _list.add(item);
     _item = item;
@@ -62,6 +63,7 @@ class _ChapterContentReplacerSheetState
       id: 'ch-content-text-${DateTime.now().millisecondsSinceEpoch}',
       matchText: '',
       toText: '',
+      enable: true,
     );
     _list.add(item);
     _item = item;
@@ -113,6 +115,18 @@ class _ChapterContentReplacerSheetState
     if (index == -1) return;
     _item = null;
     _list.removeAt(index);
+    setState(() {});
+  }
+
+  void _onEnableChanged(bool enable, IChapterContentReplacer item) {
+    final index = _list.indexWhere((it) => it.id == item.id);
+    if (index == -1) return;
+    if (item is ChapterContentReplacerLine) {
+      _list[index] = item.copyWith(enable: enable);
+    }
+    if (item is ChapterContentReplacerText) {
+      _list[index] = item.copyWith(enable: enable);
+    }
     setState(() {});
   }
 
@@ -225,8 +239,21 @@ class _ChapterContentReplacerSheetState
           borderRadius: .circular(12),
         ),
         child: Row(
+          crossAxisAlignment: .center,
           children: [
-            Expanded(child: _itemMatcher(e)),
+            Expanded(
+              child: Row(
+                spacing: 10,
+                crossAxisAlignment: .center,
+                children: [
+                  Checkbox.adaptive(
+                    value: e.enable,
+                    onChanged: (value) => _onEnableChanged(value!, e),
+                  ),
+                  _itemMatcher(e),
+                ],
+              ),
+            ),
             IconButton(
               onPressed: () => onEdit(e),
               icon: Icon(Icons.edit_document),
@@ -247,6 +274,7 @@ class _ChapterContentReplacerSheetState
     return switch (e) {
       ChapterContentReplacerLine line => Column(
         crossAxisAlignment: .start,
+        mainAxisAlignment: .center,
         spacing: 5,
         children: [
           Text(
@@ -259,15 +287,17 @@ class _ChapterContentReplacerSheetState
             maxLines: 1,
             style: TextStyle(fontSize: 11, fontWeight: .w600),
           ),
-          Text(
-            line.toText,
-            maxLines: 2,
-            style: TextStyle(fontSize: 10, fontWeight: .w400),
-          ),
+          if (line.toText.isNotEmpty)
+            Text(
+              line.toText,
+              maxLines: 2,
+              style: TextStyle(fontSize: 10, fontWeight: .w400),
+            ),
         ],
       ),
       ChapterContentReplacerText text => Column(
         crossAxisAlignment: .start,
+        mainAxisAlignment: .center,
         spacing: 5,
         children: [
           Text(
@@ -275,11 +305,12 @@ class _ChapterContentReplacerSheetState
             maxLines: 1,
             style: TextStyle(fontSize: 11, fontWeight: .w600),
           ),
-          Text(
-            text.toText,
-            maxLines: 2,
-            style: TextStyle(fontSize: 10, fontWeight: .w400),
-          ),
+          if (text.toText.isNotEmpty)
+            Text(
+              text.toText,
+              maxLines: 2,
+              style: TextStyle(fontSize: 10, fontWeight: .w400),
+            ),
         ],
       ),
     };

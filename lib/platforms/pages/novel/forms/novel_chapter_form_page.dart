@@ -40,6 +40,15 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   late ChapterLaguage _language;
   List<IChapterContentReplacer> replacerList = [];
+  bool get replacerEnable {
+    if (replacerList.isEmpty) {
+      return false;
+    }
+    for (var e in replacerList) {
+      if (e.enable) return true;
+    }
+    return false;
+  }
 
   @override
   void initState() {
@@ -127,8 +136,10 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   void showReplacerSetting() async {
     final res = await ChapterContentReplacerSheet.show(context, replacerList);
     if (res == null) return;
+    if (!mounted) return;
     replacerList = res;
     _saveReplacerCf();
+    setState(() {});
   }
 
   void _pastToContent() async {
@@ -176,6 +187,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     if (content.isEmpty) return;
 
     for (final replacer in replacerList) {
+      if (!replacer.enable) continue;
       content = replacer.apply(content);
     }
 
@@ -219,10 +231,11 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     return AppBar(
       title: Text('Chapter Form'),
       actions: [
-        FilledButton(
-          onPressed: _replaceContentText,
-          child: Text('Replace Text'),
-        ),
+        if (replacerEnable)
+          FilledButton(
+            onPressed: _replaceContentText,
+            child: Text('Replace Text'),
+          ),
         SizedBox(width: 10),
         FilledButton.icon(
           onPressed: _save,
@@ -451,10 +464,11 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
           },
           child: Text('Get Last Content'),
         ),
-        FilledButton(
-          onPressed: _replaceContentText,
-          child: Text('Replace Text'),
-        ),
+        if (replacerEnable)
+          FilledButton(
+            onPressed: _replaceContentText,
+            child: Text('Replace Text'),
+          ),
         FilledButton(
           onPressed: () {
             _contentCon.text = '';

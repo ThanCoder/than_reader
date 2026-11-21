@@ -74,19 +74,20 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
   final Map<ChapterLaguage, List<NovelChapter>> groups = {};
 
-  Future<void> init() async {
+  Future<void> init({bool autoChooseLang = true}) async {
     groups.clear();
     final list = await box.getAll();
     list.sortChapter();
     for (var val in list) {
       groups.putIfAbsent(val.lang, () => []).add(val);
     }
-    if (groups.isNotEmpty) {
+    if (groups.isNotEmpty && autoChooseLang) {
       final firstLang = ChapterLaguage.fromVal(groups.keys.first.name);
       NovelChapterSliverList.lang = firstLang;
     }
     if (!mounted) return;
     setState(() {});
+    _onSort();
   }
 
   void _goChapterFormPage({NovelChapter? editChapter}) async {
@@ -157,6 +158,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     trueTitle: 'Small To Big',
     falseTitle: 'Big To Small',
   );
+
   void _onSort() {
     if (_numberSort.isTrue) {
       final list = _currentChapterList;
@@ -219,7 +221,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           ),
         ),
         Spacer(),
-        IconButton(onPressed: init, icon: Icon(Icons.refresh_outlined)),
+        IconButton(
+          onPressed: () => init(autoChooseLang: false),
+          icon: Icon(Icons.refresh_outlined),
+        ),
         // SizedBox(width: 10),
         IconButton(
           onPressed: _goChapterFormPage,
@@ -252,9 +257,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     final selected = e == NovelChapterSliverList.lang;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          NovelChapterSliverList.lang = e;
-        });
+        NovelChapterSliverList.lang = e;
+        _onSort();
       },
       child: Container(
         padding: .symmetric(vertical: 4, horizontal: 6),
