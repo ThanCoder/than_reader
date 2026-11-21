@@ -1,6 +1,5 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:than_reader/platforms/pages/novel/desc_page/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_chapter_form_page.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/ui/build_context_x.dart';
@@ -9,10 +8,11 @@ Future<void> goChapterFormPage(
   BuildContext context, {
   NovelChapter? editChapter,
   required DuBox<NovelChapter> box,
+  ChapterLaguage? lang,
 }) async {
   await context.pushMaterialPageRoute(
     builder: (mainCtx) => NovelChapterFormPage(
-      lang: NovelChapterSliverList.lang,
+      lang: lang,
       editChapter: editChapter,
       getLastChapter: (lang) async {
         final list = await box.find((e) => e.lang == lang);

@@ -1,38 +1,12 @@
-class ChapterContentReplacer {
-  const ChapterContentReplacer({
-    required this.id,
-    required this.matchText,
-    required this.toText,
-  });
-  final String id;
-  final String matchText;
-  final String toText;
+part 'chapter_content_replacer_number.dart';
+part 'chapter_content_replacer_text.dart';
 
-  String apply(String text) {
-    return text.replaceAll(matchText, toText);
-  }
+sealed class IChapterContentReplacer {
+  const IChapterContentReplacer();
+  String apply(String text);
+  Map<String, dynamic> toJson();
+  String get id;
 
-  ChapterContentReplacer copyWith({
-    String? id,
-    String? matchText,
-    String? toText,
-  }) {
-    return ChapterContentReplacer(
-      id: id ?? this.id,
-      matchText: matchText ?? this.matchText,
-      toText: toText ?? this.toText,
-    );
-  }
-
-  factory ChapterContentReplacer.fromJson(Map<String, dynamic> json) {
-    return ChapterContentReplacer(
-      id: json['id'],
-      matchText: json['matchText'],
-      toText: json['toText'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'matchText': matchText, 'toText': toText};
-  }
+  bool get isLineMatcher => this is ChapterContentReplacerLine;
+  bool get isTexMatcher => this is ChapterContentReplacerText;
 }

@@ -90,7 +90,14 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   void _goChapterFormPage({NovelChapter? editChapter}) async {
-    await goChapterFormPage(context, box: box);
+    await goChapterFormPage(
+      context,
+      box: box,
+      lang: editChapter == null
+          ? NovelChapterSliverList.lang
+          : editChapter.lang,
+      editChapter: editChapter,
+    );
   }
 
   NovelChapter? _lastClickedItem;
@@ -98,9 +105,22 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   void goReader(NovelChapter item) async {
     await context.pushMaterialPageRoute(
       builder: (mainCtx) => NovelChapterContentReader(
-        box: box,
-        item: item,
-        lang: NovelChapterSliverList.lang,
+        props: .new(
+          lang: NovelChapterSliverList.lang,
+          chapterNumber: item.chapter,
+          getChapterBox: () => box,
+          getChapter: (lang, chNumber) {
+            return box.findOne((e) => e.chapter == chNumber && e.lang == lang);
+          },
+          getAvaliableLangs: (chNumber) async {
+            final langs = <ChapterLaguage>{};
+            final res = await box.find((e) => e.chapter == chNumber);
+            for (var ch in res) {
+              langs.add(ch.lang);
+            }
+            return langs.toList();
+          },
+        ),
       ),
     );
     _lastClickedItem = item;
@@ -158,12 +178,6 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        // SliverPadding(
-        //   padding: .symmetric(vertical: 10, horizontal: 15),
-        //   sliver: SliverList.list(
-        //     children: [_header(), SizedBox(height: 16), _subHeader()],
-        //   ),
-        // ),
         SliverPersistentHeader(
           pinned: true,
           delegate: _HeaderDelegate(

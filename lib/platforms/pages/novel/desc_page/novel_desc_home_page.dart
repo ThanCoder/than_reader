@@ -136,7 +136,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
         onCompact: _datebaseCompact,
         showCompactTile: () => db.state.deletedCount > 0,
         onNewChapter: () {
-          goChapterFormPage(context, box: chapterBox);
+          goChapterFormPage(context, box: chapterBox,lang: null);
         },
       ),
     );

@@ -26,6 +26,9 @@ void main() async {
       width: cf.getDouble(appWindowWidthKey, 600).toInt(),
       height: cf.getDouble(appWindowHeightKey, 400).toInt(),
     );
+    await ThanPkgLinux.getInstance.window.setWindowTitle(
+      AppUtil.instance.appName,
+    );
   }
 
   await ReaderInfoStore.instance.init(
@@ -47,7 +50,6 @@ void main() async {
   // ModuleApps.instance.registerModule(AppFileReadManager());
   // ModuleApps.instance.registerModule(EpubApp());
   // ModuleApps.instance.registerModule(PdfApp());
-
 
   runApp(const PlatformApp());
 }

@@ -39,15 +39,13 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   final _contentFocus = FocusNode();
 
   late ChapterLaguage _language;
-  List<ChapterContentReplacer> replacerList = [];
+  List<IChapterContentReplacer> replacerList = [];
 
   @override
   void initState() {
     // config
-    replacerList = cf
-        .getMapList(novelChapterContentReplaceListKey)
-        .map((e) => ChapterContentReplacer.fromJson(e))
-        .toList();
+
+    _loadReplacerCf();
 
     super.initState();
     init();
@@ -64,12 +62,42 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     super.dispose();
   }
 
+  void _loadReplacerCf() {
+    replacerList.clear();
+
+    for (var map in cf.getMapList(novelChapterContentReplaceTextListKey)) {
+      replacerList.add(ChapterContentReplacerText.fromJson(map));
+    }
+    for (var map in cf.getMapList(novelChapterContentReplaceLineListKey)) {
+      replacerList.add(ChapterContentReplacerLine.fromJson(map));
+    }
+  }
+
+  void _saveReplacerCf() {
+    final lineMatcher = replacerList
+        .where((e) => e.isLineMatcher)
+        .map((e) => e.toJson())
+        .toList();
+    final textMatcher = replacerList
+        .where((e) => e.isTexMatcher)
+        .map((e) => e.toJson())
+        .toList();
+
+    cf
+        .put(novelChapterContentReplaceTextListKey, textMatcher)
+        .put(novelChapterContentReplaceLineListKey, lineMatcher)
+        .writeAll();
+  }
+
   void init() async {
     final editChapter = widget.editChapter;
     if (editChapter != null) {
+      // edit
       _titleController.text = editChapter.title;
       _chapterController.text = editChapter.chapter.toString();
       _language = editChapter.lang;
+      final con = await editChapter.getContentOrNull<String>();
+      _contentCon.text = con ?? '';
     } else {
       // new
       _language = widget.lang ?? .myanmar;
@@ -100,10 +128,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     final res = await ChapterContentReplacerSheet.show(context, replacerList);
     if (res == null) return;
     replacerList = res;
-    cf.putAndWriteAll(
-      novelChapterContentReplaceListKey,
-      res.map((e) => e.toJson()).toList(),
-    );
+    _saveReplacerCf();
   }
 
   void _pastToContent() async {
@@ -194,6 +219,11 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     return AppBar(
       title: Text('Chapter Form'),
       actions: [
+        FilledButton(
+          onPressed: _replaceContentText,
+          child: Text('Replace Text'),
+        ),
+        SizedBox(width: 10),
         FilledButton.icon(
           onPressed: _save,
           label: Text('Save'),
