@@ -11,3 +11,9 @@ sealed class IChapterContentReplacer {
   bool get isLineMatcher => this is ChapterContentReplacerLine;
   bool get isTexMatcher => this is ChapterContentReplacerText;
 }
+
+extension IChapterContentReplacerListX on List<IChapterContentReplacer> {
+  void sortUpLineMatcher() {
+    sort((a, b) => a.isLineMatcher ? -1 : 1);
+  }
+}

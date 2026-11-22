@@ -37,6 +37,8 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
   final _chapterController = TextEditingController();
   final _contentCon = TextEditingController();
   final _contentFocus = FocusNode();
+  final _titleControllerFocus = FocusNode();
+  final _chapterControllerFocus = FocusNode();
 
   late ChapterLaguage _language;
   List<IChapterContentReplacer> replacerList = [];
@@ -60,16 +62,18 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     init();
   }
 
-  final cf = AppUtil.instance.config;
-
   @override
   void dispose() {
     _titleController.dispose();
     _chapterController.dispose();
     _contentCon.dispose();
     _contentFocus.dispose();
+    _titleControllerFocus.dispose();
+    _chapterControllerFocus.dispose();
     super.dispose();
   }
+
+  final cf = AppUtil.instance.config;
 
   void _loadReplacerCf() {
     replacerList.clear();
@@ -182,9 +186,11 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     _titleController.text = lines.first.trim();
   }
 
-  void _replaceContentText() {
+  void _replaceContentAllMatcher() {
     String content = _contentCon.text;
     if (content.isEmpty) return;
+
+    replacerList.sortUpLineMatcher();
 
     for (final replacer in replacerList) {
       if (!replacer.enable) continue;
@@ -192,6 +198,43 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
     }
 
     _contentCon.text = content.trim();
+    _contentFormChanged(_contentCon.text);
+  }
+
+  void _replaceContentTextMatcher() {
+    String content = _contentCon.text;
+    if (content.isEmpty) return;
+
+    for (final replacer in replacerList) {
+      if (!replacer.enable) continue;
+      if (!replacer.isTexMatcher) continue;
+
+      content = replacer.apply(content);
+    }
+
+    _contentCon.text = content.trim();
+    _contentFormChanged(_contentCon.text);
+  }
+
+  void _getLastContent() async {
+    final ch = double.tryParse(_chapterController.text.trim());
+    if (ch == null) return;
+    // chapter
+    final chapter = await widget.getChapter(_language, ch);
+    if (!mounted) return;
+    if (chapter == null) {
+      showErrorDialog(context, '`$ch`: Chapter Not Found!');
+      return;
+    }
+    // content
+    final content = await chapter.getContentOrNull<String>();
+    if (!mounted) return;
+    if (content == null) {
+      showErrorDialog(context, 'Last Content Not Found!');
+      return;
+    }
+    _contentCon.text = content;
+    setState(() {});
   }
 
   Future<void> _save() async {
@@ -224,30 +267,40 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _appbar(), body: _form());
+    return Scaffold(
+      appBar: _appbar(),
+      body: _form(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _save,
+        child: Icon(Icons.save_as_outlined),
+      ),
+    );
   }
 
   AppBar _appbar() {
     return AppBar(
-      title: Text('Chapter Form'),
+      title: Text(
+        'Chapter Form',
+        style: TextStyle(fontSize: 13, fontWeight: .w700),
+      ),
       actions: [
         if (replacerEnable)
           FilledButton(
-            onPressed: _replaceContentText,
-            child: Text('Replace Text'),
+            onPressed: _replaceContentAllMatcher,
+            child: Text('Replace All'),
           ),
-        SizedBox(width: 10),
-        FilledButton.icon(
-          onPressed: _save,
-          label: Text('Save'),
-          icon: const Icon(Icons.check_outlined),
-        ),
-        SizedBox(width: 10),
+        SizedBox(width: 5),
+        // FilledButton.icon(
+        //   onPressed: _save,
+        //   label: Text('Save'),
+        //   icon: const Icon(Icons.check_outlined),
+        // ),
+        // SizedBox(width: 5),
         IconButton(
           onPressed: _moreSetting,
           icon: Icon(Icons.settings_outlined),
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 5),
       ],
     );
   }
@@ -260,6 +313,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
         children: [
           TextFormField(
             controller: _titleController,
+            focusNode: _titleControllerFocus,
             textInputAction: TextInputAction.next,
             decoration: const InputDecoration(
               labelText: 'Chapter Title',
@@ -274,6 +328,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
               return null;
             },
+            onTapOutside: (event) => _titleControllerFocus.unfocus(),
           ),
 
           const SizedBox(height: 16),
@@ -288,16 +343,16 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
           _contentForm(),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 90),
 
-          SizedBox(
-            height: 52,
-            child: FilledButton.icon(
-              onPressed: _save,
-              icon: const Icon(Icons.save),
-              label: const Text('Save Chapter'),
-            ),
-          ),
+          // SizedBox(
+          //   height: 52,
+          //   child: FilledButton.icon(
+          //     onPressed: _save,
+          //     icon: const Icon(Icons.save),
+          //     label: const Text('Save Chapter'),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -309,6 +364,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
         Expanded(
           child: TextFormField(
             controller: _chapterController,
+            focusNode: _chapterControllerFocus,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textInputAction: TextInputAction.done,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -318,6 +374,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
               prefixIcon: Icon(Icons.numbers),
               border: OutlineInputBorder(),
             ),
+            onTapOutside: (event) => _chapterControllerFocus.unfocus(),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Chapter number is required';
@@ -422,8 +479,8 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
 
   Widget _contentFormActions() {
     return Wrap(
-      spacing: 15,
-      runSpacing: 15,
+      spacing: 5,
+      runSpacing: 5,
       children: [
         IconButton(
           style: IconButton.styleFrom(
@@ -441,34 +498,21 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
             Clipboard.setData(.new(text: _contentCon.text));
           },
         ),
-        FilledButton(
-          onPressed: () async {
-            final ch = double.tryParse(_chapterController.text.trim());
-            if (ch == null) return;
-            // chapter
-            final chapter = await widget.getChapter(_language, ch);
-            if (!mounted) return;
-            if (chapter == null) {
-              showErrorDialog(context, '`$ch`: Chapter No Found!');
-              return;
-            }
-            // content
-            final content = await chapter.getContentOrNull<String>();
-            if (!mounted) return;
-            if (content == null) {
-              showErrorDialog(context, 'Last Content Text No Found!');
-              return;
-            }
-            _contentCon.text = content;
-            setState(() {});
-          },
-          child: Text('Get Last Content'),
-        ),
+
         if (replacerEnable)
           FilledButton(
-            onPressed: _replaceContentText,
-            child: Text('Replace Text'),
+            onPressed: _replaceContentAllMatcher,
+            child: Text('Replace All Matcher'),
           ),
+        if (replacerEnable)
+          FilledButton(
+            onPressed: _replaceContentTextMatcher,
+            child: Text('Replace Only Text Matcher'),
+          ),
+        FilledButton(
+          onPressed: _getLastContent,
+          child: Text('Get Last Content'),
+        ),
         FilledButton(
           onPressed: () {
             _contentCon.text = '';
