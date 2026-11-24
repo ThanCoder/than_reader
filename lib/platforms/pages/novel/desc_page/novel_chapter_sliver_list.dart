@@ -71,12 +71,18 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   @override
   void dispose() {
     _sub?.cancel();
+    _saveRecentStorage();
     super.dispose();
   }
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
   final Map<ChapterLaguage, List<NovelChapter>> groups = {};
   final con = ControllerManager.read<NovelController>();
+
+  final Map<ChapterLaguage, int> _recentStorage = {};
+
+  List<NovelChapter> get _currentChapterList =>
+      groups[NovelChapterSliverList.lang] ?? [];
 
   Future<void> init({bool autoChooseLang = true}) async {
     groups.clear();
@@ -92,6 +98,21 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     if (!mounted) return;
     setState(() {});
     _onSort(_currentChapterList);
+
+    _loadRecentStorage();
+  }
+
+  void _loadRecentStorage() async {
+    _recentStorage.clear();
+
+    final recent = con.cf.getMap('recent-${widget.desc.id}');
+    _recentStorage.addAll(recent.map((k, v) => .new(.fromVal(k), v)));
+    setState(() {});
+  }
+
+  void _saveRecentStorage() {
+    final val = _recentStorage.map((k, v) => .new(k.name, v));
+    con.cf.put('recent-${widget.desc.id}', val).writeAll();
   }
 
   void _goChapterFormPage({NovelChapter? editChapter}) async {
@@ -126,10 +147,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         ),
       ),
     );
-    con.cf.putAndWriteAll(
-      _recentIdKey(item.generatedId, item.lang),
-      item.generatedId,
-    );
+    // con.cf.put(_recentIdKey(item.generatedId, item.lang), item.generatedId);
+    _recentStorage[item.lang] = item.generatedId;
     if (!mounted) return;
     setState(() {});
   }
@@ -147,16 +166,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         },
       ),
     );
-    con.cf.putAndWriteAll(
-      _recentIdKey(item.generatedId, item.lang),
-      item.generatedId,
-    );
+    _recentStorage[item.lang] = item.generatedId;
     if (!mounted) return;
     setState(() {});
   }
-
-  List<NovelChapter> get _currentChapterList =>
-      groups[NovelChapterSliverList.lang] ?? [];
 
   // sort
   var _numberSort = SortItem(
@@ -182,9 +195,6 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
-
-  String _recentIdKey(int itemId, ChapterLaguage lang) =>
-      'recent-clicked-${lang.name}-${widget.desc.id}-$itemId';
 
   @override
   Widget build(BuildContext context) {
@@ -311,9 +321,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   Widget listItem(NovelChapter item) {
-    final isLast =
-        con.cf.getInt(_recentIdKey(item.generatedId, item.lang)) ==
-        item.generatedId;
+    final isLast = (_recentStorage[item.lang] ?? -1) == item.generatedId;
+
     return GestureDetector(
       onSecondaryTap: () => showItemMenu(item),
       child: ListTile(

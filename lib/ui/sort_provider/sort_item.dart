@@ -75,4 +75,24 @@ class SortItem {
       falseTitle: falseTitle ?? this.falseTitle,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'isTrue': isTrue,
+      'trueTitle': trueTitle,
+      'falseTitle': falseTitle,
+    };
+  }
+
+  factory SortItem.fromJson(Map<String, dynamic> json) {
+    return SortItem(
+      id: json['id'],
+      title: json['title'],
+      isTrue: json['isTrue'],
+      trueTitle: json['trueTitle'],
+      falseTitle: json['falseTitle'],
+    );
+  }
 }
