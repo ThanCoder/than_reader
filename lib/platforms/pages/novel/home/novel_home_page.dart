@@ -33,6 +33,8 @@ class _NovelHomePageState extends State<NovelHomePage> {
   final con = ControllerManager.read<NovelController>();
 
   Future<void> init() async {
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     await con.fetchList();
   }
 

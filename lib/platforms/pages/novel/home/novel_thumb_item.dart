@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:than_reader/platforms/pages/novel/novel_util.dart';
 
@@ -15,9 +11,8 @@ class NovelThumbItem extends StatefulWidget {
 }
 
 class _NovelThumbItemState extends State<NovelThumbItem> {
-  late final thumbFile = File(
-    AppUtil.instance.getCachePath('${widget.file.name.onlyName}.png'),
-  );
+  late final thumbFile = NovelUtil.instance.getCoverCacheFile(widget.file);
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +26,7 @@ class _NovelThumbItemState extends State<NovelThumbItem> {
     }
 
     return FutureBuilder(
-      future: NovelUtil.genThumbnail(widget.file, thumbFile),
+      future: NovelUtil.instance.genThumbnail(widget.file),
       builder: (context, snapshot) {
         if (snapshot.connectionState == .waiting) {
           return Center(child: CircularProgressIndicator.adaptive());

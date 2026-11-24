@@ -5,6 +5,7 @@ import 'package:dual_store/dual_store.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_menu_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/novel_util.dart';
 import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 import 'package:than_reader/const_keys.dart';
@@ -47,7 +48,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
   int descId = -1;
   NovelDesc? desc;
   int imgDataId = -1;
-  Uint8List? imgData;
+  Uint8List? _imgData;
 
   Future<void> init() async {
     await db.open(widget.file.path);
@@ -60,8 +61,9 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     if (img != null) {
       final bytes = await img.imageData;
       if (bytes != null) {
-        imgData = bytes;
+        _imgData = bytes;
         imgDataId = img.generatedId;
+        print('init: ${img.generatedId}');
       }
     }
     if (!mounted) return;
@@ -84,14 +86,14 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     final formRes = await context.pushMaterialPageRoute<NovelEditFormResp>(
       builder: (mainCtx) => NovelEditForm(
         desc: desc ?? .empty(),
-        imgData: imgData,
+        imgData: _imgData,
         allTags: novelAllTags,
       ),
     );
     if (!mounted) return;
     if (formRes == null) return;
     desc = formRes.desc;
-    imgData = formRes.cover;
+    _imgData = formRes.cover;
 
     // new
     if (descId == -1) {
@@ -109,6 +111,9 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     if (resImgType == .none) return;
     if (resImgType == .delete) {
       await imageBox.deleteById(imgDataId);
+      _imgData = null;
+      await NovelUtil.instance.getCoverCacheFile(widget.file).deleteSafe();
+      print('dele: ${imgDataId}');
       if (!mounted) return;
       setState(() {});
       return;
@@ -117,18 +122,24 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     if (resImgType == .update) {
       if (imgDataId == -1) {
         await imageBox.add(
-          .fromBytes(imgData!, name: 'cover', ext: 'png', lastModified: .now()),
-        );
-      } else {
-        await imageBox.updateById(
-          imgDataId,
-          file: .fromBytes(
-            imgData!,
+          .fromBytes(
+            _imgData!,
             name: 'cover',
             ext: 'png',
             lastModified: .now(),
           ),
         );
+      } else {
+        await imageBox.updateById(
+          imgDataId,
+          file: .fromBytes(
+            _imgData!,
+            name: 'cover',
+            ext: 'png',
+            lastModified: .now(),
+          ),
+        );
+        await NovelUtil.instance.getCoverCacheFile(widget.file).deleteSafe();
       }
 
       if (!mounted) return;
@@ -332,8 +343,8 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
 
   ClipRRect _coverImage({double width = 120, double height = 175}) {
     Widget img = Icon(Icons.menu_book_outlined, size: 40);
-    if (imgData != null) {
-      img = Image.memory(imgData!);
+    if (_imgData != null) {
+      img = Image.memory(_imgData!);
     }
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
