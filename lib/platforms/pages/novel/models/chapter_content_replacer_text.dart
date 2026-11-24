@@ -17,7 +17,13 @@ class ChapterContentReplacerText extends IChapterContentReplacer {
 
   @override
   String apply(String text) {
-    return text.replaceAll(matchText, toText);
+    if (!enable) return text;
+
+    try {
+      return text.replaceAll(RegExp(matchText, multiLine: true), toText).trim();
+    } on FormatException {
+      return text;
+    }
   }
 
   @override

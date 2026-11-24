@@ -14,6 +14,7 @@ import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_chapter_sliver_list.dart';
 import 'package:than_reader/platforms/pages/novel/forms/novel_edit_form.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
+import 'package:than_reader/ui/dialog/index.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class NovelDescHomePage extends StatefulWidget {
@@ -65,6 +66,18 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     }
     if (!mounted) return;
     setState(() {});
+
+    if (desc != null && desc!.id.isEmpty) {
+      final conf = await showConfirmDialog(
+        context,
+        barrierDismissible: false,
+        title: 'အရေးကြီးတယ်!',
+        'Novel Id is Empty!.\nNeed To Add ID!',
+        confirmText: 'Edit Novel',
+      );
+      if (!conf) return;
+      _editDesc();
+    }
   }
 
   void _editDesc() async {
@@ -136,7 +149,7 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
         onCompact: _datebaseCompact,
         showCompactTile: () => db.state.deletedCount > 0,
         onNewChapter: () {
-          goChapterFormPage(context, box: chapterBox,lang: null);
+          goChapterFormPage(context, box: chapterBox, lang: null);
         },
       ),
     );
@@ -167,10 +180,11 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
                 sliver: _descWidget,
               ),
 
-              SliverPadding(
-                padding: .symmetric(vertical: 10, horizontal: 15),
-                sliver: NovelChapterSliverList(db: db),
-              ),
+              if (desc != null)
+                SliverPadding(
+                  padding: .symmetric(vertical: 10, horizontal: 15),
+                  sliver: NovelChapterSliverList(db: db, desc: desc!),
+                ),
               SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           ),

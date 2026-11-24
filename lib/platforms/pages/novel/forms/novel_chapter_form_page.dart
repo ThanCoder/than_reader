@@ -259,7 +259,7 @@ class _NovelChapterFormPageState extends State<NovelChapterFormPage> {
       nextChNumber();
 
       if (!mounted) return;
-      showSnackbar(context, msg);
+      // showSnackbar(context, msg);
     } catch (e) {
       showErrorDialog(context, e.toString());
     }

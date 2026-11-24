@@ -9,6 +9,7 @@ import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
 import 'package:than_reader/ui/forms/input_text.dart';
 import 'package:than_reader/ui/forms/tag_input_field.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
+import 'package:uuid/v4.dart';
 
 enum NovelEditFormRespCoverType { none, update, delete }
 
@@ -99,6 +100,7 @@ class _NovelEditFormState extends State<NovelEditForm> {
   void save() async {
     final arg = NovelEditFormResp(
       desc: desc.copyWith(
+        id: desc.id.isEmpty ? UuidV4().generate() : null,
         title: titleCon.text,
         author: authorCon.text,
         translator: translatorCon.text,

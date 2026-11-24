@@ -250,7 +250,7 @@ class _ChapterContentReplacerSheetState
                     value: e.enable,
                     onChanged: (value) => _onEnableChanged(value!, e),
                   ),
-                  _itemMatcher(e),
+                  Expanded(child: _itemMatcher(e)),
                 ],
               ),
             ),

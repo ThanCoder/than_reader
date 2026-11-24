@@ -4,15 +4,19 @@ import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:dual_store/dual_store.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:than_reader/core/controller/i_controller.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/chapter_list_item_menu_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
+import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/novel_content/novel_chapter_content_reader.dart';
 import 'package:than_reader/ui/index.dart';
 
 class NovelChapterSliverList extends StatefulWidget {
-  const new({super.key, required this.db});
+  const new({super.key, required this.db, required this.desc});
   final DualStore db;
+  final NovelDesc desc;
 
   @override
   State<NovelChapterSliverList> createState() => _NovelChapterSliverListState();
@@ -27,9 +31,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
       if (event is BoxAdded) {
         final val = event.value;
         if (val is NovelChapter) {
-          final list = _currentChapterList;
-          list.add(val);
-          _onSort();
+          groups.putIfAbsent(val.lang, () => []).add(val);
+          _onSort(groups[val.lang] ?? []);
         }
       }
       if (event is BoxUpdated) {
@@ -73,6 +76,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
   final Map<ChapterLaguage, List<NovelChapter>> groups = {};
+  final con = ControllerManager.read<NovelController>();
 
   Future<void> init({bool autoChooseLang = true}) async {
     groups.clear();
@@ -87,7 +91,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     }
     if (!mounted) return;
     setState(() {});
-    _onSort();
+    _onSort(_currentChapterList);
   }
 
   void _goChapterFormPage({NovelChapter? editChapter}) async {
@@ -100,8 +104,6 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
       editChapter: editChapter,
     );
   }
-
-  NovelChapter? _lastClickedItem;
 
   void goReader(NovelChapter item) async {
     await context.pushMaterialPageRoute(
@@ -124,7 +126,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         ),
       ),
     );
-    _lastClickedItem = item;
+    con.cf.putAndWriteAll(
+      _recentIdKey(item.generatedId, item.lang),
+      item.generatedId,
+    );
     if (!mounted) return;
     setState(() {});
   }
@@ -142,7 +147,10 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         },
       ),
     );
-    _lastClickedItem = item;
+    con.cf.putAndWriteAll(
+      _recentIdKey(item.generatedId, item.lang),
+      item.generatedId,
+    );
     if (!mounted) return;
     setState(() {});
   }
@@ -159,13 +167,12 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     falseTitle: 'Big To Small',
   );
 
-  void _onSort() {
+  void _onSort(List<NovelChapter> list) {
     if (_numberSort.isTrue) {
-      final list = _currentChapterList;
       list.sortChapter(smToBg: true);
       groups[NovelChapterSliverList.lang] = list;
     } else {
-      final list = _currentChapterList;
+      List;
       list.sortChapter(smToBg: false);
       groups[NovelChapterSliverList.lang] = list;
     }
@@ -175,6 +182,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   ColorScheme get col => Theme.of(context).colorScheme;
+
+  String _recentIdKey(int itemId, ChapterLaguage lang) =>
+      'recent-clicked-${lang.name}-${widget.desc.id}-$itemId';
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +246,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           title: 'Sort Number',
           onApply: (item) {
             _numberSort = item;
-            _onSort();
+            _onSort(_currentChapterList);
           },
         ),
         // SizedBox(width: 10),
@@ -258,7 +268,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     return GestureDetector(
       onTap: () {
         NovelChapterSliverList.lang = e;
-        _onSort();
+        _onSort(_currentChapterList);
       },
       child: Container(
         padding: .symmetric(vertical: 4, horizontal: 6),
@@ -301,7 +311,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   Widget listItem(NovelChapter item) {
-    final isLast = _lastClickedItem?.generatedId == item.generatedId;
+    final isLast =
+        con.cf.getInt(_recentIdKey(item.generatedId, item.lang)) ==
+        item.generatedId;
     return GestureDetector(
       onSecondaryTap: () => showItemMenu(item),
       child: ListTile(
