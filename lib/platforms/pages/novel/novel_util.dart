@@ -15,11 +15,11 @@ class NovelUtil {
 
   Future<void> genThumbnail(NovelFile file) async {
     final coverFile = getCoverCacheFile(file);
-    
+
     if (coverFile.existsSync()) return;
     final store = DualStore();
     await store.open(file.path);
-    final res = await store.getImageBox.getOne();
+    final res = await store.imageBox.getOne();
     if (res != null) {
       final bytes = await res.imageData;
       if (bytes != null) {

@@ -33,8 +33,6 @@ class _NovelHomePageState extends State<NovelHomePage> {
   final con = ControllerManager.read<NovelController>();
 
   Future<void> init() async {
-    PaintingBinding.instance.imageCache.clear();
-    PaintingBinding.instance.imageCache.clearLiveImages();
     await con.fetchList();
   }
 
@@ -42,6 +40,13 @@ class _NovelHomePageState extends State<NovelHomePage> {
     return File(
       AppUtil.instance.getPlatfromExternalDownloadPath('$name.$novelExtName'),
     );
+  }
+
+  void _goDesc(NovelFile file) async {
+    await context.pushMaterialPageRoute(
+      builder: (mainCtx) => NovelDescHomePage(file: file),
+    );
+    setState(() {});
   }
 
   void newNovelFile() async {
@@ -160,24 +165,25 @@ class _NovelHomePageState extends State<NovelHomePage> {
                 SliverFillRemaining(
                   child: Center(child: CircularProgressIndicator.adaptive()),
                 ),
-              if (con.error != null)
+              if (!con.isLoading && con.error != null)
                 SliverFillRemaining(
                   child: Center(
                     child: Text(con.error!, style: TextStyle(color: col.error)),
                   ),
                 ),
 
-              if (con.error == null && con.list.isEmpty)
+              if (!con.isLoading && con.error == null && con.list.isEmpty)
                 SliverFillRemaining(child: Center(child: Text('Not Found!'))),
               // list
-              SliverPadding(
-                padding: .symmetric(vertical: 6, horizontal: 8),
-                sliver: SliverList.separated(
-                  separatorBuilder: (context, index) => SizedBox(height: 10),
-                  itemCount: con.list.length,
-                  itemBuilder: (context, index) => listItem(con.list[index]),
+              if (!con.isLoading)
+                SliverPadding(
+                  padding: .symmetric(vertical: 6, horizontal: 8),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemCount: con.list.length,
+                    itemBuilder: (context, index) => listItem(con.list[index]),
+                  ),
                 ),
-              ),
             ],
           );
         },
@@ -187,9 +193,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
 
   Widget listItem(NovelFile file) {
     return GestureDetector(
-      onTap: () => context.pushMaterialPageRoute(
-        builder: (mainCtx) => NovelDescHomePage(file: file),
-      ),
+      onTap: () => _goDesc(file),
       onSecondaryTap: () => showItemMenu(file),
       onLongPress: () => showItemMenu(file),
       child: Container(

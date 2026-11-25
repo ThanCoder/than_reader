@@ -42,9 +42,9 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
   }
 
   final db = DualStore();
-  DuBox<NovelDesc> get descBox => db.getBox<NovelDesc>();
-  DuBox<NovelChapter> get chapterBox => db.getBox();
-  ImageBox get imageBox => db.getImageBox;
+  late final DuBox<NovelDesc> descBox = db.getBox<NovelDesc>();
+  late final DuBox<NovelChapter> chapterBox = db.getBox();
+  late final imageBox = db.imageBox;
   int descId = -1;
   NovelDesc? desc;
   int imgDataId = -1;
@@ -63,7 +63,6 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
       if (bytes != null) {
         _imgData = bytes;
         imgDataId = img.generatedId;
-        print('init: ${img.generatedId}');
       }
     }
     if (!mounted) return;
@@ -112,8 +111,10 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
     if (resImgType == .delete) {
       await imageBox.deleteById(imgDataId);
       _imgData = null;
+      // clear cache image
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
       await NovelUtil.instance.getCoverCacheFile(widget.file).deleteSafe();
-      print('dele: ${imgDataId}');
       if (!mounted) return;
       setState(() {});
       return;
@@ -121,26 +122,19 @@ class NovelDescHomePageState extends State<NovelDescHomePage> {
 
     if (resImgType == .update) {
       if (imgDataId == -1) {
-        await imageBox.add(
-          .fromBytes(
-            _imgData!,
-            name: 'cover',
-            ext: 'png',
-            lastModified: .now(),
-          ),
-        );
+        await imageBox.add(.bytes(_imgData!, name: 'cover', ext: 'png'));
       } else {
         await imageBox.updateById(
           imgDataId,
-          file: .fromBytes(
-            _imgData!,
-            name: 'cover',
-            ext: 'png',
-            lastModified: .now(),
-          ),
+          file: .bytes(_imgData!, name: 'cover', ext: 'png'),
         );
-        await NovelUtil.instance.getCoverCacheFile(widget.file).deleteSafe();
       }
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
+      // override cache image
+      await NovelUtil.instance
+          .getCoverCacheFile(widget.file)
+          .writeAsBytes(_imgData!);
 
       if (!mounted) return;
       setState(() {});
