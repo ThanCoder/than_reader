@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:cfb_store/cfb_store.dart';
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
-import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:than_reader/platforms/pages/novel/home/novel_file_scanner.dart';
 
@@ -13,19 +11,12 @@ class NovelController extends IController {
   List<NovelFile> list = [];
   bool isLoading = false;
   String? error;
-  final cf = CFBStore();
 
   @override
-  Future<void> init() async {
-    await cf.open(
-      AppUtil.instance.getPlatfromExternalConfigPath('novel.db.config.cf'),
-    );
-  }
+  Future<void> init() async {}
 
   Future<void> fetchList() async {
     try {
-      await cf.reloadIfNotOpened();
-
       isLoading = true;
       error = null;
       addEvent(NovelControllerStateChanged());

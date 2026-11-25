@@ -5,12 +5,15 @@ import 'package:dual_store/dual_store.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
+import 'package:than_reader/platforms/pages/novel/bookmark/chapter_bookmark_action.dart';
+import 'package:than_reader/platforms/pages/novel/bookmark/chapter_bookmark_toggle.dart';
+import 'package:than_reader/platforms/pages/novel/bookmark/novel_bookmark_home.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/chapter_list_item_menu_sheet.dart';
+import 'package:than_reader/platforms/pages/novel/home/novel_config_controller.dart';
 import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
-import 'package:than_reader/platforms/pages/novel/novel_content/novel_chapter_content_reader.dart';
 import 'package:than_reader/ui/index.dart';
 
 class NovelChapterSliverList extends StatefulWidget {
@@ -71,15 +74,14 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   @override
   void dispose() {
     _sub?.cancel();
-    _saveRecentStorage();
+    _saveConfigStorage();
     super.dispose();
   }
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
   final Map<ChapterLaguage, List<NovelChapter>> groups = {};
   final con = ControllerManager.read<NovelController>();
-
-  final Map<ChapterLaguage, int> _recentStorage = {};
+  final configCon = NovelConfigController.instance;
 
   List<NovelChapter> get _currentChapterList =>
       groups[NovelChapterSliverList.lang] ?? [];
@@ -99,20 +101,15 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     setState(() {});
     _onSort(_currentChapterList);
 
-    _loadRecentStorage();
+    _loadConfigStorage();
   }
 
-  void _loadRecentStorage() async {
-    _recentStorage.clear();
-
-    final recent = con.cf.getMap('recent-${widget.desc.id}');
-    _recentStorage.addAll(recent.map((k, v) => .new(.fromVal(k), v)));
-    setState(() {});
+  void _loadConfigStorage() async {
+    configCon.loadInit(widget.desc.id);
   }
 
-  void _saveRecentStorage() {
-    final val = _recentStorage.map((k, v) => .new(k.name, v));
-    con.cf.put('recent-${widget.desc.id}', val).writeAll();
+  void _saveConfigStorage() async {
+    await configCon.saveRecentStorage();
   }
 
   void _goChapterFormPage({NovelChapter? editChapter}) async {
@@ -127,28 +124,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   void goReader(NovelChapter item) async {
-    await context.pushMaterialPageRoute(
-      builder: (mainCtx) => NovelChapterContentReader(
-        props: .new(
-          lang: NovelChapterSliverList.lang,
-          chapterNumber: item.chapter,
-          getChapterBox: () => box,
-          getChapter: (lang, chNumber) {
-            return box.findOne((e) => e.chapter == chNumber && e.lang == lang);
-          },
-          getAvaliableLangs: (chNumber) async {
-            final langs = <ChapterLaguage>{};
-            final res = await box.find((e) => e.chapter == chNumber);
-            for (var ch in res) {
-              langs.add(ch.lang);
-            }
-            return langs.toList();
-          },
-        ),
-      ),
-    );
-    // con.cf.put(_recentIdKey(item.generatedId, item.lang), item.generatedId);
-    _recentStorage[item.lang] = item.generatedId;
+    await goNovelChapterContentReader(context, box: box, item: item);
+    // _recentStorage[item.lang] = item.generatedId;
+    configCon.addRecentStorage(item);
     if (!mounted) return;
     setState(() {});
   }
@@ -166,7 +144,8 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         },
       ),
     );
-    _recentStorage[item.lang] = item.generatedId;
+    // _recentStorage[item.lang] = item.generatedId;
+    configCon.addRecentStorage(item);
     if (!mounted) return;
     setState(() {});
   }
@@ -203,9 +182,9 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         SliverPersistentHeader(
           pinned: true,
           delegate: _HeaderDelegate(
-            height: 124,
+            height: 110,
             child: SizedBox(
-              height: 124,
+              height: 110,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 10,
@@ -215,7 +194,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _header(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _langHeader(),
                   ],
                 ),
@@ -264,12 +243,29 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     );
   }
 
-  Widget _langHeader() => Padding(
-    padding: .symmetric(vertical: 8),
-    child: Wrap(
-      spacing: 5,
-      runSpacing: 5,
-      children: groups.keys.map((e) => _langItem(e)).toList(),
+  Widget _langHeader() => SingleChildScrollView(
+    scrollDirection: .horizontal,
+    child: StreamBuilder(
+      stream: configCon.events.whereType<ChapterBookmarkChanged>(),
+      builder: (context, asyncSnapshot) {
+        return Row(
+          spacing: 5,
+          children: [
+            ...groups.keys.map((e) => _langItem(e)),
+
+            // bookmark
+            if (configCon.bookmarks.isNotEmpty)
+              ChapterBookmarkAction(
+                onTap: () {
+                  context.push(
+                    builder: (context) =>
+                        NovelBookmarkHome(controller: configCon, box: box),
+                  );
+                },
+              ),
+          ],
+        );
+      },
     ),
   );
 
@@ -321,7 +317,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   Widget listItem(NovelChapter item) {
-    final isLast = (_recentStorage[item.lang] ?? -1) == item.generatedId;
+    final isLast = configCon.existsRecentStorage(item);
 
     return GestureDetector(
       onSecondaryTap: () => showItemMenu(item),
@@ -353,6 +349,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           spacing: 4,
           children: [Text(item.title), Text(item.date.formatDate())],
         ),
+        trailing: ChapterBookmarkToggle(item: item),
         onTap: () => goReader(item),
         onLongPress: () => showItemMenu(item),
       ),
