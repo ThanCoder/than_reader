@@ -7,9 +7,11 @@ import 'package:than_reader/apps/pdf/pdf_config_bookmark.dart';
 import 'package:than_reader/apps/pdf/reader_theme_mode.dart';
 import 'package:than_reader/apps/pdf/screen_orientation.dart';
 import 'package:than_reader/const_keys.dart';
+import 'package:than_reader/core/models/reader_file.dart';
+import 'package:than_reader/core/reader_config/i_reader_config.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
 
-class PdfConfig {
+class PdfConfig implements IReaderConfig {
   const PdfConfig({
     required this.page,
     required this.totalPage,
@@ -25,8 +27,10 @@ class PdfConfig {
     required this.renderImageType,
     required this.isAdult,
     required this.isCompleted,
+    required this.type,
   });
 
+  @override
   final int page;
   final int totalPage;
   final double zoom;
@@ -39,11 +43,16 @@ class PdfConfig {
   final List<PdfConfigBookmark> bookmark;
   final int preloadPageCount;
   final PageRenderImageType renderImageType;
+  @override
   final bool isAdult;
+  @override
   final bool isCompleted;
+  @override
+  final ReaderFileType type;
 
   factory PdfConfig.empty() {
     return .new(
+      type: .pdf,
       page: 1,
       totalPage: 0,
       zoom: 1,
@@ -80,11 +89,13 @@ class PdfConfig {
       'renderImageType': renderImageType.name,
       'isAdult': isAdult,
       'isCompleted': isCompleted,
+      'type': type.name,
     };
   }
 
   factory PdfConfig.fromMap(Map<String, dynamic> map) {
     return PdfConfig(
+      type: .fromValue(map.getString(['type'])),
       isAdult: map.getBool(['isAdult']),
       isCompleted: map.getBool(['isCompleted']),
       page: map['page'] as int,
@@ -130,6 +141,7 @@ class PdfConfig {
     PageRenderImageType? renderImageType,
     bool? isAdult,
     bool? isCompleted,
+    ReaderFileType? type,
   }) {
     return PdfConfig(
       page: page ?? this.page,
@@ -146,6 +158,7 @@ class PdfConfig {
       renderImageType: renderImageType ?? this.renderImageType,
       isAdult: isAdult ?? this.isAdult,
       isCompleted: isCompleted ?? this.isCompleted,
+      type: type ?? this.type,
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:than_reader/platforms/pages/novel/home/novel_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_tracker/reader_tracker_page.dart';
 import 'package:than_reader/platforms/pages/search/search_page.dart';
 import 'package:than_reader/platforms/desktop/desktop_list_page.dart';
-import 'package:than_reader/platforms/pages/share_server/server_home_page.dart';
+import 'package:than_reader/platforms/pages/share_server/home/server_home_page.dart';
 import 'package:than_reader/platforms/pages/reader_file_info_store/reader_info_store_home_page.dart';
 
 class DesktopHome extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_config_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_config_controller.dart';
 import 'package:than_reader/ui/build_context_x.dart';
 
 class ChapterBookmarkAction extends StatefulWidget {

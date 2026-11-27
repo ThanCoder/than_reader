@@ -1,6 +1,6 @@
 import 'package:dual_store/dual_store.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_config_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_config_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/chapter_bookmark.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 import 'package:than_reader/platforms/pages/novel/routes.dart';

@@ -224,6 +224,7 @@ class _PdfReaderState extends State<PdfReader> {
       zoom: state.zoom,
       preloadPageCount: state.preloadPageCount,
       renderImageType: state.renderImageType,
+      type: config.type == .unknown ? .pdf : null,
     );
     await PdfReader.cf.writeAll();
 

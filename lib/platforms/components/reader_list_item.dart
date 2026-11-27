@@ -3,7 +3,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/const_keys.dart';
 import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/app_utils.dart';
-import 'package:than_reader/core/utils/util_ext.dart';
 import 'package:than_reader/platforms/components/config_book_lable_item.dart';
 import 'package:than_reader/platforms/components/reader_cover_file.dart';
 import 'package:than_reader/platforms/components/reader_type_icon.dart';
@@ -109,7 +108,7 @@ class ReaderListItem extends StatelessWidget {
           col,
           icon: Icons.date_range_outlined,
           name: 'Date',
-          title: file.date.formatFullDate(),
+          title: file.date.formatDate(),
         ),
         _menuList(
           col,

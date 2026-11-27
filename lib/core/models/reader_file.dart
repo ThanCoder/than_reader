@@ -2,31 +2,7 @@
 import 'package:dart_core_extensions/dart_core_extensions.dart';
 import 'package:than_reader/core/utils/utils.dart';
 
-enum FileType {
-  pdf,
-  // epub,
-  unknown;
-
-  String get label {
-    if (this == pdf) return 'PDF';
-    // if (this == epub) return 'EPUB';
-    return 'Unknown';
-  }
-
-  String get extname {
-    if (this == pdf) return 'pdf';
-    return '';
-  }
-
-  static FileType fromValue(String val) {
-    return values.firstWhere((e) => e.name == val, orElse: () => unknown);
-  }
-
-  static FileType fromPath(String path) {
-    final ext = path.extension;
-    return values.firstWhere((e) => e.name == ext, orElse: () => unknown);
-  }
-}
+part 'reader_file_type.dart';
 
 class ReaderFile {
   final String name;
@@ -35,7 +11,7 @@ class ReaderFile {
   final int size;
   final DateTime date;
   final String configId;
-  final FileType type;
+  final ReaderFileType type;
   const ReaderFile({
     required this.name,
     required this.path,
@@ -52,7 +28,7 @@ class ReaderFile {
     int? size,
     DateTime? date,
     String? configId,
-    FileType? type,
+    ReaderFileType? type,
   }) {
     return ReaderFile(
       name: name ?? this.name,
@@ -85,7 +61,7 @@ class ReaderFile {
       size: map['size'] as int,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
       configId: map['configId'] as String,
-      type: FileType.fromValue(map.getString(['type'])),
+      type: ReaderFileType.fromValue(map.getString(['type'])),
     );
   }
 }

@@ -7,21 +7,21 @@ import 'package:than_reader/core/models/reader_file.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
 import 'package:than_reader/ui/components/loader.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
-import 'package:than_reader/platforms/pages/share_server/active_host_scanner_dialog.dart';
-import 'package:than_reader/platforms/pages/share_server/share_download_menu.dart';
-import 'package:than_reader/platforms/pages/share_server/share_downloader_dialog.dart';
-import 'package:than_reader/platforms/pages/share_server/share_grid_item.dart';
+import 'package:than_reader/platforms/pages/share_server/components/active_host_scanner_dialog.dart';
+import 'package:than_reader/platforms/pages/share_server/components/share_download_menu.dart';
+import 'package:than_reader/platforms/pages/share_server/components/share_downloader_dialog.dart';
+import 'package:than_reader/platforms/pages/share_server/components/share_grid_item.dart';
 
 String? _connectAddress;
 
-class ReceivePage extends StatefulWidget {
+class ReceiveHomePage extends StatefulWidget {
   const new({super.key});
 
   @override
-  State<ReceivePage> createState() => _ReceivePageState();
+  State<ReceiveHomePage> createState() => _ReceiveHomePageState();
 }
 
-class _ReceivePageState extends State<ReceivePage> {
+class _ReceiveHomePageState extends State<ReceiveHomePage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((e) => init());

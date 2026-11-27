@@ -28,4 +28,24 @@ class NovelFile {
       date: date ?? this.date,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'path': path,
+      'ext': ext,
+      'size': size,
+      'date': date.millisecondsSinceEpoch,
+    };
+  }
+
+  factory NovelFile.fromJson(Map<String, dynamic> json) {
+    return NovelFile(
+      name: json['name'],
+      path: json['path'],
+      ext: json['ext'],
+      size: json['size'],
+      date: DateTime.fromMillisecondsSinceEpoch(json['date']),
+    );
+  }
 }

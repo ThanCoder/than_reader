@@ -8,6 +8,10 @@ import 'package:than_reader/platforms/pages/novel/home/novel_file_scanner.dart';
 class NovelControllerStateChanged extends IControllerEvent {}
 
 class NovelController extends IController {
+  static final NovelController instance = NovelController._();
+  NovelController._();
+  factory NovelController() => instance;
+
   List<NovelFile> list = [];
   bool isLoading = false;
   String? error;

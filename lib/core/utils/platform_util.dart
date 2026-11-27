@@ -37,7 +37,7 @@ class PlatformUtil {
   static Future<void> genThumbnail(
     String path, {
     required String outPath,
-    required FileType type,
+    required ReaderFileType type,
   }) async {
     if (type == .pdf) {
       final res = await PdfImageGenerator.instance.generate(

@@ -4,16 +4,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:than_pkg_android/than_pkg_android.dart';
 import 'package:than_reader/core/utils/platform_util.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
-import 'package:than_reader/platforms/pages/share_server/share_controller.dart';
+import 'package:than_reader/platforms/pages/share_server/components/share_controller.dart';
 
-class SharePage extends StatefulWidget {
+class ShareHomePage extends StatefulWidget {
   const new({super.key});
 
   @override
-  State<SharePage> createState() => _SharePageState();
+  State<ShareHomePage> createState() => _ShareHomePageState();
 }
 
-class _SharePageState extends State<SharePage> {
+class _ShareHomePageState extends State<ShareHomePage> {
   @override
   void initState() {
     init();

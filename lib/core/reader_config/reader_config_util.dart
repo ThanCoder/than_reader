@@ -17,15 +17,45 @@ class ReaderConfigUtil {
   /// listen changed config id
   Stream<String> get events => _eventCon.stream;
 
-  Result<String, String> getConfigPath(ReaderFile file) {
-    final cfName = '${file.configId}-config.cbf';
+  Result<String, String> getConfigPathFromId(String readerConfigId) {
+    final cfName = '$readerConfigId-config.cbf';
     if (Platform.isAndroid) {
       return Ok(AppUtil.instance.getAndroidExternalConfigPath(cfName));
     }
     if (Platform.isLinux) {
-      return Ok(AppUtil.instance.getCachePath(cfName));
+      return Ok(AppUtil.instance.getConfigPath(cfName));
     }
     return Err('Platform only -> `linux,android`');
+  }
+
+  Future<Map<String, dynamic>> getConfigMapOr(String readerConfigId) async {
+    final res = await getConfigMap(readerConfigId);
+    return res.fold(onErr: (err) => {}, onOk: (val) => val);
+  }
+
+  Future<Result<Map<String, dynamic>, String>> getConfigMap(
+    String readerConfigId,
+  ) async {
+    final p = getConfigPathFromId(readerConfigId);
+    if (p.isErr) {
+      return Err(p.unwrapError());
+    }
+    try {
+      final f = File(p.unwrap());
+      if (!f.existsSync()) {
+        return Ok({});
+      }
+
+      final source = await f.readAsString();
+      final json = jsonDecode(source);
+      return Ok(json);
+    } catch (e) {
+      return Err(e.toString());
+    }
+  }
+
+  Result<String, String> getConfigPath(ReaderFile file) {
+    return getConfigPathFromId(file.configId);
   }
 
   Future<Result<bool, String>> savePdfConfig(

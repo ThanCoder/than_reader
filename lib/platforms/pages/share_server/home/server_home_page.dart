@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/ui/build_context_x.dart';
-import 'package:than_reader/platforms/pages/share_server/receive_page.dart';
-import 'package:than_reader/platforms/pages/share_server/share_page.dart';
+import 'package:than_reader/platforms/pages/share_server/receive/receive_home_page.dart';
+import 'package:than_reader/platforms/pages/share_server/send/share_home_page.dart';
 
 class ServerHomePage extends StatelessWidget {
   const ServerHomePage({super.key});
@@ -45,7 +45,7 @@ class ServerHomePage extends StatelessWidget {
                 title: 'Share',
                 subtitle: 'Send files to another device',
                 onTap: () {
-                  context.pushMaterialPageRoute(builder: (_) => SharePage());
+                  context.pushMaterialPageRoute(builder: (_) => ShareHomePage());
                 },
               ),
 
@@ -56,7 +56,7 @@ class ServerHomePage extends StatelessWidget {
                 title: 'Receive',
                 subtitle: 'Receive files from another device',
                 onTap: () {
-                  context.pushMaterialPageRoute(builder: (_) => ReceivePage());
+                  context.pushMaterialPageRoute(builder: (_) => ReceiveHomePage());
                 },
               ),
             ],

@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:than_reader/core/controller/i_controller.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_config_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_config_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
 
 class ChapterBookmarkToggle extends StatefulWidget {

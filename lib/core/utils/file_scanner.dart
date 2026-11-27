@@ -23,7 +23,7 @@ class FileScanner extends PathScanner {
     final ext = name.extName;
 
     // if (name.endsWith('.pdf')) return .add;
-    if (FileType.values.map((e) => e.name).contains(ext)) return .add;
+    if (ReaderFileType.values.map((e) => e.name).contains(ext)) return .add;
     return .skip;
   }
 
@@ -42,7 +42,7 @@ class FileScanner extends PathScanner {
           date: entry.modifiedDate,
           size: entry.size,
           configId: FileConfigIdGenerator.generateSync(entry.path),
-          type: FileType.fromPath(entry.path),
+          type: ReaderFileType.fromPath(entry.path),
         );
         list.add(reader);
       }

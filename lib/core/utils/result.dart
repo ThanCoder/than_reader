@@ -17,6 +17,14 @@ sealed class Result<T, E> {
       Ok() => throw StateError('Called unwrapError() on an Ok result.'),
     };
   }
+
+  R fold<R>({
+    required R Function(E err) onErr,
+    required R Function(T val) onOk,
+  }) => switch (this) {
+    Ok(value: final val) => onOk(val),
+    Err(value: final val) => onErr(val),
+  };
 }
 
 class Ok<T, E> extends Result<T, E> {

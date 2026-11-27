@@ -11,7 +11,7 @@ import 'package:than_reader/core/utils/app_utils.dart';
 import 'package:than_reader/ui/dialog/confirm_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/error_alert_dialog.dart';
 import 'package:than_reader/ui/dialog/prompt_alert_dialog.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_file.dart';
 import 'package:than_reader/platforms/pages/novel/home/novel_file_item_menu.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/novel_desc_home_page.dart';
@@ -30,7 +30,7 @@ class _NovelHomePageState extends State<NovelHomePage> {
     super.initState();
   }
 
-  final con = ControllerManager.read<NovelController>();
+  final con = NovelController.instance;
 
   Future<void> init() async {
     await con.fetchList();

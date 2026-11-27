@@ -9,8 +9,8 @@ import 'package:than_reader/platforms/pages/novel/bookmark/chapter_bookmark_acti
 import 'package:than_reader/platforms/pages/novel/bookmark/chapter_bookmark_toggle.dart';
 import 'package:than_reader/platforms/pages/novel/bookmark/novel_bookmark_home.dart';
 import 'package:than_reader/platforms/pages/novel/desc_page/chapter_list_item_menu_sheet.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_config_controller.dart';
-import 'package:than_reader/platforms/pages/novel/home/novel_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_config_controller.dart';
+import 'package:than_reader/platforms/pages/novel/novel_controller.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_desc.dart';
 import 'package:than_reader/platforms/pages/novel/routes.dart';
 import 'package:than_reader/platforms/pages/novel/models/novel_chapter.dart';
@@ -30,45 +30,39 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   StreamSubscription? _sub;
   @override
   void initState() {
+    super.initState();
+
     _sub = box.events.all.listen((event) {
       if (event is BoxAdded) {
         final val = event.value;
         if (val is NovelChapter) {
-          groups.putIfAbsent(val.lang, () => []).add(val);
-          _onSort(groups[val.lang] ?? []);
+          _list.add(val);
+          _currentLangs.add(val.lang);
+          _onSort();
         }
       }
       if (event is BoxUpdated) {
         final val = event.value;
         if (val is NovelChapter) {
-          for (var m in groups.entries) {
-            final k = m.key;
-            final listId = m.value.indexWhere(
-              (e) => e.generatedId == val.generatedId,
-            );
-            if (listId == -1) return;
-            final res = groups[k]!;
-            res[listId] = val;
-            groups[k] = res;
-          }
+          final index = _list.indexWhere(
+            (e) => e.generatedId == val.generatedId,
+          );
+          if (index == -1) return;
+          _list[index] = val;
+          if (!mounted) return;
+          setState(() {});
         }
-        if (!mounted) return;
-        setState(() {});
       }
       if (event is BoxDeleted) {
         final id = event.id;
-        for (var m in groups.entries) {
-          final k = m.key;
-          final res = m.value.where((e) => e.generatedId != id).toList();
-          groups[k] = res;
-        }
+        final index = _list.indexWhere((e) => e.generatedId == id);
+        if (index == -1) return;
+        _list.removeAt(index);
         if (!mounted) return;
         setState(() {});
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => init());
-
-    super.initState();
   }
 
   @override
@@ -79,27 +73,30 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
   }
 
   DuBox<NovelChapter> get box => widget.db.getBox<NovelChapter>();
-  final Map<ChapterLaguage, List<NovelChapter>> groups = {};
-  final con = ControllerManager.read<NovelController>();
+  List<NovelChapter> _list = [];
+  final Set<ChapterLaguage> _currentLangs = {};
+  final con = NovelController.instance;
   final configCon = NovelConfigController.instance;
 
-  List<NovelChapter> get _currentChapterList =>
-      groups[NovelChapterSliverList.lang] ?? [];
+  List<NovelChapter> get _currentChapterList {
+    return _list.where((e) => e.lang == NovelChapterSliverList.lang).toList();
+  }
 
   Future<void> init({bool autoChooseLang = true}) async {
-    groups.clear();
-    final list = await box.getAll();
-    list.sortChapter();
-    for (var val in list) {
-      groups.putIfAbsent(val.lang, () => []).add(val);
+    _currentLangs.clear();
+    _list = await box.getAll();
+    _list.sortChapter();
+
+    for (var c in _list) {
+      _currentLangs.add(c.lang);
     }
-    if (groups.isNotEmpty && autoChooseLang) {
-      final firstLang = ChapterLaguage.fromVal(groups.keys.first.name);
-      NovelChapterSliverList.lang = firstLang;
+    if (autoChooseLang && _currentLangs.isNotEmpty) {
+      NovelChapterSliverList.lang = _currentLangs.first;
     }
+
     if (!mounted) return;
     setState(() {});
-    _onSort(_currentChapterList);
+    _onSort();
 
     _loadConfigStorage();
   }
@@ -159,14 +156,12 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     falseTitle: 'Big To Small',
   );
 
-  void _onSort(List<NovelChapter> list) {
+  void _onSort() {
     if (_numberSort.isTrue) {
-      list.sortChapter(smToBg: true);
-      groups[NovelChapterSliverList.lang] = list;
+      _list.sortChapter(smToBg: true);
     } else {
       List;
-      list.sortChapter(smToBg: false);
-      groups[NovelChapterSliverList.lang] = list;
+      _list.sortChapter(smToBg: false);
     }
 
     if (!mounted) return;
@@ -235,7 +230,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
           title: 'Sort Number',
           onApply: (item) {
             _numberSort = item;
-            _onSort(_currentChapterList);
+            _onSort();
           },
         ),
         // SizedBox(width: 10),
@@ -251,7 +246,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
         return Row(
           spacing: 5,
           children: [
-            ...groups.keys.map((e) => _langItem(e)),
+            ..._currentLangs.map((e) => _langItem(e)),
 
             // bookmark
             if (configCon.bookmarks.isNotEmpty)
@@ -274,7 +269,7 @@ class _NovelChapterSliverListState extends State<NovelChapterSliverList> {
     return GestureDetector(
       onTap: () {
         NovelChapterSliverList.lang = e;
-        _onSort(_currentChapterList);
+        _onSort();
       },
       child: Container(
         padding: .symmetric(vertical: 4, horizontal: 6),
